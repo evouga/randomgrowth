@@ -21,6 +21,7 @@ SOURCES += main.cpp\
     mesh.cpp
 
 HEADERS  += mainwindow.h \
-    mesh.h
+    mesh.h \
+    autodifftemplates.h
 
 FORMS    += mainwindow.ui
