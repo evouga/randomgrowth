@@ -11,10 +11,16 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = inversemorpho
 TEMPLATE = app
 
+INCLUDEPATH += ../ext/openmesh ../ext/eigen
+QMAKE_LIBDIR += ../ext/openmesh/build/Build/lib/OpenMesh
+LIBS += -lOpenMeshCore
+
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    mesh.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    mesh.h
 
 FORMS    += mainwindow.ui
