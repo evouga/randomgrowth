@@ -23,7 +23,7 @@ typedef OpenMesh::TriMesh_ArrayKernelT<MyTraits> OMMesh;
 class Mesh
 {
 public:
-    Mesh();
+    Mesh(double YoungsModulus, double PoissonRatio, double h);
 
     void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
                        double &energy,
@@ -39,6 +39,9 @@ public:
 
 private:
     OMMesh *mesh_;
+    double YoungsModulus_;
+    double PoissonRatio_;
+    double h_;
 };
 
 #endif // MESH_H

@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = inversemorpho
 TEMPLATE = app
 
-INCLUDEPATH += ../ext/openmesh ../ext/eigen
+INCLUDEPATH += ../ext/openmesh ../ext/eigen ../FADBAD++
 QMAKE_LIBDIR += ../ext/openmesh/build/Build/lib/OpenMesh
 LIBS += -lOpenMeshCore
 
