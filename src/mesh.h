@@ -23,7 +23,7 @@ typedef OpenMesh::TriMesh_ArrayKernelT<MyTraits> OMMesh;
 class Mesh
 {
 public:
-    Mesh(double YoungsModulus, double PoissonRatio, double h);
+    Mesh();
 
     void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
                        double &energy,
@@ -36,8 +36,23 @@ public:
     void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);
     int numdofs() const;
     int numedges() const;
+    double getYoungsModulus() const;
+    double getPoissonRatio() const;
+    double getThickness() const;
+    void setYoungsModulus(double val);
+    void setPoissonRatio(double val);
+    void setThickness(double val);
+
+    virtual void render(bool showWireframe, bool smoothShade);
+
+    Eigen::Vector3d centroid();
+    double radius();
+    bool exportOBJ(const char *filename);
+    bool importOBJ(const char *filename);
 
 private:
+    void edgeEndpoints(OMMesh::EdgeHandle eh, OMMesh::Point &pt1, OMMesh::Point &pt2);
+
     OMMesh *mesh_;
     double YoungsModulus_;
     double PoissonRatio_;

@@ -48,8 +48,55 @@ template<typename T> T dot(const T *vec1, const T *vec2)
 
 template<typename T> T triarea(T len1, T len2, T len3)
 {
-    T semi = (len1+len2+len3)/2.0;
-    return sqrt(semi*(semi-len1)*(semi-len2)*(semi-len3));
+    T a, b, c;
+    if(len1 > len2)
+    {
+        if(len1 > len3)
+        {
+            a = len1;
+            if(len2 > len3)
+            {
+                b = len2;
+                c = len3;
+            }
+            else
+            {
+                b = len3;
+                c = len2;
+            }
+        }
+        else
+        {
+            a = len3;
+            b = len1;
+            c = len2;
+        }
+    }
+    else
+    {
+        if(len3 > len2)
+        {
+            a = len3;
+            b = len2;
+            c = len1;
+        }
+        else
+        {
+            a = len2;
+            if(len1 > len3)
+            {
+                b = len1;
+                c = len3;
+            }
+            else
+            {
+                b = len3;
+                c = len1;
+            }
+        }
+    }
+    T areasq = (a+(b+c))*(c-(a-b))*(c+(a-b))*(a+(b-c));
+    return sqrt(areasq)/4.0;
 }
 
 template<typename T> T sintri(T side1, T side2, T oppside)
@@ -137,11 +184,13 @@ template<typename T> T dualareapts(T *centpt, T *nb1, T *nb2)
 {
     T cot1 = cotpts(nb1, centpt, nb2);
     T cot2 = cotpts(nb2, nb1, centpt);
+    T oppside[3];
+    diff(nb1, nb2, oppside);
     T side1[3];
     diff(nb1, centpt, side1);
     T side2[3];
     diff(nb2, centpt, side2);
-    return (normSquared(side1)*cot1 + normSquared(side2)*cot2)/8.0;
+    return (normSquared(side2)*cot1 + normSquared(side1)*cot2)/8.0;
 }
 
 template<typename T> T dualarea(int numnbs, T *lens, T *rightopplens)
@@ -153,7 +202,8 @@ template<typename T> T dualarea(int numnbs, T *lens, T *rightopplens)
         T side1 = lens[i];
         T side2 = lens[nextidx];
         T oppside = rightopplens[i];
-        result += dualareatri(side1, side2, oppside);
+        T tmp = dualareatri(side1, side2, oppside);
+        result += tmp;
     }
 
     return result;
@@ -168,7 +218,8 @@ template<typename T> T dualarea(T *centpt, std::vector<T *> nbs)
         int nextid = (i+1)%numnbs;
         T *leftnb = nbs[i];
         T *rightnb = nbs[nextid];
-        result += dualareapts(centpt, leftnb, rightnb);
+        T tmp = dualareapts(centpt, leftnb, rightnb);
+        result += tmp;
     }
 
     return result;
