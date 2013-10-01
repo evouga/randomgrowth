@@ -102,8 +102,9 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
         for(OMMesh::VertexOHalfedgeIter voh = mesh_->voh_iter(vi.handle()); voh; ++voh)
         {
             OMMesh::HalfedgeHandle heh = voh.handle();
-            spokelens.push_back(mesh_->calc_edge_length(heh));
-            spokeidx.push_back(mesh_->edge_handle(heh).idx());
+            int eidx = mesh_->edge_handle(heh).idx();
+            spokelens.push_back(g[eidx]);
+            spokeidx.push_back(eidx);
 
             OMMesh::VertexOHalfedgeIter nextoh = voh;
             ++nextoh;
@@ -119,8 +120,9 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
                 assert(mesh_->from_vertex_handle(opp) == nextvert);
             }
 
-            rightopplens.push_back(mesh_->calc_edge_length(opp));
-            rightoppidx.push_back(mesh_->edge_handle(opp).idx());
+            int oidx = mesh_->edge_handle(opp).idx();
+            rightopplens.push_back(g[oidx]);
+            rightoppidx.push_back(oidx);
 
             OMMesh::VertexHandle vh = mesh_->to_vertex_handle(heh);
             nbq.push_back(mesh_->point(vh));
@@ -259,8 +261,9 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
         {
             vidx[idx] = mesh_->to_vertex_handle(fei.handle()).idx();
             pts[idx] = mesh_->point(mesh_->to_vertex_handle(fei.handle()));
-            eidx[idx] = mesh_->edge_handle(fei.handle()).idx();
-            elens[idx] = mesh_->calc_edge_length(fei.handle());
+            int eid = mesh_->edge_handle(fei.handle()).idx();
+            eidx[idx] = eid;
+            elens[idx] = g[eid];
             idx++;
         }
         assert(idx==3);
@@ -473,6 +476,8 @@ bool Mesh::importOBJ(const char *filename)
     bool success = OpenMesh::IO::read_mesh(*mesh_, filename, opt);
     mesh_->update_normals();
 
+    setIntrinsicLengthsToCurrentLengths();
+
     Eigen::VectorXd q(numdofs());
     Eigen::VectorXd g(numedges());
     dofsFromGeometry(q, g);
@@ -482,6 +487,7 @@ bool Mesh::importOBJ(const char *filename)
     std::cout << "elastic energy" << std::endl;
     elasticEnergy(q, g, energy, gradq, gradg, hessq, hessg);
     std::cout << "Energy " << energy << std::endl;
+    std::cout << gradg.transpose() << std::endl;
     return success;
 }
 
@@ -513,4 +519,13 @@ void Mesh::setYoungsModulus(double val)
 void Mesh::setThickness(double val)
 {
     h_ = val;
+}
+
+void Mesh::setIntrinsicLengthsToCurrentLengths()
+{
+    for(OMMesh::EdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
+    {
+        double length = mesh_->calc_edge_length(ei.handle());
+        mesh_->data(ei.handle()).setRestlen(length);
+    }
 }

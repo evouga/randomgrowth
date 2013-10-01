@@ -34,6 +34,7 @@ public:
 
     void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
     void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);
+    void setIntrinsicLengthsToCurrentLengths();
     int numdofs() const;
     int numedges() const;
     double getYoungsModulus() const;
