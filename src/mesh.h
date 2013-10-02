@@ -32,6 +32,9 @@ public:
                        Eigen::SparseMatrix<double> &hessq,
                        Eigen::SparseMatrix<double> &hessg) const;
 
+    bool relaxIntrinsicLengths();
+    double triangleInequalityLineSearch(const Eigen::VectorXd &q, const Eigen::VectorXd &g, const Eigen::VectorXd &dg) const;
+
     void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
     void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);
     void setIntrinsicLengthsToCurrentLengths();

@@ -99,6 +99,17 @@ template<typename T> T triarea(T len1, T len2, T len3)
     return sqrt(areasq)/4.0;
 }
 
+template<typename T> T triareapts(T *pt1, T *pt2, T *pt3)
+{
+    T side1[3];
+    diff(pt2, pt1, side1);
+    T side2[3];
+    diff(pt3, pt1, side2);
+    T crossvec[3];
+    cross(side1, side2, crossvec);
+    return 0.5*norm(crossvec);
+}
+
 template<typename T> T sintri(T side1, T side2, T oppside)
 {
     // s1 s2 sin theta = 2A
@@ -209,6 +220,22 @@ template<typename T> T dualarea(int numnbs, T *lens, T *rightopplens)
     return result;
 }
 
+template<typename T> T dualbarycentricarea(int numnbs, T *lens, T *rightopplens)
+{
+    T result = 0;
+    for(int i=0; i<numnbs; i++)
+    {
+        int nextidx = (i+1)%numnbs;
+        T side1 = lens[i];
+        T side2 = lens[nextidx];
+        T oppside = rightopplens[i];
+        T tmp = triarea(side1, side2, oppside);
+        result += tmp;
+    }
+
+    return result/3.0;
+}
+
 template<typename T> T dualarea(T *centpt, std::vector<T *> nbs)
 {
     int numnbs = nbs.size();
@@ -225,6 +252,22 @@ template<typename T> T dualarea(T *centpt, std::vector<T *> nbs)
     return result;
 }
 
+template<typename T> T dualbarycentricarea(T *centpt, std::vector<T *> nbs)
+{
+    int numnbs = nbs.size();
+    T result = 0;
+    for(int i=0; i<numnbs; i++)
+    {
+        int nextid = (i+1)%numnbs;
+        T *leftnb = nbs[i];
+        T *rightnb = nbs[nextid];
+        T tmp = triareapts(centpt, leftnb, rightnb);
+        result += tmp;
+    }
+
+    return result/3.0;
+}
+
 template<typename T> T K(T *centpt, std::vector<T *> nbs)
 {
     int numnbs = nbs.size();
@@ -237,7 +280,7 @@ template<typename T> T K(T *centpt, std::vector<T *> nbs)
         angsum += theta;
     }
     T angdeficit = 2*PI-angsum;
-    return angdeficit/dualarea(centpt, nbs);
+    return angdeficit/dualbarycentricarea(centpt, nbs);
 }
 
 template<typename T> void metrictri(T len1, T len2, T len3, T *g)
