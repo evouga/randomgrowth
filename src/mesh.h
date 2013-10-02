@@ -20,6 +20,16 @@ struct MyTraits : public OpenMesh::DefaultTraits
 
 typedef OpenMesh::TriMesh_ArrayKernelT<MyTraits> OMMesh;
 
+struct ProblemParameters
+{
+    double h;
+    double PoissonRatio;
+    double YoungsModulus;
+    int maxiters;
+    int maxlinesearchiters;
+    double tol;
+};
+
 class Mesh
 {
 public:
@@ -32,19 +42,15 @@ public:
                        Eigen::SparseMatrix<double> &hessq,
                        Eigen::SparseMatrix<double> &hessg) const;
 
-    bool relaxIntrinsicLengths(int maxiters, int maxlinesearchiters, double tol);
+    bool relaxIntrinsicLengths();
 
     void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
     void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);
     void setIntrinsicLengthsToCurrentLengths();
     int numdofs() const;
     int numedges() const;
-    double getYoungsModulus() const;
-    double getPoissonRatio() const;
-    double getThickness() const;
-    void setYoungsModulus(double val);
-    void setPoissonRatio(double val);
-    void setThickness(double val);
+    const ProblemParameters &getParameters() const;
+    void setParameters(ProblemParameters params);
 
     virtual void render(bool showWireframe, bool smoothShade);
 
@@ -59,9 +65,7 @@ private:
     double triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const;
 
     OMMesh *mesh_;
-    double YoungsModulus_;
-    double PoissonRatio_;
-    double h_;
+    ProblemParameters params_;
 };
 
 #endif // MESH_H

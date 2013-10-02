@@ -29,8 +29,8 @@ public:
     bool smoothShade() const;
     void repaintMesh();
     std::string launchImportOBJDialog();
-    void setParameters(double Youngs, double Poisson, double h);
-    void getParameters(double &Youngs, double &Poisson, double &h);
+    void setParameters(const ProblemParameters &params);
+    ProblemParameters getParameters();
 
 private slots:
     void on_actionExit_triggered();
@@ -52,6 +52,8 @@ private slots:
     void on_youngsModulusEdit_textEdited(const QString &arg1);
 
     void on_thicknessEdit_textEdited(const QString &arg1);
+
+    void on_findMetricButton_clicked();
 
 private:
     void updateGL();

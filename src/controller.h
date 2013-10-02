@@ -17,6 +17,7 @@ public:
     void exportOBJ(const char *filename);
     void importOBJ(const char *filename);
     void updateParameters();
+    void findMetric();
 
 private:
     MainWindow &mw_;

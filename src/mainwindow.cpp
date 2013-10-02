@@ -91,18 +91,20 @@ void MainWindow::updateGL()
     ui->GLwidget->updateGL();
 }
 
-void MainWindow::setParameters(double Youngs, double Poisson, double h)
+void MainWindow::setParameters(const ProblemParameters &params)
 {
-    ui->youngsModulusEdit->setText(QString::number(Youngs));
-    ui->poissonRatioEdit->setText(QString::number(Poisson));
-    ui->thicknessEdit->setText(QString::number(h));
+    ui->youngsModulusEdit->setText(QString::number(params.YoungsModulus));
+    ui->poissonRatioEdit->setText(QString::number(params.PoissonRatio));
+    ui->thicknessEdit->setText(QString::number(params.h));
 }
 
-void MainWindow::getParameters(double &Youngs, double &Poisson, double &h)
+ProblemParameters MainWindow::getParameters()
 {
-    Youngs = ui->youngsModulusEdit->text().toDouble();
-    Poisson = ui->poissonRatioEdit->text().toDouble();
-    h = ui->thicknessEdit->text().toDouble();
+    ProblemParameters result;
+    result.YoungsModulus = ui->youngsModulusEdit->text().toDouble();
+    result.PoissonRatio  = ui->poissonRatioEdit->text().toDouble();
+    result.h = ui->thicknessEdit->text().toDouble();
+    return result;
 }
 
 void MainWindow::on_actionExit_triggered()
@@ -171,4 +173,10 @@ void MainWindow::on_youngsModulusEdit_textEdited(const QString &)
 void MainWindow::on_thicknessEdit_textEdited(const QString &)
 {
     cont_->updateParameters();
+}
+
+void MainWindow::on_findMetricButton_clicked()
+{
+    cont_->findMetric();
+    updateGL();
 }

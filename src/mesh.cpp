@@ -7,9 +7,14 @@ using namespace Eigen;
 using namespace OpenMesh;
 using namespace std;
 
-Mesh::Mesh() :
-    YoungsModulus_(1.0), PoissonRatio_(0.5), h_(1.0)
+Mesh::Mesh()
 {
+    params_.h = 1;
+    params_.YoungsModulus = 1;
+    params_.PoissonRatio = 0.5;
+    params_.maxiters = 15;
+    params_.maxlinesearchiters = 10;
+    params_.tol = 1e-6;
     mesh_ = new OMMesh();
 }
 
@@ -203,40 +208,19 @@ bool Mesh::importOBJ(const char *filename)
     bool success = OpenMesh::IO::read_mesh(*mesh_, filename, opt);
     mesh_->update_normals();
 
-    setIntrinsicLengthsToCurrentLengths();
-    relaxIntrinsicLengths(15, 10, 1e-8);
+    setIntrinsicLengthsToCurrentLengths();    
 
     return success;
 }
 
-double Mesh::getPoissonRatio() const
+const ProblemParameters &Mesh::getParameters() const
 {
-    return PoissonRatio_;
+    return params_;
 }
 
-double Mesh::getYoungsModulus() const
+void Mesh::setParameters(ProblemParameters params)
 {
-    return YoungsModulus_;
-}
-
-double Mesh::getThickness() const
-{
-    return h_;
-}
-
-void Mesh::setPoissonRatio(double val)
-{
-    PoissonRatio_ = val;
-}
-
-void Mesh::setYoungsModulus(double val)
-{
-    YoungsModulus_ = val;
-}
-
-void Mesh::setThickness(double val)
-{
-    h_ = val;
+    params_ = params;
 }
 
 void Mesh::setIntrinsicLengthsToCurrentLengths()

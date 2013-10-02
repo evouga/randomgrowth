@@ -28,7 +28,7 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
     vector<Tr> Hgcoeffs;
 
     // bending energy
-    double bendcoeff = h_*h_*h_*YoungsModulus_/24.0/(1.0+PoissonRatio_);
+    double bendcoeff = params_.h*params_.h*params_.h*params_.YoungsModulus/24.0/(1.0+params_.PoissonRatio);
     for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
     {
         if(mesh_->is_boundary(vi.handle()))
@@ -36,7 +36,7 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
 
         F<F<double> > stencilenergy = 0;
         // bending energy Laplacian term
-        double Lcoeff = 1.0/(1.0-PoissonRatio_);
+        double Lcoeff = 1.0/(1.0-params_.PoissonRatio);
         vector<double> spokelens;
         vector<int> spokeidx;
         vector<double> rightopplens;
@@ -248,7 +248,7 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
     }
 
     // Stretching energy
-    double stretchcoeff = h_*YoungsModulus_/8.0/(1.0+PoissonRatio_);
+    double stretchcoeff = params_.h*params_.YoungsModulus/8.0/(1.0+params_.PoissonRatio);
 
     for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
     {
@@ -313,7 +313,7 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
         ginva[0] -= 1.0;
         ginva[3] -= 1.0;
         F<F<double> > matarea = 0.5*sqrt(det(g));
-        stencilenergy += matarea*stretchcoeff/(1.0-PoissonRatio_)*tr(ginva)*tr(ginva);
+        stencilenergy += matarea*stretchcoeff/(1.0-params_.PoissonRatio)*tr(ginva)*tr(ginva);
         stencilenergy += matarea*stretchcoeff*-2.0*det(ginva);
 
         energy += stencilenergy.val().val();
@@ -402,7 +402,7 @@ double Mesh::triangleInequalityLineSearch(double g0, double g1, double g2, doubl
     return cand;
 }
 
-bool Mesh::relaxIntrinsicLengths(int maxiters, int maxlinesearchiters, double tol)
+bool Mesh::relaxIntrinsicLengths()
 {
     VectorXd q(numdofs());
     VectorXd g(numedges());
@@ -417,18 +417,18 @@ bool Mesh::relaxIntrinsicLengths(int maxiters, int maxlinesearchiters, double to
 
     elasticEnergy(q, g, energy, dq, dg, hq, hg);
 
-    for(int i=0; i<maxiters; i++)
+    for(int i=0; i<params_.maxiters; i++)
     {
-        if(dg.norm() < tol)
+        if(dg.norm() < params_.tol)
             break;
         SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
         solver.compute(hg);
         VectorXd searchdir = -solver.solve(dg);
-        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << " \t E " << energy << " \t |dg| " << dg.norm() << " \t |dq| " << dq.norm() << " \t sd = " << searchdir.dot(dg);
+        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << "   E " << energy << "   |dg| " << dg.norm() << "   |dq| " << dq.norm() << "   sd = " << searchdir.dot(dg);
 
         double stepsize = triangleInequalityLineSearch(g, searchdir);
         stepsize = std::min(1.0, 0.9*stepsize);
-        std::cout << std::fixed << std::setprecision(8) << " \t h0 = " << stepsize;
+        std::cout << std::fixed << std::setprecision(8) << "   h0 = " << stepsize;
         double initialenergy = energy;
 
         VectorXd newg;
@@ -440,7 +440,7 @@ bool Mesh::relaxIntrinsicLengths(int maxiters, int maxlinesearchiters, double to
             newg = g + stepsize*searchdir;
             elasticEnergy(q, newg, energy, dq, dg, hq, hg);
             stepsize /= 2.0;
-            if(++lsiters > maxlinesearchiters)
+            if(++lsiters > params_.maxlinesearchiters)
             {
                 abort = true;
                 break;
@@ -452,10 +452,10 @@ bool Mesh::relaxIntrinsicLengths(int maxiters, int maxlinesearchiters, double to
             break;
 
         g = newg;
-        std::cout << std::fixed << std::setprecision(8) << " \t h " << stepsize*2.0 << std::endl;
+        std::cout << std::fixed << std::setprecision(8) << "   h " << stepsize*2.0 << std::endl;
     }
     dofsToGeometry(q, g);
-    if(dg.norm() < tol)
+    if(dg.norm() < params_.tol)
     {
         std::cout << "Converged, final E " << energy << std::endl;
         return true;

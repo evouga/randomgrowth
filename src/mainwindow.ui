@@ -104,9 +104,26 @@
             <bool>true</bool>
            </property>
           </widget>
-          <zorder>smoothShadeCheckBox</zorder>
-          <zorder>wireframeCheckBox</zorder>
-          <zorder>renderingBox</zorder>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="algorithmsBox">
+          <property name="title">
+           <string>Algorithms</string>
+          </property>
+          <widget class="QPushButton" name="findMetricButton">
+           <property name="geometry">
+            <rect>
+             <x>30</x>
+             <y>30</y>
+             <width>161</width>
+             <height>27</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Find Material Metric</string>
+           </property>
+          </widget>
          </widget>
         </item>
         <item>
@@ -183,13 +200,6 @@
             </rect>
            </property>
           </widget>
-          <zorder>youngsModulusEdit</zorder>
-          <zorder>poissonRatioEdit</zorder>
-          <zorder>youngsModulusLabel</zorder>
-          <zorder>poissonRatioLabel</zorder>
-          <zorder>thicknessLabel</zorder>
-          <zorder>thicknessEdit</zorder>
-          <zorder>parameterBox</zorder>
          </widget>
         </item>
        </layout>

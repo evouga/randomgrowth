@@ -13,10 +13,8 @@ using namespace Eigen;
 
 Controller::Controller(MainWindow &mw) : mw_(mw), m_()
 {
-    double Youngs = m_.getYoungsModulus();
-    double Poisson = m_.getPoissonRatio();
-    double h = m_.getThickness();
-    mw_.setParameters(Youngs, Poisson, h);
+    ProblemParameters params = m_.getParameters();
+    mw_.setParameters(params);
 }
 
 void Controller::quit()
@@ -62,9 +60,11 @@ void Controller::importOBJ(const char *filename)
 
 void Controller::updateParameters()
 {
-    double Youngs, Poisson, h;
-    mw_.getParameters(Youngs, Poisson, h);
-    m_.setYoungsModulus(Youngs);
-    m_.setPoissonRatio(Poisson);
-    m_.setThickness(h);
+    ProblemParameters params = mw_.getParameters();
+    m_.setParameters(params);
+}
+
+void Controller::findMetric()
+{
+    m_.relaxIntrinsicLengths();
 }
