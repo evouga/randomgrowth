@@ -96,6 +96,9 @@ void MainWindow::setParameters(const ProblemParameters &params)
     ui->youngsModulusEdit->setText(QString::number(params.YoungsModulus));
     ui->poissonRatioEdit->setText(QString::number(params.PoissonRatio));
     ui->thicknessEdit->setText(QString::number(params.h));
+    ui->maxitersEdit->setText(QString::number(params.maxiters));
+    ui->maxlsitersEdit->setText(QString::number(params.maxlinesearchiters));
+    ui->tolEdit->setText(QString::number(params.tol));
 }
 
 ProblemParameters MainWindow::getParameters()
@@ -104,6 +107,9 @@ ProblemParameters MainWindow::getParameters()
     result.YoungsModulus = ui->youngsModulusEdit->text().toDouble();
     result.PoissonRatio  = ui->poissonRatioEdit->text().toDouble();
     result.h = ui->thicknessEdit->text().toDouble();
+    result.maxiters = ui->maxitersEdit->text().toInt();
+    result.maxlinesearchiters = ui->maxlsitersEdit->text().toInt();
+    result.tol = ui->tolEdit->text().toDouble();
     return result;
 }
 
@@ -179,4 +185,19 @@ void MainWindow::on_findMetricButton_clicked()
 {
     cont_->findMetric();
     updateGL();
+}
+
+void MainWindow::on_maxitersEdit_textEdited(const QString &)
+{
+    cont_->updateParameters();
+}
+
+void MainWindow::on_maxlsitersEdit_textEdited(const QString &)
+{
+    cont_->updateParameters();
+}
+
+void MainWindow::on_tolEdit_textEdited(const QString &)
+{
+    cont_->updateParameters();
 }

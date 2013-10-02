@@ -55,6 +55,12 @@ private slots:
 
     void on_findMetricButton_clicked();
 
+    void on_maxitersEdit_textEdited(const QString &arg1);
+
+    void on_maxlsitersEdit_textEdited(const QString &arg1);
+
+    void on_tolEdit_textEdited(const QString &arg1);
+
 private:
     void updateGL();
     Ui::MainWindow *ui;
