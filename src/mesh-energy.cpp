@@ -1,6 +1,7 @@
 #include "mesh.h"
 #include <fadbad.h>
 #include <fadiff.h>
+#include <iomanip>
 #include "autodifftemplates.h"
 
 using namespace std;
@@ -27,8 +28,6 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
     vector<Tr> Hgcoeffs;
 
     // bending energy
-    std::cout << "bending energy" << std::endl;
-
     double bendcoeff = h_*h_*h_*YoungsModulus_/24.0/(1.0+PoissonRatio_);
     for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
     {
@@ -170,8 +169,6 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
             delete[] nbdq[i];
             delete[] nbddq[i];
         }
-        if(stencilenergy.val().val() < 0)
-            std::cout << "stencil energy " << stencilenergy.val().val() << std::endl;
         energy += stencilenergy.val().val();
         for(int j=0; j<3; j++)
         {
@@ -250,9 +247,6 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
         }
     }
 
-    std::cout << energy << std::endl;
-
-    std::cout << "stretching energy" << std::endl;
     // Stretching energy
     double stretchcoeff = h_*YoungsModulus_/8.0/(1.0+PoissonRatio_);
 
@@ -362,7 +356,53 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
     hessg.setFromTriplets(Hgcoeffs.begin(), Hgcoeffs.end());
 }
 
-bool Mesh::relaxIntrinsicLengths()
+double Mesh::triangleInequalityLineSearch(const VectorXd &g, const VectorXd &dg) const
+{
+    assert(g.size() == numedges());
+    assert(dg.size() == numedges());
+
+    double maxt = std::numeric_limits<double>::infinity();
+
+    for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
+    {
+        vector<double> gs;
+        vector<double> dgs;
+        for(OMMesh::FaceEdgeIter fei = mesh_->fe_iter(fi.handle()); fei; ++fei)
+        {
+            gs.push_back(g[fei.handle().idx()]);
+            dgs.push_back(dg[fei.handle().idx()]);
+        }
+        assert(gs.size() == 3);
+        for(int i=0; i<3; i++)
+        {
+            int idx[3];
+            for(int j=0; j<3; j++)
+            {
+                idx[j] = (i+j)%3;
+            }
+            double thismax = triangleInequalityLineSearch(gs[idx[0]], gs[idx[1]], gs[idx[2]],
+                    dgs[idx[0]], dgs[idx[1]], dgs[idx[2]]);
+
+            maxt = std::min(maxt, thismax);
+        }
+    }
+
+    return maxt;
+}
+
+double Mesh::triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const
+{
+    double num = g0+g1-g2;
+    double denom = dg2-dg0-dg1;
+    if(denom == 0)
+        return std::numeric_limits<double>::infinity();
+    double cand = num/denom;
+    if(cand < 0)
+        return std::numeric_limits<double>::infinity();
+    return cand;
+}
+
+bool Mesh::relaxIntrinsicLengths(int maxiters, int maxlinesearchiters, double tol)
 {
     VectorXd q(numdofs());
     VectorXd g(numedges());
@@ -376,23 +416,50 @@ bool Mesh::relaxIntrinsicLengths()
     double energy;
 
     elasticEnergy(q, g, energy, dq, dg, hq, hg);
-    std::cout << "Initial energy: " << energy << std::endl;
 
-    for(int i=0; i<3; i++)
+    for(int i=0; i<maxiters; i++)
     {
-
+        if(dg.norm() < tol)
+            break;
         SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
         solver.compute(hg);
         VectorXd searchdir = -solver.solve(dg);
-        std::cout << "searchdir dot " << searchdir.dot(dg) << endl;
-        VectorXd testq(numedges());
-        testq.setZero();
-        testq[0] += 1.0;
+        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << " \t E " << energy << " \t |dg| " << dg.norm() << " \t |dq| " << dq.norm() << " \t sd = " << searchdir.dot(dg);
 
-        g += 0.5*searchdir;
-        elasticEnergy(q, g, energy, dq, dg, hq, hg);
-        std::cout << "new energy " << energy << std::endl;
+        double stepsize = triangleInequalityLineSearch(g, searchdir);
+        stepsize = std::min(1.0, 0.9*stepsize);
+        std::cout << std::fixed << std::setprecision(8) << " \t h0 = " << stepsize;
+        double initialenergy = energy;
+
+        VectorXd newg;
+        int lsiters = 0;
+        bool abort = false;
+
+        do
+        {
+            newg = g + stepsize*searchdir;
+            elasticEnergy(q, newg, energy, dq, dg, hq, hg);
+            stepsize /= 2.0;
+            if(++lsiters > maxlinesearchiters)
+            {
+                abort = true;
+                break;
+            }
+        }
+        while(energy > initialenergy);
+
+        if(abort)
+            break;
+
+        g = newg;
+        std::cout << std::fixed << std::setprecision(8) << " \t h " << stepsize*2.0 << std::endl;
     }
-
-    return true;
+    dofsToGeometry(q, g);
+    if(dg.norm() < tol)
+    {
+        std::cout << "Converged, final E " << energy << std::endl;
+        return true;
+    }
+    std::cout << "Failed to converge" << std::endl;
+    return false;
 }

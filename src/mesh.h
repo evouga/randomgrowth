@@ -32,8 +32,7 @@ public:
                        Eigen::SparseMatrix<double> &hessq,
                        Eigen::SparseMatrix<double> &hessg) const;
 
-    bool relaxIntrinsicLengths();
-    double triangleInequalityLineSearch(const Eigen::VectorXd &q, const Eigen::VectorXd &g, const Eigen::VectorXd &dg) const;
+    bool relaxIntrinsicLengths(int maxiters, int maxlinesearchiters, double tol);
 
     void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
     void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);
@@ -56,6 +55,8 @@ public:
 
 private:
     void edgeEndpoints(OMMesh::EdgeHandle eh, OMMesh::Point &pt1, OMMesh::Point &pt2);
+    double triangleInequalityLineSearch(const Eigen::VectorXd &g, const Eigen::VectorXd &dg) const;
+    double triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const;
 
     OMMesh *mesh_;
     double YoungsModulus_;

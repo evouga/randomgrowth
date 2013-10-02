@@ -204,7 +204,8 @@ bool Mesh::importOBJ(const char *filename)
     mesh_->update_normals();
 
     setIntrinsicLengthsToCurrentLengths();
-    relaxIntrinsicLengths();
+    relaxIntrinsicLengths(15, 10, 1e-8);
+
     return success;
 }
 
