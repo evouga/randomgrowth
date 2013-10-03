@@ -1,7 +1,5 @@
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include "mesh.h"
-#include <GL/gl.h>
-
 
 using namespace Eigen;
 using namespace OpenMesh;
@@ -61,93 +59,6 @@ void Mesh::dofsToGeometry(const VectorXd &q, const VectorXd &g)
     for(int i=0; i<(int)mesh_->n_edges(); i++)
     {
         mesh_->data(mesh_->edge_handle(i)).setRestlen(g[i]);
-    }
-}
-
-void Mesh::render(bool showWireframe, bool smoothShade)
-{
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_DITHER);
-
-    glPolygonOffset(1.0, 1.0);
-    glEnable(GL_POLYGON_OFFSET_FILL);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    if(smoothShade)
-    {
-        glShadeModel(GL_SMOOTH);
-    }
-    else
-    {
-        glShadeModel(GL_FLAT);
-    }
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-
-    static vector<GLfloat> colors;
-    static vector<int> indices;
-    static vector<GLfloat> pos;
-    static vector<GLfloat> normal;
-
-    colors.clear();
-    indices.clear();
-    pos.clear();
-    normal.clear();
-
-    for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
-    {
-        for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fi.handle()); fvi; ++fvi)
-        {
-            Vector3d color(0.0, 186/255., 0.0);
-            OMMesh::VertexHandle v = fvi.handle();
-            OMMesh::Point pt = mesh_->point(v);
-            OMMesh::Point n;
-            mesh_->calc_vertex_normal_correct(v, n);
-            n.normalize();
-            for(int j=0; j<3; j++)
-            {
-                pos.push_back(pt[j]);
-                normal.push_back(n[j]);
-                colors.push_back(color[j]);
-            }
-        }
-    }
-
-    glVertexPointer(3, GL_FLOAT, 0, &pos[0]);
-    glNormalPointer(GL_FLOAT, 0, &normal[0]);
-    glColorPointer(3, GL_FLOAT, 0, &colors[0]);
-
-    int idx=0;
-    for (int i=0; i<(int)mesh_->n_faces(); i++)
-    {
-        for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(mesh_->face_handle(i)); fvi; ++fvi)
-        {
-            indices.push_back(idx++);
-        }
-    }
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, &indices[0]);
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-    glDisable(GL_POLYGON_OFFSET_FILL);
-
-    if(showWireframe)
-    {
-        glLineWidth(1.0);
-        glBegin(GL_LINES);
-        for(OMMesh::ConstEdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
-        {
-            glColor3f(0.0, 0.0, 0.0);
-            OMMesh::Point pt1, pt2;
-            edgeEndpoints(ei.handle(), pt1, pt2);
-            glVertex3d(pt1[0], pt1[1], pt1[2]);
-            glVertex3d(pt2[0], pt2[1], pt2[2]);
-        }
-        glEnd();
     }
 }
 
@@ -230,4 +141,32 @@ void Mesh::setIntrinsicLengthsToCurrentLengths()
         double length = mesh_->calc_edge_length(ei.handle());
         mesh_->data(ei.handle()).setRestlen(length);
     }
+}
+
+double Mesh::strainDensity(int edgeidx) const
+{
+    OMMesh::EdgeHandle eh = mesh_->edge_handle(edgeidx);
+    OMMesh::HalfedgeHandle heh = mesh_->halfedge_handle(eh, 0);
+    OMMesh::VertexHandle vh1 = mesh_->to_vertex_handle(heh);
+    OMMesh::VertexHandle vh2 = mesh_->from_vertex_handle(heh);
+    OMMesh::Point pt1 = mesh_->point(vh1);
+    OMMesh::Point pt2 = mesh_->point(vh2);
+
+    Vector3d edgevec(pt1[0]-pt2[0], pt1[1]-pt2[1],pt1[2]-pt2[2]);
+    double l = edgevec.norm();
+    double L = mesh_->data(eh).restlen();
+    return (l-L)/L;
+}
+
+double Mesh::vertexStrainDensity(int vertidx) const
+{
+    OMMesh::VertexHandle vh = mesh_->vertex_handle(vertidx);
+    double totstrain = 0;
+    int numedges = 0;
+    for(OMMesh::VertexEdgeIter vei = mesh_->ve_iter(vh); vei; ++vei)
+    {
+        totstrain += strainDensity(vei.handle().idx());
+        numedges ++;
+    }
+    return totstrain/numedges;
 }

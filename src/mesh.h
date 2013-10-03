@@ -5,6 +5,8 @@
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 
+const double PI = 3.14159265359;
+
 struct MyTraits : public OpenMesh::DefaultTraits
 {
     EdgeTraits
@@ -44,9 +46,6 @@ public:
 
     bool relaxIntrinsicLengths();
 
-    void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
-    void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);
-    void setIntrinsicLengthsToCurrentLengths();
     int numdofs() const;
     int numedges() const;
     const ProblemParameters &getParameters() const;
@@ -60,9 +59,19 @@ public:
     bool importOBJ(const char *filename);
 
 private:
+    void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
+    void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);
+    void setIntrinsicLengthsToCurrentLengths();
     void edgeEndpoints(OMMesh::EdgeHandle eh, OMMesh::Point &pt1, OMMesh::Point &pt2);
     double triangleInequalityLineSearch(const Eigen::VectorXd &g, const Eigen::VectorXd &dg) const;
     double triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const;
+
+    double strainDensity(int edgeidx) const;
+    double vertexStrainDensity(int vertidx) const;
+
+    Eigen::Vector3d colormap(double val) const;
+    Eigen::Vector3d colormap(double val, double max) const;
+    Eigen::Vector3d HSLtoRGB(const Eigen::Vector3d &hsl) const;
 
     OMMesh *mesh_;
     ProblemParameters params_;

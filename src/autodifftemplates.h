@@ -3,8 +3,6 @@
 
 #include <vector>
 
-const double PI = 3.14159265359;
-
 template<typename T> void diff(const T *vec1, const T *vec2, T *difference)
 {
     for(int i=0; i<3; i++)
