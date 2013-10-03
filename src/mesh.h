@@ -51,6 +51,7 @@ public:
                         Eigen::SparseMatrix<double> &hessq) const;
 
     bool relaxIntrinsicLengths();
+    bool relaxEmbedding();
 
     int numdofs() const;
     int numedges() const;

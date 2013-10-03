@@ -68,3 +68,8 @@ void Controller::findMetric()
 {
     m_.relaxIntrinsicLengths();
 }
+
+void Controller::relaxEmbedding()
+{
+    m_.relaxEmbedding();
+}

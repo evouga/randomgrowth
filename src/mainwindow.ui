@@ -130,6 +130,19 @@
             <string>Find Material Metric</string>
            </property>
           </widget>
+          <widget class="QPushButton" name="relaxEmbeddingButton">
+           <property name="geometry">
+            <rect>
+             <x>30</x>
+             <y>60</y>
+             <width>161</width>
+             <height>27</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Relax Embedding</string>
+           </property>
+          </widget>
          </widget>
         </item>
         <item>

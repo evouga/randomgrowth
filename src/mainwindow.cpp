@@ -201,3 +201,8 @@ void MainWindow::on_tolEdit_textEdited(const QString &)
 {
     cont_->updateParameters();
 }
+
+void MainWindow::on_relaxEmbeddingButton_clicked()
+{
+    cont_->relaxEmbedding();
+}

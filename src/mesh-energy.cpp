@@ -74,7 +74,7 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
         vector<double> rightopplens;
         vector<int> rightoppidx;
 
-        vector<OMMesh::Point> nbq;
+        vector<Vector3d> nbq;
         vector<int> nbidx;
         for(OMMesh::VertexOHalfedgeIter voh = mesh_->voh_iter(vi.handle()); voh; ++voh)
         {
@@ -102,7 +102,7 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
             rightoppidx.push_back(oidx);
 
             OMMesh::VertexHandle vh = mesh_->to_vertex_handle(heh);
-            nbq.push_back(mesh_->point(vh));
+            nbq.push_back(q.segment<3>(3*vh.idx()));
             nbidx.push_back(vh.idx());
         }
 
@@ -145,10 +145,10 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
         F<double> dq[3];
         F<F<double> > ddq[3];
         int vidx = vi.handle().idx();
-        OMMesh::Point q = mesh_->point(vi.handle());
+        Vector3d thisq = q.segment<3>(3*vi.handle().idx());
         for(int i=0; i<3; i++)
         {
-            dq[i] = q[i];
+            dq[i] = thisq[i];
             if(derivs & Q)
                 dq[i].diff(i,diffvars);
             ddq[i] = dq[i];
@@ -260,7 +260,7 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
                 {
                     for(int l=0; l<3; l++)
                     {
-                        double hess = stencilenergy.d(j).d(3+3*k+j);
+                        double hess = stencilenergy.d(j).d(3+3*k+l);
                         if(hess != 0)
                         {
                             Hqcoeffs.push_back(Tr(3*vidx+j,3*nbidx[k]+l,hess));
@@ -323,14 +323,14 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
     {
         F<F<double> > stencilenergy = 0;
         int vidx[3];
-        OMMesh::Point pts[3];
+        Vector3d pts[3];
         double elens[3];
         int eidx[3];
         int idx=0;
         for(OMMesh::FaceHalfedgeIter fei = mesh_->fh_iter(fi.handle()); fei; ++fei)
         {
             vidx[idx] = mesh_->to_vertex_handle(fei.handle()).idx();
-            pts[idx] = mesh_->point(mesh_->to_vertex_handle(fei.handle()));
+            pts[idx] = q.segment<3>(3*mesh_->to_vertex_handle(fei.handle()).idx());
             int eid = mesh_->edge_handle(fei.handle()).idx();
             eidx[idx] = eid;
             elens[idx] = g[eid];
@@ -526,29 +526,101 @@ bool Mesh::relaxIntrinsicLengths()
 
         VectorXd newg;
         int lsiters = 0;
-        bool abort = false;
+        bool abort = searchdir.dot(dg) > 0;
 
-        do
+        if(!abort)
         {
-            newg = g + stepsize*searchdir;
-            elasticEnergyG(q, newg, energy, dg, hg);
-            stepsize /= 2.0;
-            if(++lsiters > params_.maxlinesearchiters)
+            do
             {
-                abort = true;
-                break;
+                newg = g + stepsize*searchdir;
+                elasticEnergyG(q, newg, energy, dg, hg);
+                stepsize /= 2.0;
+                if(++lsiters > params_.maxlinesearchiters)
+                {
+                    abort = true;
+                    break;
+                }
             }
+            while(energy > initialenergy);
         }
-        while(energy > initialenergy);
 
         if(abort)
+        {
+            std::cout << std::endl;
             break;
+        }
 
         g = newg;
         std::cout << std::fixed << std::setprecision(8) << "   h " << stepsize*2.0 << std::endl;
     }
     dofsToGeometry(q, g);
     if(dg.norm() < params_.tol)
+    {
+        std::cout << "Converged, final E " << energy << std::endl;
+        return true;
+    }
+    std::cout << "Failed to converge" << std::endl;
+    return false;
+}
+
+bool Mesh::relaxEmbedding()
+{
+    VectorXd q(numdofs());
+    VectorXd g(numedges());
+    dofsFromGeometry(q, g);
+
+    VectorXd dq(numdofs());
+
+    SparseMatrix<double> hq;
+
+    double energy;
+
+    elasticEnergyQ(q, g, energy, dq, hq);
+
+    for(int i=0; i<params_.maxiters; i++)
+    {
+        if(dq.norm() < params_.tol)
+            break;
+        SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
+        solver.compute(hq);
+        VectorXd searchdir = -solver.solve(dq);
+        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << "   E " << energy << "   |dq| " << dq.norm() << "   sd = " << searchdir.dot(dq);
+
+        double stepsize = 1.0;
+        double initialenergy = energy;
+
+        VectorXd newq;
+        int lsiters = 0;
+
+        bool abort = searchdir.dot(dq) > 0;
+
+        if(!abort)
+        {
+            do
+            {
+                newq = q + stepsize*searchdir;
+                elasticEnergyQ(newq, g, energy, dq, hq);
+                stepsize /= 2.0;
+                if(++lsiters > params_.maxlinesearchiters)
+                {
+                    abort = true;
+                    break;
+                }
+            }
+            while(energy > initialenergy);
+        }
+
+        if(abort)
+        {
+            std::cout << endl;
+            break;
+        }
+
+        q = newq;
+        std::cout << std::fixed << std::setprecision(8) << "   h " << stepsize*2.0 << std::endl;
+    }
+    dofsToGeometry(q, g);
+    if(dq.norm() < params_.tol)
     {
         std::cout << "Converged, final E " << energy << std::endl;
         return true;

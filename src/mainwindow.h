@@ -61,6 +61,8 @@ private slots:
 
     void on_tolEdit_textEdited(const QString &arg1);
 
+    void on_relaxEmbeddingButton_clicked();
+
 private:
     void updateGL();
     Ui::MainWindow *ui;

@@ -18,6 +18,7 @@ public:
     void importOBJ(const char *filename);
     void updateParameters();
     void findMetric();
+    void relaxEmbedding();
 
 private:
     MainWindow &mw_;
