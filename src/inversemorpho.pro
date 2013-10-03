@@ -26,8 +26,8 @@ SOURCES += main.cpp\
     camera.cpp \
     yimage.cpp \
     controller.cpp \
-    mesh-energy.cpp \
-    mesh-rendering.cpp
+    mesh-rendering.cpp \
+    mesh-optimization.cpp
 
 HEADERS  += mainwindow.h \
     mesh.h \
