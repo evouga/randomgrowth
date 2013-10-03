@@ -38,11 +38,17 @@ public:
     Mesh();
 
     void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
-                       double &energy,
-                       Eigen::VectorXd &gradq,
-                       Eigen::VectorXd &gradg,
-                       Eigen::SparseMatrix<double> &hessq,
-                       Eigen::SparseMatrix<double> &hessg) const;
+                        double &energy) const;
+
+    void elasticEnergyG(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
+                        double &energy,
+                        Eigen::VectorXd &gradg,
+                        Eigen::SparseMatrix<double> &hessg) const;
+
+    void elasticEnergyQ(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
+                        double &energy,
+                        Eigen::VectorXd &gradq,
+                        Eigen::SparseMatrix<double> &hessq) const;
 
     bool relaxIntrinsicLengths();
 
@@ -59,6 +65,13 @@ public:
     bool importOBJ(const char *filename);
 
 private:
+    enum EnergyDerivatives
+    {
+        NONE = 0,
+        Q = 1,
+        G = 2
+    };
+
     void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
     void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);
     void setIntrinsicLengthsToCurrentLengths();
@@ -68,6 +81,15 @@ private:
 
     double strainDensity(int edgeidx) const;
     double vertexStrainDensity(int vertidx) const;
+
+    void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
+                       double &energy,
+                       Eigen::VectorXd &gradq,
+                       Eigen::VectorXd &gradg,
+                       Eigen::SparseMatrix<double> &hessq,
+                       Eigen::SparseMatrix<double> &hessg,
+                       EnergyDerivatives derivs) const;
+
 
     Eigen::Vector3d colormap(double val) const;
     Eigen::Vector3d colormap(double val, double max) const;
