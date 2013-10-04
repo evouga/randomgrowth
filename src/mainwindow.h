@@ -63,6 +63,10 @@ private slots:
 
     void on_relaxEmbeddingButton_clicked();
 
+    void on_maxpoweritersEdit_textEdited(const QString &arg1);
+
+    void on_poweritertolEdit_textEdited(const QString &arg1);
+
 private:
     void updateGL();
     Ui::MainWindow *ui;

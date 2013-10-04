@@ -11,35 +11,53 @@ using namespace OpenMesh;
 
 typedef Eigen::Triplet<double> Tr;
 
-void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy) const
+void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energyB, double &energyS) const
 {
     EnergyDerivatives derivs = NONE;
     VectorXd gradq, gradg;
     SparseMatrix<double> hessq, hessg;
-    elasticEnergy(q, g, energy, gradq, gradg, hessq, hessg, derivs);
+    elasticEnergy(q, g, energyB, energyS, gradq, gradg, hessq, hessg, derivs);
 }
 
-void Mesh::elasticEnergyG(const VectorXd &q, const VectorXd &g, double &energy, VectorXd &gradg, Eigen::SparseMatrix<double> &hessg) const
+void Mesh::elasticEnergyG(const VectorXd &q,
+                          const VectorXd &g,
+                          double &energyB,
+                          double &energyS,
+                          VectorXd &gradg,
+                          Eigen::SparseMatrix<double> &hessg) const
 {
     EnergyDerivatives derivs = G;
     VectorXd gradq;
     SparseMatrix<double> hessq;
-    elasticEnergy(q, g, energy, gradq, gradg, hessq, hessg, derivs);
+    elasticEnergy(q, g, energyB, energyS, gradq, gradg, hessq, hessg, derivs);
 }
 
-void Mesh::elasticEnergyQ(const VectorXd &q, const VectorXd &g, double &energy, VectorXd &gradq, Eigen::SparseMatrix<double> &hessq) const
+void Mesh::elasticEnergyQ(const VectorXd &q,
+                          const VectorXd &g,
+                          double &energyB,
+                          double &energyS,
+                          VectorXd &gradq,
+                          Eigen::SparseMatrix<double> &hessq) const
 {
     EnergyDerivatives derivs = Q;
     VectorXd gradg;
     SparseMatrix<double> hessg;
-    elasticEnergy(q, g, energy, gradq, gradg, hessq, hessg, derivs);
+    elasticEnergy(q, g, energyB, energyS, gradq, gradg, hessq, hessg, derivs);
 }
 
-void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, VectorXd &gradq, VectorXd &gradg, Eigen::SparseMatrix<double> &hessq, Eigen::SparseMatrix<double> &hessg, EnergyDerivatives derivs) const
+void Mesh::elasticEnergy(const VectorXd &q,
+                         const VectorXd &g,
+                         double &energyB,
+                         double &energyS,
+                         VectorXd &gradq,
+                         VectorXd &gradg,
+                         Eigen::SparseMatrix<double> &hessq,
+                         Eigen::SparseMatrix<double> &hessg,
+                         EnergyDerivatives derivs) const
 {
     assert(q.size() == numdofs());
     assert(g.size() == numedges());
-    energy = 0;
+    energyB = energyS = 0;
 
     if(derivs & Q)
     {
@@ -220,7 +238,7 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
             delete[] nbdq[i];
             delete[] nbddq[i];
         }
-        energy += stencilenergy.val().val();
+        energyB += stencilenergy.val().val();
 
         if(derivs & Q)
         {
@@ -398,7 +416,7 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energy, V
         stencilenergy += matarea*stretchcoeff/(1.0-params_.PoissonRatio)*tr(ginva)*tr(ginva);
         stencilenergy += matarea*stretchcoeff*-2.0*det(ginva);
 
-        energy += stencilenergy.val().val();
+        energyS += stencilenergy.val().val();
 
         for(int i=0; i<3; i++)
         {
@@ -506,9 +524,9 @@ bool Mesh::relaxIntrinsicLengths()
 
     SparseMatrix<double> hg;
 
-    double energy;
+    double energyB, energyS;
 
-    elasticEnergyG(q, g, energy, dg, hg);
+    elasticEnergyG(q, g, energyB, energyS, dg, hg);
 
     for(int i=0; i<params_.maxiters; i++)
     {
@@ -517,12 +535,12 @@ bool Mesh::relaxIntrinsicLengths()
         SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
         solver.compute(hg);
         VectorXd searchdir = -solver.solve(dg);
-        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << "   E " << energy << "   |dg| " << dg.norm() << "   sd = " << searchdir.dot(dg);
+        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << "   Eb " << energyB << "   Es " << energyS << "   |dg| " << dg.norm() << "   sd = " << searchdir.dot(dg);
 
         double stepsize = triangleInequalityLineSearch(g, searchdir);
         stepsize = std::min(1.0, 0.9*stepsize);
         std::cout << std::fixed << std::setprecision(8) << "   h0 = " << stepsize;
-        double initialenergy = energy;
+        double initialenergy = energyB+energyS;
 
         VectorXd newg;
         int lsiters = 0;
@@ -533,7 +551,7 @@ bool Mesh::relaxIntrinsicLengths()
             do
             {
                 newg = g + stepsize*searchdir;
-                elasticEnergyG(q, newg, energy, dg, hg);
+                elasticEnergyG(q, newg, energyB, energyS, dg, hg);
                 stepsize /= 2.0;
                 if(++lsiters > params_.maxlinesearchiters)
                 {
@@ -541,7 +559,7 @@ bool Mesh::relaxIntrinsicLengths()
                     break;
                 }
             }
-            while(energy > initialenergy);
+            while(energyB+energyS > initialenergy);
         }
 
         if(abort)
@@ -556,7 +574,7 @@ bool Mesh::relaxIntrinsicLengths()
     dofsToGeometry(q, g);
     if(dg.norm() < params_.tol)
     {
-        std::cout << "Converged, final E " << energy << std::endl;
+        std::cout << "Converged, final E " << energyB+energyS << std::endl;
         return true;
     }
     std::cout << "Failed to converge" << std::endl;
@@ -573,24 +591,28 @@ bool Mesh::relaxEmbedding()
 
     SparseMatrix<double> hq;
 
-    double energy;
+    double energyB, energyS;
 
-    elasticEnergyQ(q, g, energy, dq, hq);
+    elasticEnergyQ(q, g, energyB, energyS, dq, hq);
 
     for(int i=0; i<params_.maxiters; i++)
     {
-        if(dq.norm() < params_.tol)
+        std::cout << infinityNorm(dq) << std::endl;
+        if(infinityNorm(dq) < params_.tol)
             break;
         SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
         solver.compute(hq);
         VectorXd searchdir = -solver.solve(dq);
-        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << "   E " << energy << "   |dq| " << dq.norm() << "   sd = " << searchdir.dot(dq);
+
+        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << "   Eb " << energyB << "   Es " << energyS << "   |dq| " << dq.norm() << "   sd = " << searchdir.dot(dq);
 
         double stepsize = 1.0;
-        double initialenergy = energy;
+        double initialenergy = energyB+energyS;
 
         VectorXd newq;
         int lsiters = 0;
+        if(searchdir.dot(dq) >= 0)
+            searchdir = -dq;
 
         bool abort = searchdir.dot(dq) > 0;
 
@@ -599,7 +621,7 @@ bool Mesh::relaxEmbedding()
             do
             {
                 newq = q + stepsize*searchdir;
-                elasticEnergyQ(newq, g, energy, dq, hq);
+                elasticEnergyQ(newq, g, energyB, energyS, dq, hq);
                 stepsize /= 2.0;
                 if(++lsiters > params_.maxlinesearchiters)
                 {
@@ -607,7 +629,7 @@ bool Mesh::relaxEmbedding()
                     break;
                 }
             }
-            while(energy > initialenergy);
+            while(energyB+energyS > initialenergy);
         }
 
         if(abort)
@@ -620,11 +642,57 @@ bool Mesh::relaxEmbedding()
         std::cout << std::fixed << std::setprecision(8) << "   h " << stepsize*2.0 << std::endl;
     }
     dofsToGeometry(q, g);
-    if(dq.norm() < params_.tol)
+    if(infinityNorm(dq) < params_.tol)
     {
-        std::cout << "Converged, final E " << energy << std::endl;
+        std::cout << "Converged, final E " << energyB+energyS << std::endl;
         return true;
     }
     std::cout << "Failed to converge" << std::endl;
     return false;
+}
+
+bool Mesh::largestMagnitudeEigenvalue(const Eigen::SparseMatrix<double> &M, double &eigenvalue)
+{
+    int dim = M.cols();
+    VectorXd v(dim);
+    v.setRandom();
+    v.normalize();
+    double oldestimate = std::numeric_limits<double>::infinity();
+    double curestimate=0;
+
+    for(int iter=0; iter < params_.maxpoweriters; iter++)
+    {
+        v = M*v;
+        v.normalize();
+        curestimate = v.dot(M*v);
+        if(fabs(curestimate-oldestimate) < params_.powertol)
+            break;
+        oldestimate = curestimate;
+    }
+    eigenvalue = curestimate;
+    return fabs(curestimate-oldestimate) < params_.powertol;
+}
+
+bool Mesh::smallestEigenvalue(const Eigen::SparseMatrix<double> &M, double &eigenvalue)
+{
+    double largesteval;
+    if(!largestMagnitudeEigenvalue(M, largesteval))
+        return false;
+
+    if(largesteval < 0)
+    {
+        eigenvalue = largesteval;
+        return true;
+    }
+
+    int dim = M.cols();
+    SparseMatrix<double> shift(dim,dim);
+    shift.setIdentity();
+    shift *= -largesteval;
+    SparseMatrix<double> newM = M + shift;
+    double newlargest;
+    if(!largestMagnitudeEigenvalue(newM, newlargest))
+        return false;
+    eigenvalue = newlargest+largesteval;
+    return true;
 }

@@ -13,6 +13,8 @@ Mesh::Mesh()
     params_.maxiters = 15;
     params_.maxlinesearchiters = 10;
     params_.tol = 1e-6;
+    params_.maxpoweriters = 100;
+    params_.powertol = 1e-6;
     mesh_ = new OMMesh();
 }
 
@@ -169,4 +171,12 @@ double Mesh::vertexStrainDensity(int vertidx) const
         numedges ++;
     }
     return totstrain/numedges;
+}
+
+double Mesh::infinityNorm(const VectorXd &v) const
+{
+    double maxval = 0;
+    for(int i=0; i<v.size(); i++)
+        maxval = std::max(fabs(v[i]), maxval);
+    return maxval;
 }

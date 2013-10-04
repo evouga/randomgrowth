@@ -99,6 +99,8 @@ void MainWindow::setParameters(const ProblemParameters &params)
     ui->maxitersEdit->setText(QString::number(params.maxiters));
     ui->maxlsitersEdit->setText(QString::number(params.maxlinesearchiters));
     ui->tolEdit->setText(QString::number(params.tol));
+    ui->maxpoweritersEdit->setText(QString::number(params.maxpoweriters));
+    ui->poweritertolEdit->setText(QString::number(params.powertol));
 }
 
 ProblemParameters MainWindow::getParameters()
@@ -110,6 +112,8 @@ ProblemParameters MainWindow::getParameters()
     result.maxiters = ui->maxitersEdit->text().toInt();
     result.maxlinesearchiters = ui->maxlsitersEdit->text().toInt();
     result.tol = ui->tolEdit->text().toDouble();
+    result.powertol = ui->poweritertolEdit->text().toDouble();
+    result.maxpoweriters = ui->maxpoweritersEdit->text().toInt();
     return result;
 }
 
@@ -205,4 +209,14 @@ void MainWindow::on_tolEdit_textEdited(const QString &)
 void MainWindow::on_relaxEmbeddingButton_clicked()
 {
     cont_->relaxEmbedding();
+}
+
+void MainWindow::on_maxpoweritersEdit_textEdited(const QString &)
+{
+    cont_->updateParameters();
+}
+
+void MainWindow::on_poweritertolEdit_textEdited(const QString &)
+{
+    cont_->updateParameters();
 }

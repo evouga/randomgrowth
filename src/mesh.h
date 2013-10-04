@@ -29,6 +29,8 @@ struct ProblemParameters
     double YoungsModulus;
     int maxiters;
     int maxlinesearchiters;
+    int maxpoweriters;
+    double powertol;
     double tol;
 };
 
@@ -38,15 +40,17 @@ public:
     Mesh();
 
     void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
-                        double &energy) const;
+                        double &energyB, double &energyS) const;
 
     void elasticEnergyG(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
-                        double &energy,
+                        double &energyB,
+                        double &energyS,
                         Eigen::VectorXd &gradg,
                         Eigen::SparseMatrix<double> &hessg) const;
 
     void elasticEnergyQ(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
-                        double &energy,
+                        double &energyB,
+                        double &energyS,
                         Eigen::VectorXd &gradq,
                         Eigen::SparseMatrix<double> &hessq) const;
 
@@ -79,12 +83,16 @@ private:
     void edgeEndpoints(OMMesh::EdgeHandle eh, OMMesh::Point &pt1, OMMesh::Point &pt2);
     double triangleInequalityLineSearch(const Eigen::VectorXd &g, const Eigen::VectorXd &dg) const;
     double triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const;
+    bool largestMagnitudeEigenvalue(const Eigen::SparseMatrix<double> &M, double &eigenvalue);
+    bool smallestEigenvalue(const Eigen::SparseMatrix<double> &M, double &eigenvalue);
+    double infinityNorm(const Eigen::VectorXd &v) const;
 
     double strainDensity(int edgeidx) const;
     double vertexStrainDensity(int vertidx) const;
 
     void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
-                       double &energy,
+                       double &energyB,
+                       double &energyS,
                        Eigen::VectorXd &gradq,
                        Eigen::VectorXd &gradg,
                        Eigen::SparseMatrix<double> &hessq,
