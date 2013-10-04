@@ -79,7 +79,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
     vector<Tr> Hgcoeffs;
 
     // bending energy
-    double bendcoeff = params_.h*params_.h*params_.h*params_.YoungsModulus/24.0/(1.0+params_.PoissonRatio);
+    double bendcoeff = params_.h*params_.h*params_.YoungsModulus/24.0/(1.0+params_.PoissonRatio);
     for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
     {
         if(mesh_->is_boundary(vi.handle()))
@@ -336,7 +336,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
     }
 
     // Stretching energy
-    double stretchcoeff = params_.h*params_.YoungsModulus/8.0/(1.0+params_.PoissonRatio);
+    double stretchcoeff = params_.YoungsModulus/8.0/(1.0+params_.PoissonRatio);
 
     for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
     {
@@ -605,6 +605,10 @@ bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
     if(gradient.norm() < params_.tol)
     {
         std::cout << "Converged, final energies " << energyB << ", " << energyS << std::endl;
+
+        double eval;
+        std::cout << smallestEigenvalue(hessian, eval) << " ";
+        cout << eval << endl;
         return true;
     }
     std::cout << "Failed to converge" << std::endl;
