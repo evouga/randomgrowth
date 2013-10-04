@@ -7,6 +7,8 @@
 
 const double PI = 3.14159265359;
 
+class Controller;
+
 struct MyTraits : public OpenMesh::DefaultTraits
 {
     EdgeTraits
@@ -24,6 +26,7 @@ typedef OpenMesh::TriMesh_ArrayKernelT<MyTraits> OMMesh;
 
 struct ProblemParameters
 {
+    // simulation
     double h;
     double PoissonRatio;
     double YoungsModulus;
@@ -32,6 +35,10 @@ struct ProblemParameters
     int maxpoweriters;
     double powertol;
     double tol;
+
+    // rendering
+    bool showWireframe;
+    bool smoothShade;
 };
 
 class Mesh
@@ -56,14 +63,14 @@ public:
 
     enum RelaxationType {RelaxMetric, RelaxEmbedding};
 
-    bool relaxEnergy(RelaxationType type);
+    bool relaxEnergy(Controller &cont, RelaxationType type);
 
     int numdofs() const;
     int numedges() const;
     const ProblemParameters &getParameters() const;
     void setParameters(ProblemParameters params);
 
-    virtual void render(bool showWireframe, bool smoothShade);
+    void render();
 
     Eigen::Vector3d centroid();
     double radius();

@@ -19,57 +19,63 @@ Controller::Controller(MainWindow &mw) : mw_(mw), m_()
 
 void Controller::quit()
 {
-    mw_.close();
+    QMetaObject::invokeMethod(&mw_, "close");
 }
 
 void Controller::renderMesh()
 {
-    bool showWireframe = mw_.showWireframe();
-    bool smoothShade = mw_.smoothShade();
-    m_.render(showWireframe, smoothShade);
+    m_.render();
 }
 
-void Controller::getSceneBounds(Eigen::Vector3d &center, double &radius)
+void Controller::exportOBJ(string filename)
 {
-    center = m_.centroid();
-    radius = m_.radius();
-}
-
-void Controller::exportOBJ(const char *filename)
-{
-    if(!m_.exportOBJ(filename))
+    if(!m_.exportOBJ(filename.c_str()))
     {
-        QString msg = "Couldn't write file " + QString(filename) + ". Save failed.";
+        QString msg = "Couldn't write file " + QString::fromStdString(filename) + ". Save failed.";
         QMessageBox::warning(&mw_, "Couldn't Write File", msg, QMessageBox::Ok);
         return;
     }
 }
 
-void Controller::importOBJ(const char *filename)
+void Controller::importOBJ(string filename)
 {
-    if(!m_.importOBJ(filename))
+    if(!m_.importOBJ(filename.c_str()))
     {
         string err = string("Couldn't load OBJ: ") + filename;
-        mw_.showError(err);
+        QMetaObject::invokeMethod(&mw_, "showError", Q_ARG(std::string, err));
     }
     else
     {
-        mw_.centerCamera();
+        centerCamera();
     }
 }
 
-void Controller::updateParameters()
-{
-    ProblemParameters params = mw_.getParameters();
+void Controller::updateParameters(ProblemParameters params)
+{    
     m_.setParameters(params);
+    updateGL();
 }
 
 void Controller::findMetric()
 {
-    m_.relaxEnergy(Mesh::RelaxMetric);
+    m_.relaxEnergy(*this, Mesh::RelaxMetric);
+    updateGL();
 }
 
 void Controller::relaxEmbedding()
 {
-    m_.relaxEnergy(Mesh::RelaxEmbedding);
+    m_.relaxEnergy(*this, Mesh::RelaxEmbedding);
+    updateGL();
+}
+
+void Controller::centerCamera()
+{
+    Vector3d centroid = m_.centroid();
+    double radius = m_.radius();
+    QMetaObject::invokeMethod(&mw_, "centerCamera", Q_ARG(Eigen::Vector3d, centroid), Q_ARG(double, radius));
+}
+
+void Controller::updateGL()
+{
+    QMetaObject::invokeMethod(&mw_, "repaintMesh");
 }

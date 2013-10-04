@@ -2,12 +2,23 @@
 #include "controller.h"
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QThread>
+#include <string>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    qRegisterMetaType<std::string>("std::string");
+    qRegisterMetaType<Eigen::Vector3d>("Eigen::Vector3d");
+    qRegisterMetaType<ProblemParameters>("ProblemParameters");
+
+    QThread workthread;
+    workthread.start();
     MainWindow window;
     Controller cont(window);
+    cont.moveToThread(&workthread);
+
     window.setController(cont);
 
     int desktopArea = QApplication::desktop()->width() *
@@ -17,5 +28,9 @@ int main(int argc, char *argv[])
         window.show();
     else
         window.showMaximized();
-    return app.exec();
+
+    int ret = app.exec();
+    workthread.quit();
+    workthread.wait();
+    return ret;
 }

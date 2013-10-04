@@ -18,7 +18,6 @@ GLWidget::GLWidget(QWidget *parent) :
 void GLWidget::setController(Controller &cont)
 {
     cont_ = &cont;
-    centerCamera();
 }
 
 void GLWidget::initializeGL()
@@ -150,13 +149,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
     zoomer_.stopZoom();
 }
 
-void GLWidget::centerCamera()
+void GLWidget::centerCamera(Vector3d centroid, double radius)
 {
-    assert(cont_);
-    Vector3d centroid;
-    double radius;
-    cont_->getSceneBounds(centroid, radius);
-
     c_.setCenter(centroid);
     translator_.setScale(2*radius);
     zoomer_.setScale(2*radius);

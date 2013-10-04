@@ -3,6 +3,7 @@
 #include <fadiff.h>
 #include <iomanip>
 #include "autodifftemplates.h"
+#include "controller.h"
 
 using namespace std;
 using namespace Eigen;
@@ -514,7 +515,7 @@ double Mesh::triangleInequalityLineSearch(double g0, double g1, double g2, doubl
     return cand;
 }
 
-bool Mesh::relaxEnergy(RelaxationType type)
+bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
 {
     VectorXd q(numdofs());
     VectorXd g(numedges());
@@ -596,8 +597,11 @@ bool Mesh::relaxEnergy(RelaxationType type)
             g = newdofs;
 
         std::cout << std::fixed << std::setprecision(8) << "   h " << stepsize*2.0 << std::endl;
+
+        dofsToGeometry(q, g);
+        cont.updateGL();
     }
-    dofsToGeometry(q, g);
+
     if(gradient.norm() < params_.tol)
     {
         std::cout << "Converged, final energies " << energyB << ", " << energyS << std::endl;

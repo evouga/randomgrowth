@@ -7,6 +7,7 @@
 #include <QDateTime>
 #include <QPixmap>
 
+using namespace Eigen;
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -28,16 +29,17 @@ void MainWindow::setController(Controller &cont)
     ui->GLwidget->setController(cont);
 }
 
-void MainWindow::showError(const string &error)
+void MainWindow::showError(string error)
 {
     QMessageBox::warning(this, tr("VViewer"),
                                     QString(error.c_str()),
                                     QMessageBox::Ok, QMessageBox::NoButton);
 }
 
-void MainWindow::centerCamera()
+void MainWindow::centerCamera(Vector3d centroid, double radius)
 {
-    ui->GLwidget->centerCamera();
+    ui->GLwidget->centerCamera(centroid, radius);
+    updateGL();
 }
 
 
@@ -71,16 +73,6 @@ string MainWindow::launchImportOBJDialog()
     return filename;
 }
 
-bool MainWindow::showWireframe() const
-{
-    return ui->wireframeCheckBox->isChecked();
-}
-
-bool MainWindow::smoothShade() const
-{
-    return ui->smoothShadeCheckBox->isChecked();
-}
-
 void MainWindow::repaintMesh()
 {
     updateGL();
@@ -91,7 +83,7 @@ void MainWindow::updateGL()
     ui->GLwidget->updateGL();
 }
 
-void MainWindow::setParameters(const ProblemParameters &params)
+void MainWindow::setParameters(ProblemParameters params)
 {
     ui->youngsModulusEdit->setText(QString::number(params.YoungsModulus));
     ui->poissonRatioEdit->setText(QString::number(params.PoissonRatio));
@@ -101,6 +93,8 @@ void MainWindow::setParameters(const ProblemParameters &params)
     ui->tolEdit->setText(QString::number(params.tol));
     ui->maxpoweritersEdit->setText(QString::number(params.maxpoweriters));
     ui->poweritertolEdit->setText(QString::number(params.powertol));
+    ui->wireframeCheckBox->setChecked(params.showWireframe);
+    ui->smoothShadeCheckBox->setChecked(params.smoothShade);
 }
 
 ProblemParameters MainWindow::getParameters()
@@ -114,18 +108,20 @@ ProblemParameters MainWindow::getParameters()
     result.tol = ui->tolEdit->text().toDouble();
     result.powertol = ui->poweritertolEdit->text().toDouble();
     result.maxpoweriters = ui->maxpoweritersEdit->text().toInt();
+    result.showWireframe = ui->wireframeCheckBox->isChecked();
+    result.smoothShade = ui->smoothShadeCheckBox->isChecked();
     return result;
 }
 
 void MainWindow::on_actionExit_triggered()
 {
     assert(cont_);
-    cont_->quit();
+    QMetaObject::invokeMethod(cont_, "quit");
 }
 
 void MainWindow::on_actionReset_Camera_triggered()
 {
-    centerCamera();
+    QMetaObject::invokeMethod(cont_, "centerCamera");
     updateGL();
 }
 
@@ -137,12 +133,12 @@ void MainWindow::on_actionTake_Screenshot_triggered()
 
 void MainWindow::on_wireframeCheckBox_clicked()
 {
-    updateGL();
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
 void MainWindow::on_smoothShadeCheckBox_clicked()
 {
-    updateGL();
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
 void MainWindow::on_actionExport_OBJ_triggered()
@@ -158,7 +154,7 @@ void MainWindow::on_actionExport_OBJ_triggered()
         if(filenames.size() > 0)
         {
             QString filename = filenames[0];
-            cont_->exportOBJ(filename.toStdString().c_str());
+            QMetaObject::invokeMethod(cont_, "exportOBJ", Q_ARG(std::string, filename.toStdString()));
         }
     }
 }
@@ -166,57 +162,55 @@ void MainWindow::on_actionExport_OBJ_triggered()
 void MainWindow::on_actionImport_OBJ_triggered()
 {
     string filename = launchImportOBJDialog();
-    cont_->importOBJ(filename.c_str());
-    updateGL();
+    QMetaObject::invokeMethod(cont_, "importOBJ", Q_ARG(std::string, filename));
 }
 
 void MainWindow::on_poissonRatioEdit_textEdited(const QString &)
 {
-    cont_->updateParameters();
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
 void MainWindow::on_youngsModulusEdit_textEdited(const QString &)
 {
-    cont_->updateParameters();
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
 void MainWindow::on_thicknessEdit_textEdited(const QString &)
 {
-    cont_->updateParameters();
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
 void MainWindow::on_findMetricButton_clicked()
 {
-    cont_->findMetric();
-    updateGL();
+    QMetaObject::invokeMethod(cont_, "findMetric");
 }
 
 void MainWindow::on_maxitersEdit_textEdited(const QString &)
 {
-    cont_->updateParameters();
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
 void MainWindow::on_maxlsitersEdit_textEdited(const QString &)
 {
-    cont_->updateParameters();
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
 void MainWindow::on_tolEdit_textEdited(const QString &)
 {
-    cont_->updateParameters();
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
 void MainWindow::on_relaxEmbeddingButton_clicked()
 {
-    cont_->relaxEmbedding();
+    QMetaObject::invokeMethod(cont_, "relaxEmbedding");
 }
 
 void MainWindow::on_maxpoweritersEdit_textEdited(const QString &)
 {
-    cont_->updateParameters();
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
 void MainWindow::on_poweritertolEdit_textEdited(const QString &)
 {
-    cont_->updateParameters();
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }

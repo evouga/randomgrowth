@@ -15,6 +15,10 @@ Mesh::Mesh()
     params_.tol = 1e-6;
     params_.maxpoweriters = 100;
     params_.powertol = 1e-6;
+
+    params_.smoothShade = true;
+    params_.showWireframe = true;
+
     mesh_ = new OMMesh();
 }
 

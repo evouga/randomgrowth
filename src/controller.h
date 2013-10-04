@@ -3,24 +3,30 @@
 
 #include "mesh.h"
 #include <Eigen/Core>
+#include <QObject>
 
 class MainWindow;
 
-class Controller
+class Controller : public QObject
 {
+    Q_OBJECT
+
 public:
     Controller(MainWindow &mw);
 
     void renderMesh();
-    void quit();
-    void getSceneBounds(Eigen::Vector3d &center, double &radius);
-    void exportOBJ(const char *filename);
-    void importOBJ(const char *filename);
-    void updateParameters();
+
+public slots:
+    void exportOBJ(std::string filename);
+    void importOBJ(std::string filename);
+    void updateParameters(ProblemParameters params);
     void findMetric();
     void relaxEmbedding();
+    void quit();
+    void centerCamera();
+    void updateGL();
 
-private:
+private:    
     MainWindow &mw_;
     Mesh m_;
 };

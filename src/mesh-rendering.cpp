@@ -5,7 +5,7 @@ using namespace std;
 using namespace OpenMesh;
 using namespace Eigen;
 
-void Mesh::render(bool showWireframe, bool smoothShade)
+void Mesh::render()
 {
 
     glEnable(GL_LIGHTING);
@@ -18,7 +18,7 @@ void Mesh::render(bool showWireframe, bool smoothShade)
     glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
     glEnable ( GL_COLOR_MATERIAL );
 
-    if(smoothShade)
+    if(params_.smoothShade)
     {
         glShadeModel(GL_SMOOTH);
     }
@@ -81,7 +81,7 @@ void Mesh::render(bool showWireframe, bool smoothShade)
     glDisable(GL_POLYGON_OFFSET_FILL);
     glDisable(GL_LIGHTING);
 
-    if(showWireframe)
+    if(params_.showWireframe)
     {
         glLineWidth(1.0);
         glBegin(GL_LINES);

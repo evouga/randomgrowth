@@ -17,7 +17,7 @@ public:
     explicit GLWidget(QWidget *parent = 0);
 
     void setController(Controller &cont);
-    void centerCamera();
+    void centerCamera(Eigen::Vector3d centroid, double radius);
     void saveScreenshot(const std::string &filename);
 
 protected:

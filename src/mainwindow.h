@@ -21,16 +21,11 @@ public:
 
     void setController(Controller &cont);
 
-    void saveScreenshot();
-    void saveScreenshot(const std::string &filename);
-    void showError(const std::string &error);
-    void centerCamera();
-    bool showWireframe() const;
-    bool smoothShade() const;
+public slots:
+    void setParameters(ProblemParameters params);
+    void showError(std::string error);
+    void centerCamera(Eigen::Vector3d centroid, double radius);
     void repaintMesh();
-    std::string launchImportOBJDialog();
-    void setParameters(const ProblemParameters &params);
-    ProblemParameters getParameters();
 
 private slots:
     void on_actionExit_triggered();
@@ -69,6 +64,11 @@ private slots:
 
 private:
     void updateGL();
+    void saveScreenshot();
+    void saveScreenshot(const std::string &filename);
+    ProblemParameters getParameters();
+    std::string launchImportOBJDialog();
+
     Ui::MainWindow *ui;
     Controller *cont_;
 };
