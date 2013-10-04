@@ -95,6 +95,7 @@ void MainWindow::setParameters(ProblemParameters params)
     ui->poweritertolEdit->setText(QString::number(params.powertol));
     ui->wireframeCheckBox->setChecked(params.showWireframe);
     ui->smoothShadeCheckBox->setChecked(params.smoothShade);
+    ui->densityEdit->setText(QString::number(params.rho));
 }
 
 ProblemParameters MainWindow::getParameters()
@@ -110,6 +111,7 @@ ProblemParameters MainWindow::getParameters()
     result.maxpoweriters = ui->maxpoweritersEdit->text().toInt();
     result.showWireframe = ui->wireframeCheckBox->isChecked();
     result.smoothShade = ui->smoothShadeCheckBox->isChecked();
+    result.rho = ui->densityEdit->text().toDouble();
     return result;
 }
 
@@ -211,6 +213,11 @@ void MainWindow::on_maxpoweritersEdit_textEdited(const QString &)
 }
 
 void MainWindow::on_poweritertolEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_densityEdit_textEdited(const QString &)
 {
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }

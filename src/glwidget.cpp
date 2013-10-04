@@ -50,10 +50,13 @@ void GLWidget::paintGL()
 
     c_.applyViewport();
     c_.applyProjection();
-    c_.applyLookAt();
 
-    static GLfloat lightPosition[4] = { 0.0, -1.0, 0.0, 0.0 };
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    static GLfloat lightPosition[4] = { 0.0, 0.0, 1.0, 0.0 };
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+
+    c_.applyLookAt();
 
     cont_->renderMesh();
 

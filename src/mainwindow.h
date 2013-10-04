@@ -62,6 +62,8 @@ private slots:
 
     void on_poweritertolEdit_textEdited(const QString &arg1);
 
+    void on_densityEdit_textEdited(const QString &arg1);
+
 private:
     void updateGL();
     void saveScreenshot();

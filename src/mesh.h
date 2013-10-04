@@ -35,6 +35,7 @@ struct ProblemParameters
     int maxpoweriters;
     double powertol;
     double tol;
+    double rho;
 
     // rendering
     bool showWireframe;
@@ -64,6 +65,7 @@ public:
     enum RelaxationType {RelaxMetric, RelaxEmbedding};
 
     bool relaxEnergy(Controller &cont, RelaxationType type);
+    bool simulate(Controller &cont);
 
     int numdofs() const;
     int numedges() const;
