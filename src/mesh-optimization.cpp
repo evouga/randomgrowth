@@ -514,114 +514,66 @@ double Mesh::triangleInequalityLineSearch(double g0, double g1, double g2, doubl
     return cand;
 }
 
-bool Mesh::relaxIntrinsicLengths()
+bool Mesh::relaxEnergy(RelaxationType type)
 {
     VectorXd q(numdofs());
     VectorXd g(numedges());
     dofsFromGeometry(q, g);
 
-    VectorXd dg(numedges());
+    VectorXd gradient;
 
-    SparseMatrix<double> hg;
-
-    double energyB, energyS;
-
-    elasticEnergyG(q, g, energyB, energyS, dg, hg);
-
-    for(int i=0; i<params_.maxiters; i++)
-    {
-        if(dg.norm() < params_.tol)
-            break;
-        SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
-        solver.compute(hg);
-        VectorXd searchdir = -solver.solve(dg);
-        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << "   Eb " << energyB << "   Es " << energyS << "   |dg| " << dg.norm() << "   sd = " << searchdir.dot(dg);
-
-        double stepsize = triangleInequalityLineSearch(g, searchdir);
-        stepsize = std::min(1.0, 0.9*stepsize);
-        std::cout << std::fixed << std::setprecision(8) << "   h0 = " << stepsize;
-        double initialenergy = energyB+energyS;
-
-        VectorXd newg;
-        int lsiters = 0;
-        bool abort = searchdir.dot(dg) > 0;
-
-        if(!abort)
-        {
-            do
-            {
-                newg = g + stepsize*searchdir;
-                elasticEnergyG(q, newg, energyB, energyS, dg, hg);
-                stepsize /= 2.0;
-                if(++lsiters > params_.maxlinesearchiters)
-                {
-                    abort = true;
-                    break;
-                }
-            }
-            while(energyB+energyS > initialenergy);
-        }
-
-        if(abort)
-        {
-            std::cout << std::endl;
-            break;
-        }
-
-        g = newg;
-        std::cout << std::fixed << std::setprecision(8) << "   h " << stepsize*2.0 << std::endl;
-    }
-    dofsToGeometry(q, g);
-    if(dg.norm() < params_.tol)
-    {
-        std::cout << "Converged, final E " << energyB+energyS << std::endl;
-        return true;
-    }
-    std::cout << "Failed to converge" << std::endl;
-    return false;
-}
-
-bool Mesh::relaxEmbedding()
-{
-    VectorXd q(numdofs());
-    VectorXd g(numedges());
-    dofsFromGeometry(q, g);
-
-    VectorXd dq(numdofs());
-
-    SparseMatrix<double> hq;
+    SparseMatrix<double> hessian;
 
     double energyB, energyS;
 
-    elasticEnergyQ(q, g, energyB, energyS, dq, hq);
+    if(type == RelaxEmbedding)
+        elasticEnergyQ(q, g, energyB, energyS, gradient, hessian);
+    else if(type == RelaxMetric)
+        elasticEnergyG(q, g, energyB, energyS, gradient, hessian);
 
     for(int i=0; i<params_.maxiters; i++)
     {
-        std::cout << infinityNorm(dq) << std::endl;
-        if(infinityNorm(dq) < params_.tol)
+        if(gradient.norm() < params_.tol)
             break;
         SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
-        solver.compute(hq);
-        VectorXd searchdir = -solver.solve(dq);
+        solver.compute(hessian);
+        VectorXd searchdir = -solver.solve(gradient);
 
-        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << "   Eb " << energyB << "   Es " << energyS << "   |dq| " << dq.norm() << "   sd = " << searchdir.dot(dq);
+        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << "   Eb " << energyB << "   Es " << energyS << "   |dq| " << gradient.norm() << "   sd = " << searchdir.dot(gradient);
+
 
         double stepsize = 1.0;
+
+        if(type == RelaxMetric)
+        {
+            stepsize = triangleInequalityLineSearch(g, searchdir);
+            stepsize = std::min(1.0, 0.9*stepsize);
+        }
+
         double initialenergy = energyB+energyS;
 
-        VectorXd newq;
+        VectorXd newdofs;
         int lsiters = 0;
-        if(searchdir.dot(dq) >= 0)
-            searchdir = -dq;
+        if(searchdir.dot(gradient) >= 0)
+            searchdir = -gradient;
 
-        bool abort = searchdir.dot(dq) > 0;
+        bool abort = searchdir.dot(gradient) > 0;
 
         if(!abort)
         {
             do
             {
-                newq = q + stepsize*searchdir;
-                elasticEnergyQ(newq, g, energyB, energyS, dq, hq);
+                if(type == RelaxEmbedding)
+                {
+                    newdofs = q + stepsize*searchdir;
+                    elasticEnergyQ(newdofs, g, energyB, energyS, gradient, hessian);
+                }
+                else if(type == RelaxMetric)
+                {
+                    newdofs = g + stepsize*searchdir;
+                    elasticEnergyG(q, newdofs, energyB, energyS, gradient, hessian);
+                }
+
                 stepsize /= 2.0;
                 if(++lsiters > params_.maxlinesearchiters)
                 {
@@ -638,13 +590,17 @@ bool Mesh::relaxEmbedding()
             break;
         }
 
-        q = newq;
+        if(type == RelaxEmbedding)
+            q = newdofs;
+        else if(type == RelaxMetric)
+            g = newdofs;
+
         std::cout << std::fixed << std::setprecision(8) << "   h " << stepsize*2.0 << std::endl;
     }
     dofsToGeometry(q, g);
-    if(infinityNorm(dq) < params_.tol)
+    if(gradient.norm() < params_.tol)
     {
-        std::cout << "Converged, final E " << energyB+energyS << std::endl;
+        std::cout << "Converged, final energies " << energyB << ", " << energyS << std::endl;
         return true;
     }
     std::cout << "Failed to converge" << std::endl;

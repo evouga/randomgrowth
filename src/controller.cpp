@@ -66,10 +66,10 @@ void Controller::updateParameters()
 
 void Controller::findMetric()
 {
-    m_.relaxIntrinsicLengths();
+    m_.relaxEnergy(Mesh::RelaxMetric);
 }
 
 void Controller::relaxEmbedding()
 {
-    m_.relaxEmbedding();
+    m_.relaxEnergy(Mesh::RelaxEmbedding);
 }

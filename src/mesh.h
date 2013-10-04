@@ -54,8 +54,9 @@ public:
                         Eigen::VectorXd &gradq,
                         Eigen::SparseMatrix<double> &hessq) const;
 
-    bool relaxIntrinsicLengths();
-    bool relaxEmbedding();
+    enum RelaxationType {RelaxMetric, RelaxEmbedding};
+
+    bool relaxEnergy(RelaxationType type);
 
     int numdofs() const;
     int numedges() const;
