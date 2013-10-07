@@ -62,7 +62,11 @@ public:
                         Eigen::VectorXd &gradq,
                         Eigen::SparseMatrix<double> &hessq) const;
 
-    enum RelaxationType {RelaxMetric, RelaxEmbedding};
+    void elasticEnergyGQ(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
+                         Eigen::VectorXd &gradq,
+                         Eigen::SparseMatrix<double> &gradggradq);
+
+    enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
 
     bool relaxEnergy(Controller &cont, RelaxationType type);
     bool simulate(Controller &cont);
@@ -84,7 +88,8 @@ private:
     {
         NONE = 0,
         Q = 1,
-        G = 2
+        G = 2,
+        BOTH = 3
     };
 
     void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
@@ -106,7 +111,7 @@ private:
                        Eigen::VectorXd &gradq,
                        Eigen::VectorXd &gradg,
                        Eigen::SparseMatrix<double> &hessq,
-                       Eigen::SparseMatrix<double> &hessg,
+                       Eigen::SparseMatrix<double> &hessg, Eigen::SparseMatrix<double> &gradggradq,
                        EnergyDerivatives derivs) const;
 
 

@@ -18,8 +18,8 @@ void Mesh::elasticEnergy(const VectorXd &q, const VectorXd &g, double &energyB, 
 {
     EnergyDerivatives derivs = NONE;
     VectorXd gradq, gradg;
-    SparseMatrix<double> hessq, hessg;
-    elasticEnergy(q, g, energyB, energyS, gradq, gradg, hessq, hessg, derivs);
+    SparseMatrix<double> hessq, hessg, gradggradq;
+    elasticEnergy(q, g, energyB, energyS, gradq, gradg, hessq, hessg, gradggradq, derivs);
 }
 
 void Mesh::elasticEnergyG(const VectorXd &q,
@@ -31,8 +31,8 @@ void Mesh::elasticEnergyG(const VectorXd &q,
 {
     EnergyDerivatives derivs = G;
     VectorXd gradq;
-    SparseMatrix<double> hessq;
-    elasticEnergy(q, g, energyB, energyS, gradq, gradg, hessq, hessg, derivs);
+    SparseMatrix<double> hessq, gradggradq;
+    elasticEnergy(q, g, energyB, energyS, gradq, gradg, hessq, hessg, gradggradq, derivs);
 }
 
 void Mesh::elasticEnergyQ(const VectorXd &q,
@@ -44,8 +44,17 @@ void Mesh::elasticEnergyQ(const VectorXd &q,
 {
     EnergyDerivatives derivs = Q;
     VectorXd gradg;
-    SparseMatrix<double> hessg;
-    elasticEnergy(q, g, energyB, energyS, gradq, gradg, hessq, hessg, derivs);
+    SparseMatrix<double> hessg, gradggradq;
+    elasticEnergy(q, g, energyB, energyS, gradq, gradg, hessq, hessg, gradggradq, derivs);
+}
+
+void Mesh::elasticEnergyGQ(const VectorXd &q, const VectorXd &g, VectorXd &gradq, Eigen::SparseMatrix<double> &gradggradq)
+{
+    double energyB, energyS;
+    VectorXd gradg;
+    SparseMatrix<double> hessg, hessq;
+    EnergyDerivatives derivs = BOTH;
+    elasticEnergy(q, g, energyB, energyS, gradq, gradg, hessq, hessg, gradggradq, derivs);
 }
 
 void Mesh::elasticEnergy(const VectorXd &q,
@@ -56,6 +65,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
                          VectorXd &gradg,
                          Eigen::SparseMatrix<double> &hessq,
                          Eigen::SparseMatrix<double> &hessg,
+                         Eigen::SparseMatrix<double> &gradggradq,
                          EnergyDerivatives derivs) const
 {
     assert(q.size() == numdofs());
@@ -76,9 +86,15 @@ void Mesh::elasticEnergy(const VectorXd &q,
         hessg.resize(numedges(), numedges());
     }
 
+    if(derivs & G && derivs & Q)
+    {
+        gradggradq.resize(numedges(), numdofs());
+    }
+
 
     vector<Tr> Hqcoeffs;
     vector<Tr> Hgcoeffs;
+    vector<Tr> dgdqcoeffs;
 
     // bending energy
     double bendcoeff = params_.h*params_.h*params_.YoungsModulus/24.0/(1.0+params_.PoissonRatio);
@@ -173,8 +189,6 @@ void Mesh::elasticEnergy(const VectorXd &q,
             if(derivs & Q)
                 dq[i].diff(i,diffvars);
             ddq[i] = dq[i];
-            //if(derivs & Q)
-            //    ddq[i].diff(i, diffvars);
         }
 
         F<double> *dnbq[3];
@@ -189,8 +203,6 @@ void Mesh::elasticEnergy(const VectorXd &q,
                 if(derivs & Q)
                     dnbq[i][j].diff(3+3*j+i,diffvars);
                 ddnbq[i][j] = dnbq[i][j];
-                //if(derivs & Q)
-                //    ddnbq[i][j].diff(3+3*j+i,diffvars);
             }
         }
 
@@ -229,7 +241,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
         {
             for(int j=0; j<3; j++)
             {
-                gradq[3*vidx+j] += ddq[j].d(0).val();//->stencilenergy.d(j).val();
+                gradq[3*vidx+j] += ddq[j].d(0).val();
             }
         }
 
@@ -239,13 +251,13 @@ void Mesh::elasticEnergy(const VectorXd &q,
             {
                 for(int j=0; j<3; j++)
                 {
-                    gradq[3*nbidx[i]+j] += ddnbq[j][i].d(0).val();//stencilenergy.d(3+3*i+j).val();
+                    gradq[3*nbidx[i]+j] += ddnbq[j][i].d(0).val();
                 }
             }
             if(derivs & G)
             {
-                gradg[spokeidx[i]] += ddspokelens[i].d(0).val();// stencilenergy.d(diffqvars+i).val();
-                gradg[rightoppidx[i]] += ddopplens[i].d(0).val();// stencilenergy.d(diffqvars+numnbs+i).val();
+                gradg[spokeidx[i]] += ddspokelens[i].d(0).val();
+                gradg[rightoppidx[i]] += ddopplens[i].d(0).val();
             }
         }
 
@@ -255,7 +267,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
             {
                 for(int k=0; k<3; k++)
                 {
-                    double hess = ddq[j].d(0).d(k);//stencilenergy.d(j).d(k);
+                    double hess = ddq[j].d(0).d(k);
                     if(hess != 0)
                         Hqcoeffs.push_back(Tr(3*vidx+j,3*vidx+k,hess));
                 }
@@ -263,7 +275,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
                 {
                     for(int l=0; l<3; l++)
                     {
-                        double hess = ddq[j].d(0).d(3+3*k+l);//stencilenergy.d(j).d(3+3*k+l);
+                        double hess = ddq[j].d(0).d(3+3*k+l);
                         if(hess != 0)
                         {
                             Hqcoeffs.push_back(Tr(3*vidx+j,3*nbidx[k]+l,hess));
@@ -281,7 +293,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
                     {
                         for(int l=0; l<3; l++)
                         {
-                            double hess = ddnbq[k][i].d(0).d(3+3*j+l);//stencilenergy.d(3+3*i+k).d(3+3*j+l);
+                            double hess = ddnbq[k][i].d(0).d(3+3*j+l);
                             if(hess != 0)
                                 Hqcoeffs.push_back(Tr(3*nbidx[i]+k,3*nbidx[j]+l,hess));
                         }
@@ -296,13 +308,13 @@ void Mesh::elasticEnergy(const VectorXd &q,
             {
                 for(int j=0; j<numnbs; j++)
                 {
-                    double hess = ddspokelens[i].d(0).d(diffqvars+j);// stencilenergy.d(diffqvars+i).d(diffqvars+j);
+                    double hess = ddspokelens[i].d(0).d(diffqvars+j);
                     if(hess != 0)
                         Hgcoeffs.push_back(Tr(spokeidx[i],spokeidx[j],hess));
                 }
                 for(int j=0; j<numnbs; j++)
                 {
-                    double hess = ddspokelens[i].d(0).d(diffqvars+numnbs+j);//stencilenergy.d(diffqvars+i).d(diffqvars+numnbs+j);
+                    double hess = ddspokelens[i].d(0).d(diffqvars+numnbs+j);
                     if(hess != 0)
                     {
                         Hgcoeffs.push_back(Tr(spokeidx[i],rightoppidx[j],hess));
@@ -311,9 +323,36 @@ void Mesh::elasticEnergy(const VectorXd &q,
                 }
                 for(int j=0; j<numnbs; j++)
                 {
-                    double hess = ddopplens[i].d(0).d(diffqvars+numnbs+j);// stencilenergy.d(diffqvars+numnbs+i).d(diffqvars+numnbs+j);
+                    double hess = ddopplens[i].d(0).d(diffqvars+numnbs+j);
                     if(hess != 0)
                         Hgcoeffs.push_back(Tr(rightoppidx[i],rightoppidx[j],hess));
+                }
+
+                if(derivs & Q)
+                {
+                    for(int j=0; j<3; j++)
+                    {
+                        double hess = ddspokelens[i].d(0).d(j);
+                        if(hess != 0)
+                            dgdqcoeffs.push_back(Tr(spokeidx[i],3*vidx+j,hess));
+                        hess = ddopplens[i].d(0).d(j);
+                        if(hess != 0)
+                            dgdqcoeffs.push_back(Tr(rightoppidx[i],3*vidx+j,hess));
+                    }
+
+                    for(int j=0; j<numnbs; j++)
+                    {
+                        for(int k=0; k<3; k++)
+                        {
+                            double hess = ddspokelens[i].d(0).d(3+3*j+k);
+                            if(hess != 0)
+                                dgdqcoeffs.push_back(Tr(spokeidx[i], 3*nbidx[j]+k, hess));
+
+                            hess = ddopplens[i].d(0).d(3+3*j+k);
+                            if(hess != 0)
+                                dgdqcoeffs.push_back(Tr(rightoppidx[i], 3*nbidx[j]+k, hess));
+                        }
+                    }
                 }
             }
         }
@@ -374,8 +413,6 @@ void Mesh::elasticEnergy(const VectorXd &q,
                 if(derivs & Q)
                     dq[i][j].diff(3*i+j, diffvars);
                 ddq[i][j] = dq[i][j];
-                //if(derivs & Q)
-                //    ddq[i][j].diff(3*i+j, diffvars);
             }
         }
 
@@ -387,8 +424,6 @@ void Mesh::elasticEnergy(const VectorXd &q,
             if(derivs & G)
                 delen[i].diff(diffqvars+i, diffvars);
             ddelen[i] = delen[i];
-            //if(derivs & G)
-            //    ddelen[i].diff(diffqvars+i, diffvars);
         }
 
         {
@@ -424,11 +459,11 @@ void Mesh::elasticEnergy(const VectorXd &q,
             {
                 for(int j=0; j<3; j++)
                 {
-                    gradq[3*vidx[i]+j] += ddq[i][j].d(0).val();//stencilenergy.d(3*i+j).val();
+                    gradq[3*vidx[i]+j] += ddq[i][j].d(0).val();
                 }
             }
             if(derivs & G)
-                gradg[eidx[i]] += ddelen[i].d(0).val();//stencilenergy.d(diffqvars + i).val();
+                gradg[eidx[i]] += ddelen[i].d(0).val();
         }
 
         for(int i=0; i<3; i++)
@@ -441,7 +476,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
                     {
                         for(int l=0; l<3; l++)
                         {
-                            double hess = ddq[i][k].d(0).d(3*j+l);//stencilenergy.d(3*i+k).d(3*j+l);
+                            double hess = ddq[i][k].d(0).d(3*j+l);
                             if(hess != 0.0)
                             {
                                 Hqcoeffs.push_back(Tr(3*vidx[i]+k,3*vidx[j]+l,hess));
@@ -452,10 +487,25 @@ void Mesh::elasticEnergy(const VectorXd &q,
 
                 if(derivs & G)
                 {
-                    double hess = ddelen[i].d(0).d(diffqvars+j);//stencilenergy.d(diffqvars+i).d(diffqvars+j);
+                    double hess = ddelen[i].d(0).d(diffqvars+j);
                     if(hess != 0)
                     {
                         Hgcoeffs.push_back(Tr(eidx[i],eidx[j],hess));
+                    }                                       
+                }
+            }
+
+            if(derivs & G && derivs & Q)
+            {
+                for(int k=0; k<3; k++)
+                {
+                    for(int l=0; l<3; l++)
+                    {
+                        double hess = ddelen[i].d(0).d(3*k+l);
+                        if(hess != 0.0)
+                        {
+                            dgdqcoeffs.push_back(Tr(eidx[i], 3*vidx[k]+l, hess));
+                        }
                     }
                 }
             }
@@ -466,6 +516,8 @@ void Mesh::elasticEnergy(const VectorXd &q,
         hessq.setFromTriplets(Hqcoeffs.begin(), Hqcoeffs.end());
     if(derivs & G)
         hessg.setFromTriplets(Hgcoeffs.begin(), Hgcoeffs.end());
+    if(derivs & G && derivs & Q)
+        gradggradq.setFromTriplets(dgdqcoeffs.begin(), dgdqcoeffs.end());
 }
 
 double Mesh::triangleInequalityLineSearch(const VectorXd &g, const VectorXd &dg) const
@@ -530,6 +582,16 @@ bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
         elasticEnergyQ(q, g, energyB, energyS, gradient, hessian);
     else if(type == RelaxMetric)
         elasticEnergyG(q, g, energyB, energyS, gradient, hessian);
+    else if(type == FitMetric)
+    {
+        VectorXd dq;
+        SparseMatrix<double> dgdq;
+        elasticEnergyGQ(q, g, dq, dgdq);
+        gradient = dgdq*dq;
+        hessian = dgdq*dgdq.transpose();
+        energyB = dq.norm();
+        energyS = 0;
+    }
 
     for(int i=0; i<params_.maxiters; i++)
     {
@@ -549,7 +611,7 @@ bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
 
         double stepsize = 1.0;
 
-        if(type == RelaxMetric)
+        if(type == RelaxMetric || type == FitMetric)
         {
             stepsize = triangleInequalityLineSearch(g, searchdir);
             stepsize = std::min(1.0, 0.9*stepsize);
@@ -590,6 +652,17 @@ bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
                     newdofs = g + stepsize*searchdir;
                     elasticEnergyG(q, newdofs, energyB, energyS, gradient, hessian);
                 }
+                else if(type == FitMetric)
+                {
+                    newdofs = g + stepsize*searchdir;
+                    VectorXd dq;
+                    SparseMatrix<double> dgdq;
+                    elasticEnergyGQ(q, newdofs, dq, dgdq);
+                    gradient = dgdq*dq;
+                    hessian = dgdq*dgdq.transpose();
+                    energyB = dq.norm();
+                    energyS = 0;
+                }
 
                 stepsize /= 2.0;
                 if(++lsiters > params_.maxlinesearchiters)
@@ -609,7 +682,7 @@ bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
 
         if(type == RelaxEmbedding)
             q = newdofs;
-        else if(type == RelaxMetric)
+        else if(type == RelaxMetric || type == FitMetric)
             g = newdofs;
 
         std::cout << std::fixed << std::setprecision(8) << "   h " << stepsize*2.0 << std::endl;

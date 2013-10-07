@@ -58,7 +58,7 @@ void Controller::updateParameters(ProblemParameters params)
 
 void Controller::findMetric()
 {
-    m_.relaxEnergy(*this, Mesh::RelaxMetric);
+    m_.relaxEnergy(*this, Mesh::FitMetric);
     updateGL();
 }
 
