@@ -5,6 +5,7 @@
 #include <iomanip>
 #include "autodifftemplates.h"
 #include "controller.h"
+#include <Eigen/Dense>
 
 using namespace std;
 using namespace Eigen;
@@ -534,12 +535,17 @@ bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
     {
         if(gradient.norm() < params_.tol)
             break;
+
         SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
         solver.compute(hessian);
         VectorXd searchdir = -solver.solve(gradient);
 
-        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1 << "   Eb " << energyB << "   Es " << energyS << "   |dq| " << gradient.norm() << "   sd = " << searchdir.dot(gradient);
 
+        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1
+                  << "   Eb " << energyB
+                  << "   Es " << energyS
+                  << "   |dq| " << gradient.norm()
+                  << "   sd = " << searchdir.dot(gradient);
 
         double stepsize = 1.0;
 
@@ -553,8 +559,20 @@ bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
 
         VectorXd newdofs;
         int lsiters = 0;
-        if(searchdir.dot(gradient) >= 0)
-            searchdir = -gradient;
+        double eps = searchdir.dot(gradient) >= 0 ? 1e-4 : 0;
+
+        while(searchdir.dot(gradient) >= 0)
+        {
+            SparseMatrix<double> shift(hessian.rows(), hessian.cols());
+            shift.setIdentity();
+            shift *= eps;
+            SparseMatrix<double> newh = hessian + shift;
+            SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
+            solver.compute(newh);
+            searchdir = -solver.solve(gradient);
+            eps *= 2;
+        }
+        std::cout << std::fixed << std::setprecision(8) << "   lm " << eps/2.0 << std::endl;
 
         bool abort = searchdir.dot(gradient) > 0;
 
@@ -580,7 +598,7 @@ bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
                     break;
                 }
             }
-            while(energyB+energyS > initialenergy);
+            while(energyB+energyS > initialenergy || isnan(energyB) || isnan(energyS));
         }
 
         if(abort)
@@ -603,10 +621,6 @@ bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
     if(gradient.norm() < params_.tol)
     {
         std::cout << "Converged, final energies " << energyB << ", " << energyS << std::endl;
-
-        double eval;
-        std::cout << smallestEigenvalue(hessian, eval) << " ";
-        cout << eval << endl;
         return true;
     }
     std::cout << "Failed to converge" << std::endl;
@@ -619,20 +633,21 @@ bool Mesh::largestMagnitudeEigenvalue(const Eigen::SparseMatrix<double> &M, doub
     VectorXd v(dim);
     v.setRandom();
     v.normalize();
-    double oldestimate = std::numeric_limits<double>::infinity();
     double curestimate=0;
+    int iter=0;
 
-    for(int iter=0; iter < params_.maxpoweriters; iter++)
+    for(iter=0; iter < params_.maxpoweriters; iter++)
     {
-        v = M*v;
+        v = M*v;        
         v.normalize();
+
         curestimate = v.dot(M*v);
-        if(fabs(curestimate-oldestimate) < params_.powertol)
+        double err = (M*v-curestimate*v).norm();
+        if(err < params_.powertol)
             break;
-        oldestimate = curestimate;
     }
     eigenvalue = curestimate;
-    return fabs(curestimate-oldestimate) < params_.powertol;
+    return iter < params_.maxpoweriters;
 }
 
 bool Mesh::smallestEigenvalue(const Eigen::SparseMatrix<double> &M, double &eigenvalue)
