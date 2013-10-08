@@ -83,6 +83,9 @@ public:
     bool exportOBJ(const char *filename);
     bool importOBJ(const char *filename);
 
+    friend class EmbeddingMinimizer;
+    friend class MetricFit;
+
 private:
     enum EnergyDerivatives
     {

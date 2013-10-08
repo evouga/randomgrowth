@@ -6,6 +6,7 @@
 #include "autodifftemplates.h"
 #include "controller.h"
 #include <Eigen/Dense>
+#include "newton.h"
 
 using namespace std;
 using namespace Eigen;
@@ -566,138 +567,133 @@ double Mesh::triangleInequalityLineSearch(double g0, double g1, double g2, doubl
     return cand;
 }
 
+class EmbeddingMinimizer : public NewtonObjective
+{
+public:
+    EmbeddingMinimizer(Mesh &m, Controller &cont, const VectorXd &g) : m_(m), cont_(cont), g_(g) {}
+
+    virtual double getEnergy(const VectorXd &q) const
+    {
+        double energyB, energyS;
+        VectorXd gradq;
+        SparseMatrix<double> hessq;
+        m_.elasticEnergyQ(q, g_, energyB, energyS, gradq, hessq);
+        return energyB+energyS;
+    }
+
+    virtual void getGradient(const VectorXd &q, VectorXd &grad) const
+    {
+        double energyB, energyS;
+        SparseMatrix<double> hessq;
+        m_.elasticEnergyQ(q, g_, energyB, energyS, grad, hessq);
+    }
+
+    virtual void getHessian(const VectorXd &q, Eigen::SparseMatrix<double> &hess) const
+    {
+        double energyB, energyS;
+        VectorXd grad;
+        m_.elasticEnergyQ(q, g_, energyB, energyS, grad, hess);
+    }
+
+    virtual void showCurrentIteration(const VectorXd &q) const
+    {
+        m_.dofsToGeometry(q, g_);
+        cont_.updateGL();
+    }
+
+private:
+    Mesh &m_;
+    Controller &cont_;
+    const VectorXd &g_;
+};
+
+class MetricFit : public NewtonObjective
+{
+public:
+    MetricFit(Mesh &m, Controller &cont, const VectorXd &q) : m_(m), cont_(cont), q_(q) {}
+
+    virtual double getEnergy(const VectorXd &q) const
+    {
+        VectorXd gradq;
+        SparseMatrix<double> dgdq;
+        m_.elasticEnergyGQ(q_, q, gradq, dgdq);
+        return gradq.norm();
+    }
+
+    virtual void getGradient(const VectorXd &q, VectorXd &grad) const
+    {
+        SparseMatrix<double> dgdq;
+        VectorXd gradq;
+        m_.elasticEnergyGQ(q_, q, gradq, dgdq);
+        grad = dgdq*gradq;
+    }
+
+    virtual void getHessian(const VectorXd &q, Eigen::SparseMatrix<double> &hess) const
+    {
+        SparseMatrix<double> dgdq;
+        VectorXd gradq;
+        m_.elasticEnergyGQ(q_, q, gradq, dgdq);
+        hess = dgdq*dgdq.transpose();
+    }
+
+    virtual void showCurrentIteration(const VectorXd &q) const
+    {
+        m_.dofsToGeometry(q_, q);
+        cont_.updateGL();
+    }
+
+private:
+    Mesh &m_;
+    Controller &cont_;
+    const VectorXd &q_;
+};
+
 bool Mesh::relaxEnergy(Controller &cont, RelaxationType type)
 {
     VectorXd q(numdofs());
     VectorXd g(numedges());
     dofsFromGeometry(q, g);
 
-    VectorXd gradient;
-
-    SparseMatrix<double> hessian;
-
-    double energyB, energyS;
+    NewtonObjective *obj = NULL;
+    VectorXd guess;
 
     if(type == RelaxEmbedding)
-        elasticEnergyQ(q, g, energyB, energyS, gradient, hessian);
-    else if(type == RelaxMetric)
-        elasticEnergyG(q, g, energyB, energyS, gradient, hessian);
+    {
+        obj = new EmbeddingMinimizer(*this, cont, g);
+        guess = q;
+    }
     else if(type == FitMetric)
     {
-        VectorXd dq;
-        SparseMatrix<double> dgdq;
-        elasticEnergyGQ(q, g, dq, dgdq);
-        gradient = dgdq*dq;
-        hessian = dgdq*dgdq.transpose();
-        energyB = dq.norm();
-        energyS = 0;
+        obj = new MetricFit(*this, cont, q);
+        guess = g;
     }
+    else
+        return false;
 
-    for(int i=0; i<params_.maxiters; i++)
+    Newton n(*obj);
+    NewtonParameters params;
+    params.tol = params_.tol;
+    params.maxiters = params_.maxiters;
+    params.lsmaxiters = params_.maxlinesearchiters;
+    VectorXd result;
+    Newton::SolverStatus ss = n.solve(params, guess, result);
+    std::cout << n.solverStatusMessage(ss) << std::endl;
+
+    if(ss != Newton::CONVERGED)
+        return false;
+
+    if(type == RelaxEmbedding)
     {
-        if(gradient.norm() < params_.tol)
-            break;
-
-        SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
-        solver.compute(hessian);
-        VectorXd searchdir = -solver.solve(gradient);
-
-
-        std::cout << std::fixed << std::setprecision(8) << "Iter " << i+1
-                  << "   Eb " << energyB
-                  << "   Es " << energyS
-                  << "   |dq| " << gradient.norm()
-                  << "   sd = " << searchdir.dot(gradient);
-
-        double stepsize = 1.0;
-
-        if(type == RelaxMetric || type == FitMetric)
-        {
-            stepsize = triangleInequalityLineSearch(g, searchdir);
-            stepsize = std::min(1.0, 0.9*stepsize);
-        }
-
-        double initialenergy = energyB+energyS;
-
-        VectorXd newdofs;
-        int lsiters = 0;
-        double eps = searchdir.dot(gradient) >= 0 ? 1e-4 : 0;
-
-        while(searchdir.dot(gradient) >= 0)
-        {
-            SparseMatrix<double> shift(hessian.rows(), hessian.cols());
-            shift.setIdentity();
-            shift *= eps;
-            SparseMatrix<double> newh = hessian + shift;
-            SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
-            solver.compute(newh);
-            searchdir = -solver.solve(gradient);
-            eps *= 2;
-        }
-        std::cout << std::fixed << std::setprecision(8) << "   lm " << eps/2.0 << std::endl;
-
-        bool abort = searchdir.dot(gradient) > 0;
-
-        if(!abort)
-        {
-            do
-            {
-                if(type == RelaxEmbedding)
-                {
-                    newdofs = q + stepsize*searchdir;
-                    elasticEnergyQ(newdofs, g, energyB, energyS, gradient, hessian);
-                }
-                else if(type == RelaxMetric)
-                {
-                    newdofs = g + stepsize*searchdir;
-                    elasticEnergyG(q, newdofs, energyB, energyS, gradient, hessian);
-                }
-                else if(type == FitMetric)
-                {
-                    newdofs = g + stepsize*searchdir;
-                    VectorXd dq;
-                    SparseMatrix<double> dgdq;
-                    elasticEnergyGQ(q, newdofs, dq, dgdq);
-                    gradient = dgdq*dq;
-                    hessian = dgdq*dgdq.transpose();
-                    energyB = dq.norm();
-                    energyS = 0;
-                }
-
-                stepsize /= 2.0;
-                if(++lsiters > params_.maxlinesearchiters)
-                {
-                    abort = true;
-                    break;
-                }
-            }
-            while(energyB+energyS > initialenergy || isnan(energyB) || isnan(energyS));
-        }
-
-        if(abort)
-        {
-            std::cout << endl;
-            break;
-        }
-
-        if(type == RelaxEmbedding)
-            q = newdofs;
-        else if(type == RelaxMetric || type == FitMetric)
-            g = newdofs;
-
-        std::cout << std::fixed << std::setprecision(8) << "   h " << stepsize*2.0 << std::endl;
-
-        dofsToGeometry(q, g);
-        cont.updateGL();
+        q = result;
     }
-
-    if(gradient.norm() < params_.tol)
+    else if(type == FitMetric)
     {
-        std::cout << "Converged, final energies " << energyB << ", " << energyS << std::endl;
-        return true;
+        g = result;
     }
-    std::cout << "Failed to converge" << std::endl;
-    return false;
+
+    dofsToGeometry(q, g);
+    cont.updateGL();
+    return true;
 }
 
 bool Mesh::largestMagnitudeEigenvalue(const Eigen::SparseMatrix<double> &M, double &eigenvalue)

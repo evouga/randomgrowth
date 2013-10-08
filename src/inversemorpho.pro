@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     yimage.cpp \
     controller.cpp \
     mesh-rendering.cpp \
-    mesh-optimization.cpp
+    mesh-optimization.cpp \
+    newton.cpp
 
 HEADERS  += mainwindow.h \
     mesh.h \
@@ -38,6 +39,7 @@ HEADERS  += mainwindow.h \
     rotator.h \
     camera.h \
     yimage.h \
-    controller.h
+    controller.h \
+    newton.h
 
 FORMS    += mainwindow.ui
