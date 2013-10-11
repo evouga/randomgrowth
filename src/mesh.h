@@ -7,6 +7,8 @@
 
 const double PI = 3.14159265359;
 
+typedef Eigen::Triplet<double> Tr;
+
 class Controller;
 
 struct MyTraits : public OpenMesh::DefaultTraits
@@ -65,6 +67,20 @@ public:
     void elasticEnergyGQ(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
                          Eigen::VectorXd &gradq,
                          Eigen::SparseMatrix<double> &gradggradq);
+
+    double stretchOne(const Eigen::VectorXd &qs, const Eigen::VectorXd &gs,
+                      int *qidx, int *gidx,
+                      Eigen::VectorXd &dq,
+                      std::vector<Tr> &hq,
+                      std::vector<Tr> &dgdq,
+                      bool derivs) const;
+
+    double stretchTwo(const Eigen::VectorXd &qs, const Eigen::VectorXd &gs,
+                      int *qidx, int *gidx,
+                      Eigen::VectorXd &dq,
+                      std::vector<Tr> &hq,
+                      std::vector<Tr> &dgdq,
+                      bool derivs) const;
 
     enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
 
