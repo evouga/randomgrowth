@@ -4,10 +4,7 @@
 #include "OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh"
 #include <Eigen/Core>
 #include <Eigen/Sparse>
-
-const double PI = 3.14159265359;
-
-typedef Eigen::Triplet<double> Tr;
+#include "elasticenergy.h"
 
 class Controller;
 
@@ -26,12 +23,9 @@ struct MyTraits : public OpenMesh::DefaultTraits
 
 typedef OpenMesh::TriMesh_ArrayKernelT<MyTraits> OMMesh;
 
-struct ProblemParameters
+struct ProblemParameters : public ElasticParameters
 {
     // simulation
-    double h;
-    double PoissonRatio;
-    double YoungsModulus;
     int maxiters;
     int maxlinesearchiters;
     int maxpoweriters;
@@ -67,20 +61,6 @@ public:
     void elasticEnergyGQ(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
                          Eigen::VectorXd &gradq,
                          Eigen::SparseMatrix<double> &gradggradq);
-
-    double stretchOne(const Eigen::VectorXd &qs, const Eigen::VectorXd &gs,
-                      int *qidx, int *gidx,
-                      Eigen::VectorXd &dq,
-                      std::vector<Tr> &hq,
-                      std::vector<Tr> &dgdq,
-                      bool derivs) const;
-
-    double stretchTwo(const Eigen::VectorXd &qs, const Eigen::VectorXd &gs,
-                      int *qidx, int *gidx,
-                      Eigen::VectorXd &dq,
-                      std::vector<Tr> &hq,
-                      std::vector<Tr> &dgdq,
-                      bool derivs) const;
 
     enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
 
