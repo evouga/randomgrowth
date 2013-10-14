@@ -227,10 +227,19 @@ void Mesh::elasticEnergy(const VectorXd &q,
 
             B<F<double> > Kcurv = K(ddq, nbddq);
             B<F<double> > embeddedArea = dualbarycentricarea(ddq, nbddq);
-            stencilenergy += -2.0*bendcoeff*Kcurv*embeddedArea*embeddedArea/materialArea;
+            //stencilenergy += -2.0*bendcoeff*Kcurv*embeddedArea*embeddedArea/materialArea;
             for(int i=0; i<numnbs; i++)
                 delete[] nbddq[i];
         }
+
+        VectorXd Dq(numdofs());
+        Dq.setZero();
+        vector<Tr> hq, dgdq;
+        int dr = ElasticEnergy::DR_DQ | ElasticEnergy::DR_HQ;
+        cout << "e " << ElasticEnergy::bendOne(q, g, vidx, nbidx, spokeidx, rightoppidx, Dq, hq, dgdq, params_, dr);
+        cout << stencilenergy.val().val() << endl;
+        SparseMatrix<double> Hq(numdofs(), numdofs());
+        Hq.setFromTriplets(hq.begin(), hq.end());
 
         stencilenergy.diff(0,1);
 
@@ -241,6 +250,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
             for(int j=0; j<3; j++)
             {
                 gradq[3*vidx+j] += ddq[j].d(0).val();
+                cout << "dq " << ddq[j].d(0).val() << " " << Dq[3*vidx+j] << endl;
             }
         }
 
@@ -251,6 +261,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
                 for(int j=0; j<3; j++)
                 {
                     gradq[3*nbidx[i]+j] += ddnbq[j][i].d(0).val();
+                    cout << "dq " << ddnbq[j][i].d(0).val() << " " << Dq[3*nbidx[i]+j] << endl;
                 }
             }
             if(derivs & G)
@@ -268,7 +279,10 @@ void Mesh::elasticEnergy(const VectorXd &q,
                 {
                     double hess = ddq[j].d(0).d(k);
                     if(hess != 0)
+                    {
                         Hqcoeffs.push_back(Tr(3*vidx+j,3*vidx+k,hess));
+                        cout << "h " << hess << " " << Hq.coeffRef(3*vidx+j, 3*vidx+k) << endl;
+                    }
                 }
                 for(int k=0; k<numnbs; k++)
                 {
@@ -278,7 +292,9 @@ void Mesh::elasticEnergy(const VectorXd &q,
                         if(hess != 0)
                         {
                             Hqcoeffs.push_back(Tr(3*vidx+j,3*nbidx[k]+l,hess));
+                            cout << "h " << hess << " " << Hq.coeffRef(3*vidx+j, 3*nbidx[k]+l) << endl;
                             Hqcoeffs.push_back(Tr(3*nbidx[k]+l,3*vidx+j,hess));
+                            cout << "h " << hess << " " << Hq.coeffRef(3*nbidx[k]+l, 3*vidx+j) << endl;
                         }
                     }
                 }
@@ -294,7 +310,10 @@ void Mesh::elasticEnergy(const VectorXd &q,
                         {
                             double hess = ddnbq[k][i].d(0).d(3+3*j+l);
                             if(hess != 0)
+                            {
                                 Hqcoeffs.push_back(Tr(3*nbidx[i]+k,3*nbidx[j]+l,hess));
+                                cout << hess << " " << Hq.coeffRef(3*nbidx[i]+k, 3*nbidx[j]+l) << endl;
+                            }
                         }
                     }
                 }

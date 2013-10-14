@@ -331,3 +331,95 @@ double ElasticEnergy::stretchTwo(const VectorXd &qs,
 
     return coeff*sqrt(detg) + coeff*(A+B)/sqrt(detg);
 }
+
+double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqidx, const std::vector<int> &nbqidx, const std::vector<int> &spokegidx, const std::vector<int> &oppgidx, VectorXd &dq, std::vector<Tr> &hq, std::vector<Tr> &dgdq, const ElasticParameters &params, int derivsRequested)
+{
+    int numnbs = nbqidx.size();
+    assert((int)spokegidx.size() == numnbs);
+    assert((int)oppgidx.size() == numnbs);
+
+    double coeff = params.YoungsModulus*params.h*params.h/(24.0*(1.0-params.PoissonRatio*params.PoissonRatio));
+
+    std::vector<double> A;
+    std::vector<double> thetas;
+    std::vector<double> psis;
+    for(int i=0; i<numnbs; i++)
+    {
+        int nextid = (i+1)%numnbs;
+        int previd = (i+numnbs-1)%numnbs;
+        double gi = gs[spokegidx[i]];
+        double gn = gs[spokegidx[nextid]];
+        double gin = gs[oppgidx[i]];
+        double gp = gs[spokegidx[previd]];
+        double gpi = gs[oppgidx[previd]];
+        double area = 0.5*sqrt(gi*gi*gn*gn - (gi*gi+gn*gn-gin*gin)*(gi*gi+gn*gn-gin*gin)/4.0);
+        A.push_back(area);
+
+        double thetanum = gp*gp+gpi*gpi-gi*gi;
+        double thetadenom = sqrt(4.0*gp*gp*gpi*gpi - (gp*gp+gpi*gpi-gi*gi)*(gp*gp+gpi*gpi-gi*gi));
+
+        thetas.push_back(thetanum/thetadenom);
+
+        double psinum = gn*gn+gin*gin-gi*gi;
+        double psidenom = sqrt(4.0*gn*gn*gin*gin - (gn*gn+gin*gin-gi*gi)*(gn*gn+gin*gin-gi*gi));
+
+        psis.push_back(psinum/psidenom);
+    }
+
+    double rtdetg = 0;
+    for(int i=0; i<numnbs; i++)
+        rtdetg += A[i];
+    rtdetg /= 3.0;
+
+    Vector3d B(0,0,0);
+    for(int i=0; i<numnbs; i++)
+    {
+        B += 0.5*(thetas[i]+psis[i])*(qs.segment<3>(3*nbqidx[i])-qs.segment<3>(3*centqidx));
+    }
+
+    if(derivsRequested != DR_NONE)
+    {
+        double cotsums = 0;
+        for(int i=0; i<numnbs; i++)
+        {
+            if(derivsRequested & DR_DQ)
+                dq.segment<3>(3*nbqidx[i]) += coeff*(thetas[i]+psis[i])/rtdetg * B;
+            cotsums += thetas[i]+psis[i];
+        }
+
+        if(derivsRequested & DR_DQ)
+            dq.segment<3>(3*centqidx) += -coeff*cotsums/rtdetg*B;
+
+        if(derivsRequested & DR_HQ)
+        {
+            for(int i=0; i<numnbs; i++)
+            {
+                for(int j=0; j<numnbs; j++)
+                {
+                    double hess = coeff*(thetas[i]+psis[i])*(thetas[j]+psis[j])/(2.0*rtdetg);
+
+                    for(int k=0; k<3; k++)
+                    {
+                        hq.push_back(Tr(3*nbqidx[i]+k, 3*nbqidx[j]+k, hess));
+                    }
+                }
+
+                double hess = -coeff/(2.0*rtdetg)*(thetas[i]+psis[i])*cotsums;
+                for(int k=0; k<3; k++)
+                {
+                    hq.push_back(Tr(3*nbqidx[i]+k, 3*centqidx+k, hess));
+                    hq.push_back(Tr(3*centqidx+k, 3*nbqidx[i]+k, hess));
+                }
+            }
+
+            double hess = coeff*cotsums*cotsums/(2.0*rtdetg);
+
+            for(int k=0; k<3; k++)
+            {
+                hq.push_back(Tr(3*centqidx+k, 3*centqidx+k, hess));
+            }
+        }
+    }
+
+    return coeff*B.dot(B)/rtdetg;
+}
