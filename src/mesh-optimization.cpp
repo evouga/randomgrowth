@@ -205,11 +205,15 @@ void Mesh::elasticEnergy(const VectorXd &q,
             }
         }
 
+        B<F<double> > temp;
+
         {
             B<F<double> > Lr[3];
             for(int j=0; j<3; j++)
                 Lr[j] = L(ddq[j], numnbs, ddnbq[j], ddspokelens, ddopplens);
             B<F<double> > materialArea = dualbarycentricarea(numnbs, ddspokelens, ddopplens);
+
+            temp = cottri(ddopplens[0], ddspokelens[0], ddspokelens[1]);
 
             stencilenergy += bendcoeff*Lcoeff*normSquared(Lr)/materialArea;
 
@@ -235,11 +239,13 @@ void Mesh::elasticEnergy(const VectorXd &q,
         VectorXd Dq(numdofs());
         Dq.setZero();
         vector<Tr> hq, dgdq;
-        int dr = ElasticEnergy::DR_DQ | ElasticEnergy::DR_HQ;
+        int dr = ElasticEnergy::DR_DQ | ElasticEnergy::DR_HQ | ElasticEnergy::DR_DGDQ;
         cout << "e " << ElasticEnergy::bendOne(q, g, vidx, nbidx, spokeidx, rightoppidx, Dq, hq, dgdq, params_, dr);
         cout << stencilenergy.val().val() << endl;
         SparseMatrix<double> Hq(numdofs(), numdofs());
         Hq.setFromTriplets(hq.begin(), hq.end());
+        SparseMatrix<double> DgDq(numedges(), numdofs());
+        DgDq.setFromTriplets(dgdq.begin(), dgdq.end());
 
         stencilenergy.diff(0,1);
 
@@ -352,10 +358,16 @@ void Mesh::elasticEnergy(const VectorXd &q,
                     {
                         double hess = ddspokelens[i].d(0).d(j);
                         if(hess != 0)
+                        {
                             dgdqcoeffs.push_back(Tr(spokeidx[i],3*vidx+j,hess));
+                            std::cout << "mix " << hess << " " << DgDq.coeffRef(spokeidx[i], 3*vidx+j) << endl;
+                        }
                         hess = ddopplens[i].d(0).d(j);
                         if(hess != 0)
+                        {
                             dgdqcoeffs.push_back(Tr(rightoppidx[i],3*vidx+j,hess));
+                            std::cout << "mixon " << hess << " " << DgDq.coeffRef(rightoppidx[i],3*vidx+j) << endl;
+                        }
                     }
 
                     for(int j=0; j<numnbs; j++)
@@ -364,11 +376,17 @@ void Mesh::elasticEnergy(const VectorXd &q,
                         {
                             double hess = ddspokelens[i].d(0).d(3+3*j+k);
                             if(hess != 0)
+                            {
                                 dgdqcoeffs.push_back(Tr(spokeidx[i], 3*nbidx[j]+k, hess));
+                                std::cout << "mix " << hess << " " << DgDq.coeffRef(spokeidx[i], 3*nbidx[j]+k) << endl;
+                            }
 
                             hess = ddopplens[i].d(0).d(3+3*j+k);
                             if(hess != 0)
+                            {
                                 dgdqcoeffs.push_back(Tr(rightoppidx[i], 3*nbidx[j]+k, hess));
+                                std::cout << "mixoc " << hess << " " << DgDq.coeffRef(rightoppidx[i], 3*nbidx[j]+k) << endl;
+                            }
                         }
                     }
                 }

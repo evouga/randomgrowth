@@ -1,4 +1,5 @@
 #include "elasticenergy.h"
+#include <iostream>
 
 using namespace Eigen;
 
@@ -417,6 +418,114 @@ double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqi
             for(int k=0; k<3; k++)
             {
                 hq.push_back(Tr(3*centqidx+k, 3*centqidx+k, hess));
+            }
+        }
+
+        if(derivsRequested & DR_DGDQ)
+        {
+            VectorXd dgspokedrtdeg(numnbs);
+            VectorXd dgoppdrtdeg(numnbs);
+            dgspokedrtdeg.setZero();
+            dgoppdrtdeg.setZero();
+
+            MatrixXd dgdcottheta(numnbs, numnbs);
+            MatrixXd dgdcotpsi(numnbs, numnbs);
+            dgdcottheta.setZero();
+            dgdcotpsi.setZero();
+
+            MatrixXd dgoppdcottheta(numnbs, numnbs);
+            MatrixXd dgoppdcotpsi(numnbs, numnbs);
+            dgoppdcottheta.setZero();
+            dgoppdcotpsi.setZero();
+
+            for(int i=0; i<numnbs; i++)
+            {
+                int nextid = (i+1)%numnbs;
+                int previd = (i+numnbs-1)%numnbs;
+                double gi = gs[spokegidx[i]];
+                double gn = gs[spokegidx[nextid]];
+                double gp = gs[spokegidx[previd]];
+                double gin = gs[oppgidx[i]];
+                double gpn = gs[oppgidx[previd]];
+
+                double spoke = 1.0/24.0*(gi*(gn*gn+gin*gin-gi*gi)/A[i] + gi*(gp*gp+gpn*gpn-gi*gi)/A[previd]);
+                double opp = 1.0/24.0*(gin*(gi*gi+gn*gn-gin*gin)/A[i]);
+                dgspokedrtdeg[i] = spoke;
+                dgoppdrtdeg[i] = opp;
+
+                double thetadenom = 4.0*gp*gp*gpn*gpn-(gp*gp+gpn*gpn-gi*gi)*(gp*gp+gpn*gpn-gi*gi);
+                double psidenom = 4.0*gn*gn*gin*gin-(gn*gn+gin*gin-gi*gi)*(gn*gn+gin*gin-gi*gi);
+
+                dgdcottheta(previd, i) = 2.0*gp*(1.0/sqrt(thetadenom) + (gp*gp+gpn*gpn-gi*gi)*(gp*gp-gpn*gpn-gi*gi)/(thetadenom*sqrt(thetadenom)));
+                dgdcottheta(i, i) = -2.0*gi*(1.0/sqrt(thetadenom) + (gp*gp+gpn*gpn-gi*gi)*(gp*gp+gpn*gpn-gi*gi)/(thetadenom*sqrt(thetadenom)));
+                dgoppdcottheta(previd, i) = 2.0*gpn*(1.0/sqrt(thetadenom) + (gp*gp+gpn*gpn-gi*gi)*(gpn*gpn-gp*gp-gi*gi)/(thetadenom*sqrt(thetadenom)));
+
+                dgdcotpsi(nextid, i) = 2.0*gn*(1.0/sqrt(psidenom) + (gn*gn+gin*gin-gi*gi)*(gn*gn-gin*gin-gi*gi)/(psidenom*sqrt(psidenom)));
+                dgdcotpsi(i, i) = -2.0*gi*(1.0/sqrt(psidenom) + (gn*gn+gin*gin-gi*gi)*(gn*gn+gin*gin-gi*gi)/(psidenom*sqrt(psidenom)));
+                dgoppdcotpsi(i, i) = 2.0*gin*(1.0/sqrt(psidenom) + (gn*gn+gin*gin-gi*gi)*(gin*gin-gn*gn-gi*gi)/(psidenom*sqrt(psidenom)));
+            }
+
+            MatrixXd dgdB(3,numnbs);
+            dgdB.setZero();
+
+            MatrixXd dgoppdB(3,numnbs);
+            dgoppdB.setZero();
+
+            for(int j=0; j<numnbs; j++)
+            {
+                dgdB += 0.5*(qs.segment<3>(3*nbqidx[j])-qs.segment<3>(3*centqidx))
+                        * (dgdcottheta.col(j)+dgdcotpsi.col(j)).transpose();
+                dgoppdB += 0.5*(qs.segment<3>(3*nbqidx[j])-qs.segment<3>(3*centqidx))
+                        * (dgoppdcottheta.col(j)+dgoppdcotpsi.col(j)).transpose();
+            }
+
+            for(int j=0; j<numnbs; j++)
+            {
+                MatrixXd dgdqj = B*dgspokedrtdeg.transpose();
+                dgdqj *= -1.0/(rtdetg);
+                dgdqj += dgdB;
+                dgdqj *= (thetas[j]+psis[j]);
+                dgdqj += B*(dgdcottheta.col(j)+dgdcotpsi.col(j)).transpose();
+                dgdqj *= coeff/rtdetg;
+
+                MatrixXd dgoppdqj = B*dgoppdrtdeg.transpose();
+                dgoppdqj *= -1.0/(rtdetg);
+                dgoppdqj += dgoppdB;
+                dgoppdqj *= (thetas[j]+psis[j]);
+                dgoppdqj += B*(dgoppdcottheta.col(j)+dgoppdcotpsi.col(j)).transpose();
+                dgoppdqj *= coeff/rtdetg;
+
+                for(int i=0; i<3; i++)
+                    for(int k=0; k<numnbs; k++)
+                    {
+                        dgdq.push_back(Tr(spokegidx[k],3*nbqidx[j]+i,dgdqj(i,k)));
+                        dgdq.push_back(Tr(oppgidx[k], 3*nbqidx[j]+i,dgoppdqj(i,k)));
+                    }
+            }
+
+            MatrixXd dgdqc = B*dgspokedrtdeg.transpose();
+            dgdqc *= -1.0/rtdetg;
+            dgdqc += dgdB;
+            dgdqc *= cotsums;
+
+            MatrixXd dgoppdqc = B*dgoppdrtdeg.transpose();
+            dgoppdqc *= -1.0/rtdetg;
+            dgoppdqc += dgoppdB;
+            dgoppdqc *= cotsums;
+            for(int j=0; j<numnbs; j++)
+            {
+                dgdqc += B*(dgdcottheta.col(j)+dgdcotpsi.col(j)).transpose();
+                dgoppdqc += B*(dgoppdcottheta.col(j)+dgoppdcotpsi.col(j)).transpose();
+            }
+            dgdqc *= -1.0*coeff/rtdetg;
+            dgoppdqc *= -1.0*coeff/rtdetg;
+            for(int i=0; i<3; i++)
+            {
+                for(int k=0; k<numnbs; k++)
+                {
+                    dgdq.push_back(Tr(spokegidx[k], 3*centqidx+i, dgdqc(i,k)));
+                    dgdq.push_back(Tr(oppgidx[k], 3*centqidx+i, dgoppdqc(i,k)));
+                }
             }
         }
     }
