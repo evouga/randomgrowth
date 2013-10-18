@@ -205,7 +205,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
             }
         }
 
-        B<F<double> > temp;
+        B<F<double> > test;
 
         {
             B<F<double> > Lr[3];
@@ -213,9 +213,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
                 Lr[j] = L(ddq[j], numnbs, ddnbq[j], ddspokelens, ddopplens);
             B<F<double> > materialArea = dualbarycentricarea(numnbs, ddspokelens, ddopplens);
 
-            temp = cottri(ddopplens[0], ddspokelens[0], ddspokelens[1]);
-
-            stencilenergy += bendcoeff*Lcoeff*normSquared(Lr)/materialArea;
+            //stencilenergy += bendcoeff*Lcoeff*normSquared(Lr)/materialArea;
 
             // bending energy det term
             vector<B<F<double> > *> nbddq;
@@ -230,8 +228,9 @@ void Mesh::elasticEnergy(const VectorXd &q,
             }
 
             B<F<double> > Kcurv = K(ddq, nbddq);
+            test = dualbarycentricarea(ddq, nbddq);
             B<F<double> > embeddedArea = dualbarycentricarea(ddq, nbddq);
-            //stencilenergy += -2.0*bendcoeff*Kcurv*embeddedArea*embeddedArea/materialArea;
+            stencilenergy += -2.0*bendcoeff*Kcurv*embeddedArea*embeddedArea/materialArea;
             for(int i=0; i<numnbs; i++)
                 delete[] nbddq[i];
         }
@@ -240,12 +239,21 @@ void Mesh::elasticEnergy(const VectorXd &q,
         Dq.setZero();
         vector<Tr> hq, dgdq;
         int dr = ElasticEnergy::DR_DQ | ElasticEnergy::DR_HQ | ElasticEnergy::DR_DGDQ;
-        cout << "e " << ElasticEnergy::bendOne(q, g, vidx, nbidx, spokeidx, rightoppidx, Dq, hq, dgdq, params_, dr);
-        cout << stencilenergy.val().val() << endl;
+        cout << "e " << ElasticEnergy::bendTwo(q, g, vidx, nbidx, spokeidx, rightoppidx, Dq, hq, dgdq, params_, dr);
+        cout << " " << stencilenergy.val().val() << endl;
         SparseMatrix<double> Hq(numdofs(), numdofs());
         Hq.setFromTriplets(hq.begin(), hq.end());
         SparseMatrix<double> DgDq(numedges(), numdofs());
         DgDq.setFromTriplets(dgdq.begin(), dgdq.end());
+
+//        test.diff(0,1);
+//        for(int i=0; i<3; i++)
+//            for(int j=0; j<3; j++)
+//            {
+//                cout << ddq[i].d(0).d(j) << " ";
+//            }
+//        cout << endl;
+//        exit(0);
 
         stencilenergy.diff(0,1);
 
@@ -287,7 +295,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
                     if(hess != 0)
                     {
                         Hqcoeffs.push_back(Tr(3*vidx+j,3*vidx+k,hess));
-                        cout << "h " << hess << " " << Hq.coeffRef(3*vidx+j, 3*vidx+k) << endl;
+                        cout << "hcent " << hess << " " << Hq.coeffRef(3*vidx+j, 3*vidx+k) << endl;
                     }
                 }
                 for(int k=0; k<numnbs; k++)
@@ -298,9 +306,9 @@ void Mesh::elasticEnergy(const VectorXd &q,
                         if(hess != 0)
                         {
                             Hqcoeffs.push_back(Tr(3*vidx+j,3*nbidx[k]+l,hess));
-                            cout << "h " << hess << " " << Hq.coeffRef(3*vidx+j, 3*nbidx[k]+l) << endl;
+                            cout << "hmix " << hess << " " << Hq.coeffRef(3*vidx+j, 3*nbidx[k]+l) << endl;
                             Hqcoeffs.push_back(Tr(3*nbidx[k]+l,3*vidx+j,hess));
-                            cout << "h " << hess << " " << Hq.coeffRef(3*nbidx[k]+l, 3*vidx+j) << endl;
+                            cout << "hmix " << hess << " " << Hq.coeffRef(3*nbidx[k]+l, 3*vidx+j) << endl;
                         }
                     }
                 }
@@ -318,7 +326,8 @@ void Mesh::elasticEnergy(const VectorXd &q,
                             if(hess != 0)
                             {
                                 Hqcoeffs.push_back(Tr(3*nbidx[i]+k,3*nbidx[j]+l,hess));
-                                cout << hess << " " << Hq.coeffRef(3*nbidx[i]+k, 3*nbidx[j]+l) << endl;
+                                if(i==j) cout << "=";
+                                cout << "hnb " << hess << " " << Hq.coeffRef(3*nbidx[i]+k, 3*nbidx[j]+l) << endl;
                             }
                         }
                     }

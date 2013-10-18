@@ -532,3 +532,315 @@ double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqi
 
     return coeff*B.dot(B)/rtdetg;
 }
+
+double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqidx, const std::vector<int> &nbqidx, const std::vector<int> &spokegidx, const std::vector<int> &oppgidx, VectorXd &dq, std::vector<Tr> &hq, std::vector<Tr> &dgdq, const ElasticParameters &params, int derivsRequested)
+{
+    int numnbs = nbqidx.size();
+    assert((int)spokegidx.size() == numnbs);
+    assert((int)oppgidx.size() == numnbs);
+
+    double coeff = -params.YoungsModulus*params.h*params.h/(12.0*(1.0+params.PoissonRatio));
+
+    std::vector<double> A;
+    std::vector<double> qA;
+
+    std::vector<double> angles;
+
+    for(int i=0; i<numnbs; i++)
+    {
+        int nextid = (i+1)%numnbs;
+        double gi = gs[spokegidx[i]];
+        double gn = gs[spokegidx[nextid]];
+        double gin = gs[oppgidx[i]];
+        double area = 0.5*sqrt(gi*gi*gn*gn - (gi*gi+gn*gn-gin*gin)*(gi*gi+gn*gn-gin*gin)/4.0);
+
+
+        Vector3d qi = qs.segment<3>(3*nbqidx[i]);
+        Vector3d qn = qs.segment<3>(3*nbqidx[nextid]);
+        Vector3d qc = qs.segment<3>(3*centqidx);
+
+        double qarea = 0.5*sqrt((qi-qc).dot(qi-qc)*(qn-qc).dot(qn-qc) - (qi-qc).dot(qn-qc)*(qi-qc).dot(qn-qc));
+
+        double sinangle = 2.0*qarea;
+        double cosangle = (qi-qc).dot(qn-qc);
+        angles.push_back(atan2(sinangle, cosangle));
+
+        A.push_back(area);
+        qA.push_back(qarea);
+    }
+
+    double rtdetg = 0;
+    double rtdeta = 0;
+    for(int i=0; i<numnbs; i++)
+    {
+        rtdetg += A[i];
+        rtdeta += qA[i];
+    }
+    rtdetg /= 3.0;
+    rtdeta /= 3.0;
+
+    double D = 2*PI;
+    for(int i=0; i<numnbs; i++)
+        D -= angles[i];
+
+    if(derivsRequested != DR_NONE)
+    {
+        MatrixXd dqdD(3,numnbs);
+        Vector3d dqcdD(0,0,0);
+        MatrixXd dqddeta(3,numnbs);
+        Vector3d dqcddeta(0,0,0);
+        for(int i=0; i<numnbs; i++)
+        {
+            int nextid = (i+1)%numnbs;
+            int previd = (i+numnbs-1)%numnbs;
+            Vector3d qi = qs.segment<3>(3*nbqidx[i]);
+            Vector3d qn = qs.segment<3>(3*nbqidx[nextid]);
+            Vector3d qc = qs.segment<3>(3*centqidx);
+            Vector3d qp = qs.segment<3>(3*nbqidx[previd]);
+            dqdD.col(i) = -1.0/(2.0*(qi-qc).dot(qi-qc))*
+                    ( ((qi-qc).dot(qn-qc)*(qi-qc) - (qi-qc).dot(qi-qc)*(qn-qc))/qA[i]
+                      + ((qp-qc).dot(qi-qc)*(qi-qc) - (qi-qc).dot(qi-qc)*(qp-qc))/qA[previd]);
+            dqcdD -= 1.0/(2.0*qA[i]) *
+                    ( (qn-qc).dot(qn-qi)*(qn-qc)/(qn-qc).dot(qn-qc) + (qi-qc).dot(qi-qn)*(qi-qc)/(qi-qc).dot(qi-qc));
+
+            dqddeta.col(i) = ((qn-qc).dot(qn-qc)*(qi-qc) - (qi-qc).dot(qn-qc)*(qn-qc))/(12.0*qA[i])
+                    + ( (qp-qc).dot(qp-qc)*(qi-qc)-(qp-qc).dot(qi-qc)*(qp-qc))/(12.0*qA[previd]);
+            dqcddeta += ( (qi-qc).dot(qn-qc)*(qi-qc + qn-qc) - (qn-qc).dot(qn-qc)*(qi-qc) - (qi-qc).dot(qi-qc)*(qn-qc))/(12.0*qA[i]);
+        }
+
+        if(derivsRequested & DR_DQ)
+        {
+            for(int i=0; i<numnbs; i++)
+            {
+                Vector3d dqidE = coeff*dqdD.col(i)*rtdeta/rtdetg + coeff*D*dqddeta.col(i)/rtdetg;
+                dq.segment<3>(3*nbqidx[i]) += dqidE;
+            }
+            Vector3d dqcdE = coeff*dqcdD*rtdeta/rtdetg + coeff*D*dqcddeta/rtdetg;
+            dq.segment<3>(3*centqidx) += dqcdE;
+        }
+
+        if(derivsRequested & DR_HQ)
+        {
+            for(int i=0; i<numnbs; i++)
+            {
+                int nextid = (i+1)%numnbs;
+                int previd = (i+numnbs-1)%numnbs;
+                Vector3d qi = qs.segment<3>(3*nbqidx[i]);
+                Vector3d qn = qs.segment<3>(3*nbqidx[nextid]);
+                Vector3d qc = qs.segment<3>(3*centqidx);
+                Vector3d qp = qs.segment<3>(3*nbqidx[previd]);
+
+                Matrix3d id;
+                id.setIdentity();
+
+                for(int j=i; j<numnbs; j++)
+                {
+                    Matrix3d dqjdqiE = coeff*dqdD.col(i)*dqddeta.col(j).transpose()/rtdetg;
+                    dqjdqiE += coeff*dqddeta.col(i)*dqdD.col(j).transpose()/rtdetg;
+
+                    if(j==i)
+                    {
+                        Matrix3d dqidqidD = 2.0*dqdD.col(i)*-(qi-qc).transpose();
+                        dqidqidD += 1.0/(8.0*qA[i]*qA[i]*qA[i])
+                               * ( (qi-qc).dot(qn-qc)*(qi-qc) - (qi-qc).dot(qi-qc)*(qn-qc))
+                                * ((qn-qc).dot(qn-qc)*(qi-qc)-(qi-qc).dot(qn-qc)*(qn-qc)).transpose();
+                        dqidqidD += 1.0/(8.0*qA[previd]*qA[previd]*qA[previd])
+                                * ( (qp-qc).dot(qi-qc)*(qi-qc)-(qi-qc).dot(qi-qc)*(qp-qc))
+                                * ((qp-qc).dot(qp-qc)*(qi-qc)-(qp-qc).dot(qi-qc)*(qp-qc)).transpose();
+                        dqidqidD += 1.0/(2.0*qA[i]) * (2.0*(qn-qc)*(qi-qc).transpose() - (qi-qc).dot(qn-qc)*id - (qi-qc)*(qn-qc).transpose());
+                        dqidqidD += 1.0/(2.0*qA[previd]) * (2.0*(qp-qc)*(qi-qc).transpose() - (qp-qc).dot(qi-qc)*id - (qi-qc)*(qp-qc).transpose());
+                        dqidqidD *= 1.0/(qi-qc).dot(qi-qc);
+
+                        dqjdqiE += coeff*dqidqidD * rtdeta/rtdetg;
+
+                        Matrix3d dqidqiddeta;
+                        dqidqiddeta = -1.0/(48.0*qA[i]*qA[i]*qA[i]) * ((qn-qc).dot(qn-qc)*(qi-qc)-(qi-qc).dot(qn-qc)*(qn-qc))*((qn-qc).dot(qn-qc)*(qi-qc)-(qi-qc).dot(qn-qc)*(qn-qc)).transpose();
+                        dqidqiddeta += -1.0/(48.0*qA[previd]*qA[previd]*qA[previd]) * ((qp-qc).dot(qp-qc)*(qi-qc) - (qp-qc).dot(qi-qc) * (qp-qc))*((qp-qc).dot(qp-qc)*(qi-qc) - (qp-qc).dot(qi-qc) * (qp-qc)).transpose();
+                        dqidqiddeta += 1.0/(12.0*qA[i]) * ( (qn-qc).dot(qn-qc)*id - (qn-qc)*(qn-qc).transpose());
+                        dqidqiddeta += 1.0/(12.0*qA[previd])*( (qp-qc).dot(qp-qc)*id - (qp-qc)*(qp-qc).transpose());
+
+                        dqjdqiE += coeff*D*dqidqiddeta/rtdetg;
+                    }
+                    if(j==i+1)
+                    {
+                        Matrix3d dqndqidD = -1.0/(8.0*qA[i]*qA[i]*qA[i]) *
+                                ( (qi-qc).dot(qn-qc)*(qi-qc)-(qi-qc).dot(qi-qc)*(qn-qc))
+                                * ( (qi-qc).dot(qn-qc)*(qi-qc)-(qi-qc).dot(qi-qc)*(qn-qc)).transpose();
+                        dqndqidD += -1.0/(2.0*qA[i]) * ( (qi-qc)*(qi-qc).transpose() - (qi-qc).dot(qi-qc)*id);
+                        dqndqidD *= 1.0/((qi-qc).dot(qi-qc));
+
+                        dqjdqiE += coeff*dqndqidD * rtdeta/rtdetg;
+
+                        Matrix3d dqndqiddeta = -1.0/(48.0*qA[i]*qA[i]*qA[i]) *
+                                ( (qn-qc).dot(qn-qc)*(qi-qc) - (qi-qc).dot(qn-qc) * (qn-qc) )
+                                * ( (qi-qc).dot(qi-qc) * (qn-qc) - (qi-qc).dot(qn-qc)*(qi-qc)).transpose();
+                        dqndqiddeta += 1.0/(12.0*qA[i]) * (2.0*(qi-qc)*(qn-qc).transpose() - (qi-qc).dot(qn-qc)*id - (qn-qc)*(qi-qc).transpose());
+
+                        dqjdqiE += coeff*D*dqndqiddeta/rtdetg;
+                    }
+                    if(i==0 && j==numnbs-1)
+                    {
+                        Matrix3d dqndqidD = -1.0/(8.0*qA[previd]*qA[previd]*qA[previd]) *
+                                ( (qi-qc).dot(qp-qc)*(qi-qc)-(qi-qc).dot(qi-qc)*(qp-qc))
+                                * ( (qi-qc).dot(qp-qc)*(qi-qc)-(qi-qc).dot(qi-qc)*(qp-qc)).transpose();
+                        dqndqidD += -1.0/(2.0*qA[previd]) * ( (qi-qc)*(qi-qc).transpose() - (qi-qc).dot(qi-qc)*id);
+                        dqndqidD *= 1.0/((qi-qc).dot(qi-qc));
+
+                        dqjdqiE += coeff*dqndqidD * rtdeta/rtdetg;
+
+                        Matrix3d dqndqiddeta = -1.0/(48.0*qA[previd]*qA[previd]*qA[previd]) *
+                                ( (qp-qc).dot(qp-qc)*(qi-qc) - (qi-qc).dot(qp-qc) * (qp-qc) )
+                                * ( (qi-qc).dot(qi-qc) * (qp-qc) - (qi-qc).dot(qp-qc)*(qi-qc)).transpose();
+                        dqndqiddeta += 1.0/(12.0*qA[previd]) * (2.0*(qi-qc)*(qp-qc).transpose() - (qi-qc).dot(qp-qc)*id - (qp-qc)*(qi-qc).transpose());
+
+                        dqjdqiE += coeff*D*dqndqiddeta/rtdetg;
+                    }
+                    for(int n=0; n<3; n++)
+                    {
+                        for(int m=0; m<3; m++)
+                        {
+                            hq.push_back(Tr(3*nbqidx[i]+n, 3*nbqidx[j]+m, dqjdqiE(n,m)));
+                            if(i != j)
+                                hq.push_back(Tr(3*nbqidx[j]+m, 3*nbqidx[i]+n, dqjdqiE(n,m)));
+                        }
+                    }
+                }
+                Matrix3d dqcdqiE = coeff*dqddeta.col(i)*dqcdD.transpose()/rtdetg;
+                dqcdqiE += coeff*dqdD.col(i)*dqcddeta.transpose()/rtdetg;
+
+                Matrix3d dqcdqidD = 4.0*dqdD.col(i)*(qi-qc).transpose();
+                dqcdqidD += 1.0/(4.0*qA[i]*qA[i]*qA[i])
+                        * ((qi-qc).dot(qn-qc)*(qi-qc)-(qi-qc).dot(qi-qc)*(qn-qc))
+                        * ((qi-qc).dot(qn-qc)*(qi-qc+qn-qc)-(qi-qc)*(qn-qc).dot(qn-qc) - (qi-qc).dot(qi-qc)*(qn-qc)).transpose();
+                dqcdqidD += 1.0/qA[i] * ( (qi-qc)*(qi-qc+qn-qc).transpose() -2*(qn-qc)*(qi-qc).transpose() + (qi-qc).dot(qn-qi)*id);
+                dqcdqidD += 1.0/(4.0*qA[previd]*qA[previd]*qA[previd])
+                        * ((qi-qc).dot(qp-qc)*(qi-qc)-(qi-qc).dot(qi-qc)*(qp-qc))
+                        * ((qi-qc).dot(qp-qc)*(qi-qc+qp-qc)-(qi-qc)*(qp-qc).dot(qp-qc) - (qi-qc).dot(qi-qc)*(qp-qc)).transpose();
+                dqcdqidD += 1.0/qA[previd] * ( (qi-qc)*(qi-qc+qp-qc).transpose() -2*(qp-qc)*(qi-qc).transpose() + (qi-qc).dot(qp-qi)*id);
+                dqcdqidD *= 1.0/(2.0*(qi-qc).dot(qi-qc));
+
+                dqcdqiE += coeff*dqcdqidD*rtdeta/rtdetg;
+
+                Matrix3d dqcdqiddeta;
+                dqcdqiddeta.setZero();
+
+                dqcdqiddeta += -1.0/(48.0*qA[i]*qA[i]*qA[i])
+                        * ( (qn-qc).dot(qn-qc)*(qi-qc) - (qi-qc).dot(qn-qc) * (qn-qc) )
+                        * ( (qi-qc).dot(qn-qc) * (qi-qc+qn-qc) - (qi-qc)*(qn-qc).dot(qn-qc) - (qi-qc).dot(qi-qc)*(qn-qc)).transpose();
+                dqcdqiddeta += -1.0/(12.0*qA[i]) *
+                        ( (qn-qc).dot(qn-qi)*id + 2.0*(qi-qc)*(qn-qc).transpose() - (qn-qc)*(qi-qc+qn-qc).transpose());
+                dqcdqiddeta += -1.0/(48.0*qA[previd]*qA[previd]*qA[previd])
+                        * ( (qp-qc).dot(qp-qc)*(qi-qc) - (qi-qc).dot(qp-qc) * (qp-qc) )
+                        * ( (qi-qc).dot(qp-qc) * (qi-qc+qp-qc) - (qi-qc)*(qp-qc).dot(qp-qc) - (qi-qc).dot(qi-qc)*(qp-qc)).transpose();
+                dqcdqiddeta += -1.0/(12.0*qA[previd]) *
+                        ( (qp-qc).dot(qp-qi)*id + 2.0*(qi-qc)*(qp-qc).transpose() - (qp-qc)*(qi-qc+qp-qc).transpose());
+
+                dqcdqiE += coeff*D*dqcdqiddeta/rtdetg;
+
+                for(int n=0; n<3; n++)
+                {
+                    for(int m=0; m<3; m++)
+                    {
+                        hq.push_back(Tr(3*centqidx+m, 3*nbqidx[i]+n, dqcdqiE(n,m)));
+                        hq.push_back(Tr(3*nbqidx[i]+n, 3*centqidx+m, dqcdqiE(n,m)));
+                    }
+                }
+            }
+
+            Matrix3d dqcdqcdD;
+            dqcdqcdD.setZero();
+
+            Matrix3d dqcdqcddeta;
+            dqcdqcddeta.setZero();
+
+            for(int i=0; i<numnbs; i++)
+            {
+                int nextid = (i+1)%numnbs;
+                int previd = (i+numnbs-1)%numnbs;
+                Vector3d qi = qs.segment<3>(3*nbqidx[i]);
+                Vector3d qn = qs.segment<3>(3*nbqidx[nextid]);
+                Vector3d qc = qs.segment<3>(3*centqidx);
+                Vector3d qp = qs.segment<3>(3*nbqidx[previd]);
+
+                Matrix3d id;
+                id.setIdentity();
+
+                dqcdqcdD += 1.0/(8.0*qA[i]*qA[i]*qA[i])
+                        * ( (qn-qc).dot(qn-qi)*(qn-qc)/(qn-qc).dot(qn-qc) + (qi-qc).dot(qi-qn)*(qi-qc)/(qi-qc).dot(qi-qc))
+                        * ( (qi-qc).dot(qn-qc)*(qi-qc+qn-qc) - (qi-qc)*(qn-qc).dot(qn-qc) - (qn-qc)*(qi-qc).dot(qi-qc)).transpose();
+                dqcdqcdD -= 1.0/(2.0*qA[i]) *
+                        ( (qn-qc).dot(qn-qi)*(qn-qc)/(qn-qc).dot(qn-qc)/(qn-qc).dot(qn-qc) * 2.0*(qn-qc).transpose() - (qn-qc)*(qn-qi).transpose()/(qn-qc).dot(qn-qc) - (qn-qc).dot(qn-qi)/(qn-qc).dot(qn-qc) * id);
+                dqcdqcdD -= 1.0/(2.0*qA[i]) *
+                        ( (qi-qc).dot(qi-qn)*(qi-qc)/(qi-qc).dot(qi-qc)/(qi-qc).dot(qi-qc) * 2.0*(qi-qc).transpose() - (qi-qc)*(qi-qn).transpose()/(qi-qc).dot(qi-qc) - (qi-qc).dot(qi-qn)/(qi-qc).dot(qi-qc) * id);
+
+                dqcdqcddeta += -1.0/(48.0*qA[i]*qA[i]*qA[i])
+                        * ( (qi-qc).dot(qn-qc)*(qi-qc+qn-qc) - (qi-qc)*(qn-qc).dot(qn-qc) - (qi-qc).dot(qi-qc)*(qn-qc))
+                        * ( (qi-qc).dot(qn-qc)*(qi-qc+qn-qc) - (qi-qc)*(qn-qc).dot(qn-qc) - (qi-qc).dot(qi-qc)*(qn-qc)).transpose();
+                dqcdqcddeta += -1.0/(12.0*qA[i])
+                        * ( (qi-qc).dot(qn-qi)*id + (qn-qc).dot(qi-qn) * id + (qi-qc)*(qi-qc).transpose() + (qn-qc)*(qn-qc).transpose() - (qi-qc)*(qn-qc).transpose() - (qn-qc)*(qi-qc).transpose());
+            }
+
+            Matrix3d dqcdqcE = coeff*dqcdD*dqcddeta.transpose()/rtdetg;
+            dqcdqcE += coeff*dqcddeta*dqcdD.transpose()/rtdetg;
+            dqcdqcE += coeff*dqcdqcdD*rtdeta/rtdetg;
+            dqcdqcE += coeff*D*dqcdqcddeta/rtdetg;
+
+            for(int i=0; i<3; i++)
+            {
+                for(int j=0; j<3; j++)
+                {
+                    hq.push_back(Tr(3*centqidx+i, 3*centqidx+j, dqcdqcE(j,i)));
+                }
+            }
+        }
+
+        if(derivsRequested & DR_DGDQ)
+        {
+            VectorXd dgspokedrtdeg(numnbs);
+            VectorXd dgoppdrtdeg(numnbs);
+            dgspokedrtdeg.setZero();
+            dgoppdrtdeg.setZero();
+
+            for(int i=0; i<numnbs; i++)
+            {
+                int nextid = (i+1)%numnbs;
+                int previd = (i+numnbs-1)%numnbs;
+                double gi = gs[spokegidx[i]];
+                double gn = gs[spokegidx[nextid]];
+                double gp = gs[spokegidx[previd]];
+                double gin = gs[oppgidx[i]];
+                double gpn = gs[oppgidx[previd]];
+
+                double spoke = 1.0/24.0*(gi*(gn*gn+gin*gin-gi*gi)/A[i] + gi*(gp*gp+gpn*gpn-gi*gi)/A[previd]);
+                double opp = 1.0/24.0*(gin*(gi*gi+gn*gn-gin*gin)/A[i]);
+                dgspokedrtdeg[i] = spoke;
+                dgoppdrtdeg[i] = opp;
+
+            }
+
+            for(int i=0; i<numnbs; i++)
+            {
+                for(int j=0; j<numnbs; j++)
+                {
+                    Vector3d dgjdqiE = -coeff/(rtdetg*rtdetg)*(dqdD.col(i)*rtdeta + D*dqddeta.col(i)) * dgspokedrtdeg[j];
+                    Vector3d dgoppjdqiE = -coeff/(rtdetg*rtdetg)*(dqdD.col(i)*rtdeta + D*dqddeta.col(i)) * dgoppdrtdeg[j];
+                    for(int k=0; k<3; k++)
+                    {
+                        dgdq.push_back(Tr(spokegidx[j], 3*nbqidx[i]+k, dgjdqiE[k]));
+                        dgdq.push_back(Tr(oppgidx[j], 3*nbqidx[i]+k, dgoppjdqiE[k]));
+                    }
+                }
+
+                Vector3d dgidqcE = -coeff/(rtdetg*rtdetg)*(dqcdD*rtdeta + D*dqcddeta) * dgspokedrtdeg[i];
+                Vector3d dgoppidqcE = -coeff/(rtdetg*rtdetg)*(dqcdD*rtdeta + D*dqcddeta) * dgoppdrtdeg[i];
+                for(int k=0; k<3; k++)
+                {
+                    dgdq.push_back(Tr(spokegidx[i], 3*centqidx+k, dgidqcE[k]));
+                    dgdq.push_back(Tr(oppgidx[i], 3*centqidx+k, dgoppidqcE[k]));
+                }
+            }
+        }
+    }
+
+    return coeff*D*rtdeta/rtdetg;
+}
