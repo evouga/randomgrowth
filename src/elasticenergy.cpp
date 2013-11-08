@@ -13,8 +13,26 @@ double ElasticEnergy::stretchingEnergy(const VectorXd &qs,
                                        const ElasticParameters &params,
                                        int derivsRequested)
 {
-    return stretchOne(qs, gs, qidx, gidx, dq, hq, dgdq, params, derivsRequested)
-            + stretchTwo(qs, gs, qidx, gidx, dq, hq, dgdq, params, derivsRequested);
+    double one = stretchOne(qs, gs, qidx, gidx, dq, hq, dgdq, params, derivsRequested);
+    double two = stretchTwo(qs, gs, qidx, gidx, dq, hq, dgdq, params, derivsRequested);
+    return one+two;
+}
+
+double ElasticEnergy::bendingEnergy(const VectorXd &qs,
+                                    const VectorXd &gs,
+                                    int centqidx,
+                                    const std::vector<int> &nbqidx,
+                                    const std::vector<int> &spokegidx,
+                                    const std::vector<int> &oppgidx,
+                                    VectorXd &dq,
+                                    std::vector<Tr> &hq,
+                                    std::vector<Tr> &dgdq,
+                                    const ElasticParameters &params,
+                                    int derivsRequested)
+{
+    double one = bendOne(qs, gs, centqidx, nbqidx, spokegidx, oppgidx, dq, hq, dgdq, params, derivsRequested);
+    double two = bendTwo(qs, gs, centqidx, nbqidx, spokegidx, oppgidx, dq, hq, dgdq, params, derivsRequested);
+    return one + two;
 }
 
 double ElasticEnergy::stretchOne(const VectorXd &qs,
@@ -40,7 +58,6 @@ double ElasticEnergy::stretchOne(const VectorXd &qs,
     }
 
     double detg = g[0]*g[0]*g[1]*g[1] - (g[0]*g[0]+g[1]*g[1]-g[2]*g[2])*(g[0]*g[0]+g[1]*g[1]-g[2]*g[2])/4.0;
-
     double A = (q[2]-q[1]).dot(2.0*g[1]*g[1]*(q[2]-q[1])+(g[2]*g[2]-g[0]*g[0]-g[1]*g[1])*(q[2]-q[0]))
             +(q[2]-q[0]).dot(2.0*g[0]*g[0]*(q[2]-q[0])+(g[2]*g[2]-g[0]*g[0]-g[1]*g[1])*(q[2]-q[1]))
             -4.0*detg;
@@ -563,6 +580,7 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
 
         double sinangle = 2.0*qarea;
         double cosangle = (qi-qc).dot(qn-qc);
+
         angles.push_back(atan2(sinangle, cosangle));
 
         A.push_back(area);
@@ -756,11 +774,9 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
             for(int i=0; i<numnbs; i++)
             {
                 int nextid = (i+1)%numnbs;
-                int previd = (i+numnbs-1)%numnbs;
                 Vector3d qi = qs.segment<3>(3*nbqidx[i]);
                 Vector3d qn = qs.segment<3>(3*nbqidx[nextid]);
                 Vector3d qc = qs.segment<3>(3*centqidx);
-                Vector3d qp = qs.segment<3>(3*nbqidx[previd]);
 
                 Matrix3d id;
                 id.setIdentity();

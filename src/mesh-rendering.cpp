@@ -7,94 +7,97 @@ using namespace Eigen;
 
 void Mesh::render()
 {
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_DITHER);
-
-    glPolygonOffset(1.0, 1.0);
-    glEnable(GL_POLYGON_OFFSET_FILL);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
-    glEnable ( GL_COLOR_MATERIAL );
-
-    if(params_.smoothShade)
+    meshLock_.lock();
     {
-        glShadeModel(GL_SMOOTH);
-    }
-    else
-    {
-        glShadeModel(GL_FLAT);
-    }
+        glEnable(GL_LIGHTING);
+        glEnable(GL_DITHER);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
+        glPolygonOffset(1.0, 1.0);
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    static vector<GLfloat> colors;
-    static vector<int> indices;
-    static vector<GLfloat> pos;
-    static vector<GLfloat> normal;
+        glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+        glEnable ( GL_COLOR_MATERIAL );
 
-    colors.clear();
-    indices.clear();
-    pos.clear();
-    normal.clear();
-
-    for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
-    {
-        for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fi.handle()); fvi; ++fvi)
+        if(params_.smoothShade)
         {
-            double strain = vertexStrainDensity(fvi.handle().idx());
-            Vector3d color = colormap(strain, 0.5);
-            OMMesh::VertexHandle v = fvi.handle();
-            OMMesh::Point pt = mesh_->point(v);
-            OMMesh::Point n;
-            mesh_->calc_vertex_normal_correct(v, n);
-            n.normalize();
-            for(int j=0; j<3; j++)
+            glShadeModel(GL_SMOOTH);
+        }
+        else
+        {
+            glShadeModel(GL_FLAT);
+        }
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_NORMAL_ARRAY);
+        glEnableClientState(GL_COLOR_ARRAY);
+
+        static vector<GLfloat> colors;
+        static vector<int> indices;
+        static vector<GLfloat> pos;
+        static vector<GLfloat> normal;
+
+        colors.clear();
+        indices.clear();
+        pos.clear();
+        normal.clear();
+
+        for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
+        {
+            for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fi.handle()); fvi; ++fvi)
             {
-                pos.push_back(pt[j]);
-                normal.push_back(n[j]);
-                colors.push_back(color[j]);
+                double strain = vertexStrainDensity(fvi.handle().idx());
+                Vector3d color = colormap(strain, 0.5);
+                OMMesh::VertexHandle v = fvi.handle();
+                OMMesh::Point pt = mesh_->point(v);
+                OMMesh::Point n;
+                mesh_->calc_vertex_normal_correct(v, n);
+                n.normalize();
+                for(int j=0; j<3; j++)
+                {
+                    pos.push_back(pt[j]);
+                    normal.push_back(n[j]);
+                    colors.push_back(color[j]);
+                }
             }
         }
-    }
 
-    glVertexPointer(3, GL_FLOAT, 0, &pos[0]);
-    glNormalPointer(GL_FLOAT, 0, &normal[0]);
-    glColorPointer(3, GL_FLOAT, 0, &colors[0]);
+        glVertexPointer(3, GL_FLOAT, 0, &pos[0]);
+        glNormalPointer(GL_FLOAT, 0, &normal[0]);
+        glColorPointer(3, GL_FLOAT, 0, &colors[0]);
 
-    int idx=0;
-    for (int i=0; i<(int)mesh_->n_faces(); i++)
-    {
-        for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(mesh_->face_handle(i)); fvi; ++fvi)
+        int idx=0;
+        for (int i=0; i<(int)mesh_->n_faces(); i++)
         {
-            indices.push_back(idx++);
+            for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(mesh_->face_handle(i)); fvi; ++fvi)
+            {
+                indices.push_back(idx++);
+            }
+        }
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, &indices[0]);
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_NORMAL_ARRAY);
+        glDisableClientState(GL_COLOR_ARRAY);
+        glDisable(GL_POLYGON_OFFSET_FILL);
+        glDisable(GL_LIGHTING);
+
+        if(params_.showWireframe)
+        {
+            glLineWidth(1.0);
+            glBegin(GL_LINES);
+            for(OMMesh::ConstEdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
+            {
+                glColor3f(0,0,0);
+                OMMesh::Point pt1, pt2;
+                edgeEndpoints(ei.handle(), pt1, pt2);
+                glVertex3d(pt1[0], pt1[1], pt1[2]);
+                glVertex3d(pt2[0], pt2[1], pt2[2]);
+            }
+            glEnd();
         }
     }
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, &indices[0]);
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-    glDisable(GL_POLYGON_OFFSET_FILL);
-    glDisable(GL_LIGHTING);
-
-    if(params_.showWireframe)
-    {
-        glLineWidth(1.0);
-        glBegin(GL_LINES);
-        for(OMMesh::ConstEdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
-        {
-            glColor3f(0,0,0);
-            OMMesh::Point pt1, pt2;
-            edgeEndpoints(ei.handle(), pt1, pt2);
-            glVertex3d(pt1[0], pt1[1], pt1[2]);
-            glVertex3d(pt2[0], pt2[1], pt2[2]);
-        }
-        glEnd();
-    }
+    meshLock_.unlock();
 }
 
 Vector3d Mesh::colormap(double val, double max) const
@@ -162,4 +165,45 @@ Vector3d Mesh::HSLtoRGB(const Vector3d &hsl) const
     for(int i=0; i<3; i++)
         rgb[i] += m;
     return rgb;
+}
+
+Vector3d Mesh::centroid()
+{
+    Vector3d centroid(0,0,0);
+
+    meshLock_.lock();
+    {
+        int numpts = mesh_->n_vertices();
+
+        for(int i=0; i<numpts; i++)
+        {
+            OMMesh::Point pt = mesh_->point(mesh_->vertex_handle(i));
+            for(int j=0; j<3; j++)
+                centroid[j] += pt[j];
+        }
+        centroid /= numpts;
+    }
+    meshLock_.unlock();
+    return centroid;
+}
+
+double Mesh::radius()
+{
+    double maxradius = 0;
+
+    meshLock_.lock();
+    {
+        Vector3d cent = centroid();
+        int numpts = mesh_->n_vertices();
+        for(int i=0; i<numpts; i++)
+        {
+            OMMesh::Point pt = mesh_->point(mesh_->vertex_handle(i));
+            Vector3d ept(pt[0],pt[1],pt[2]);
+            double radius = (ept-cent).squaredNorm();
+            if(radius > maxradius)
+                maxradius = radius;
+        }
+    }
+    meshLock_.unlock();
+    return sqrt(maxradius);
 }

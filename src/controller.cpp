@@ -64,7 +64,8 @@ void Controller::findMetric()
 
 void Controller::relaxEmbedding()
 {
-    m_.relaxEnergy(*this, Mesh::RelaxEmbedding);
+    //m_.relaxEnergy(*this, Mesh::RelaxEmbedding);
+    m_.simulate(*this);
     updateGL();
 }
 

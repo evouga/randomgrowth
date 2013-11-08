@@ -5,17 +5,18 @@ using namespace Eigen;
 using namespace OpenMesh;
 using namespace std;
 
-Mesh::Mesh()
+Mesh::Mesh() : meshLock_(QMutex::Recursive)
 {
     params_.h = 1;
     params_.YoungsModulus = 1;
     params_.PoissonRatio = 0.5;
-    params_.maxiters = 15;
+    params_.maxiters = 50;
     params_.maxlinesearchiters = 10;
     params_.tol = 1e-6;
-    params_.maxpoweriters = 100;
-    params_.powertol = 1e-6;
     params_.rho = 1.0;
+    params_.dampingCoeff = 0.9;
+    params_.eulerTimestep = 0.1;
+    params_.numEulerIters = 100;
 
     params_.smoothShade = true;
     params_.showWireframe = true;
@@ -52,52 +53,25 @@ void Mesh::dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const
 }
 
 void Mesh::dofsToGeometry(const VectorXd &q, const VectorXd &g)
-{
-    assert(q.size() == numdofs());
-    assert(g.size() == numedges());
-
-    for(int i=0; i<(int)mesh_->n_vertices(); i++)
+{    
+    meshLock_.lock();
     {
-        OMMesh::Point &pt = mesh_->point(mesh_->vertex_handle(i));
-        for(int j=0; j<3; j++)
-            pt[j] = q[3*i+j];
-    }
+        assert(q.size() == numdofs());
+        assert(g.size() == numedges());
 
-    for(int i=0; i<(int)mesh_->n_edges(); i++)
-    {
-        mesh_->data(mesh_->edge_handle(i)).setRestlen(g[i]);
-    }
-}
+        for(int i=0; i<(int)mesh_->n_vertices(); i++)
+        {
+            OMMesh::Point &pt = mesh_->point(mesh_->vertex_handle(i));
+            for(int j=0; j<3; j++)
+                pt[j] = q[3*i+j];
+        }
 
-Vector3d Mesh::centroid()
-{
-    Vector3d centroid(0,0,0);
-    int numpts = mesh_->n_vertices();
-
-    for(int i=0; i<numpts; i++)
-    {
-        OMMesh::Point pt = mesh_->point(mesh_->vertex_handle(i));
-        for(int j=0; j<3; j++)
-            centroid[j] += pt[j];
+        for(int i=0; i<(int)mesh_->n_edges(); i++)
+        {
+            mesh_->data(mesh_->edge_handle(i)).setRestlen(g[i]);
+        }
     }
-    centroid /= numpts;
-    return centroid;
-}
-
-double Mesh::radius()
-{
-    Vector3d cent = centroid();
-    int numpts = mesh_->n_vertices();
-    double maxradius = 0;
-    for(int i=0; i<numpts; i++)
-    {
-        OMMesh::Point pt = mesh_->point(mesh_->vertex_handle(i));
-        Vector3d ept(pt[0],pt[1],pt[2]);
-        double radius = (ept-cent).squaredNorm();
-        if(radius > maxradius)
-            maxradius = radius;
-    }
-    return sqrt(maxradius);
+    meshLock_.unlock();
 }
 
 void Mesh::edgeEndpoints(OMMesh::EdgeHandle eh, OMMesh::Point &pt1, OMMesh::Point &pt2)
@@ -119,15 +93,19 @@ bool Mesh::exportOBJ(const char *filename)
 
 bool Mesh::importOBJ(const char *filename)
 {
-    OpenMesh::IO::Options opt;
-    mesh_->request_face_normals();
-    mesh_->request_vertex_normals();
-    opt.set(OpenMesh::IO::Options::VertexNormal);
-    bool success = OpenMesh::IO::read_mesh(*mesh_, filename, opt);
-    mesh_->update_normals();
+    bool success = true;
+    meshLock_.lock();
+    {
+        OpenMesh::IO::Options opt;
+        mesh_->request_face_normals();
+        mesh_->request_vertex_normals();
+        opt.set(OpenMesh::IO::Options::VertexNormal);
+        success = OpenMesh::IO::read_mesh(*mesh_, filename, opt);
+        mesh_->update_normals();
 
-    setIntrinsicLengthsToCurrentLengths();    
-
+        setIntrinsicLengthsToCurrentLengths();
+    }
+    meshLock_.unlock();
     return success;
 }
 
@@ -143,11 +121,15 @@ void Mesh::setParameters(ProblemParameters params)
 
 void Mesh::setIntrinsicLengthsToCurrentLengths()
 {
-    for(OMMesh::EdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
+    meshLock_.lock();
     {
-        double length = mesh_->calc_edge_length(ei.handle());
-        mesh_->data(ei.handle()).setRestlen(length);
+        for(OMMesh::EdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
+        {
+            double length = mesh_->calc_edge_length(ei.handle());
+            mesh_->data(ei.handle()).setRestlen(length);
+        }
     }
+    meshLock_.unlock();
 }
 
 double Mesh::strainDensity(int edgeidx) const

@@ -91,11 +91,12 @@ void MainWindow::setParameters(ProblemParameters params)
     ui->maxitersEdit->setText(QString::number(params.maxiters));
     ui->maxlsitersEdit->setText(QString::number(params.maxlinesearchiters));
     ui->tolEdit->setText(QString::number(params.tol));
-    ui->maxpoweritersEdit->setText(QString::number(params.maxpoweriters));
-    ui->poweritertolEdit->setText(QString::number(params.powertol));
     ui->wireframeCheckBox->setChecked(params.showWireframe);
     ui->smoothShadeCheckBox->setChecked(params.smoothShade);
     ui->densityEdit->setText(QString::number(params.rho));
+    ui->dampingCoeffEdit->setText(QString::number(params.dampingCoeff));
+    ui->eulerItersEdit->setText(QString::number(params.numEulerIters));
+    ui->eulerTimestepEdit->setText(QString::number(params.eulerTimestep));
 }
 
 ProblemParameters MainWindow::getParameters()
@@ -107,11 +108,12 @@ ProblemParameters MainWindow::getParameters()
     result.maxiters = ui->maxitersEdit->text().toInt();
     result.maxlinesearchiters = ui->maxlsitersEdit->text().toInt();
     result.tol = ui->tolEdit->text().toDouble();
-    result.powertol = ui->poweritertolEdit->text().toDouble();
-    result.maxpoweriters = ui->maxpoweritersEdit->text().toInt();
     result.showWireframe = ui->wireframeCheckBox->isChecked();
     result.smoothShade = ui->smoothShadeCheckBox->isChecked();
     result.rho = ui->densityEdit->text().toDouble();
+    result.dampingCoeff = ui->dampingCoeffEdit->text().toDouble();
+    result.eulerTimestep = ui->eulerTimestepEdit->text().toDouble();
+    result.numEulerIters = ui->eulerItersEdit->text().toInt();
     return result;
 }
 
@@ -207,17 +209,22 @@ void MainWindow::on_relaxEmbeddingButton_clicked()
     QMetaObject::invokeMethod(cont_, "relaxEmbedding");
 }
 
-void MainWindow::on_maxpoweritersEdit_textEdited(const QString &)
-{
-    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
-}
-
-void MainWindow::on_poweritertolEdit_textEdited(const QString &)
-{
-    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
-}
-
 void MainWindow::on_densityEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_dampingCoeffEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_eulerTimestepEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_eulerItersEdit_textEdited(const QString &)
 {
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }

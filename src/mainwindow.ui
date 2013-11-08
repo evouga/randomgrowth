@@ -273,7 +273,7 @@
              <x>10</x>
              <y>180</y>
              <width>191</width>
-             <height>181</height>
+             <height>201</height>
             </rect>
            </property>
            <property name="title">
@@ -348,7 +348,7 @@
              </rect>
             </property>
            </widget>
-           <widget class="QLabel" name="maxpoweritersLabel">
+           <widget class="QLabel" name="eulerItersLabel">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -358,10 +358,10 @@
              </rect>
             </property>
             <property name="text">
-             <string>Max Power Iters</string>
+             <string>Euler Iterations</string>
             </property>
            </widget>
-           <widget class="QLabel" name="poweritertolLabel">
+           <widget class="QLabel" name="eulerTimestepLabel">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -371,10 +371,10 @@
              </rect>
             </property>
             <property name="text">
-             <string>Power Iter Tol</string>
+             <string>Euler Timestep</string>
             </property>
            </widget>
-           <widget class="QLineEdit" name="maxpoweritersEdit">
+           <widget class="QLineEdit" name="eulerItersEdit">
             <property name="geometry">
              <rect>
               <x>130</x>
@@ -384,11 +384,34 @@
              </rect>
             </property>
            </widget>
-           <widget class="QLineEdit" name="poweritertolEdit">
+           <widget class="QLineEdit" name="eulerTimestepEdit">
             <property name="geometry">
              <rect>
               <x>130</x>
               <y>150</y>
+              <width>61</width>
+              <height>20</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QLabel" name="dampingCoeffLabel">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>180</y>
+              <width>111</width>
+              <height>17</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Damping Coeff</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="dampingCoeffEdit">
+            <property name="geometry">
+             <rect>
+              <x>130</x>
+              <y>180</y>
               <width>61</width>
               <height>20</height>
              </rect>

@@ -20,10 +20,8 @@ Newton::SolverStatus Newton::solve(NewtonParameters params, const VectorXd &gues
     for(; iter<params.maxiters; iter++)
     {
         SparseMatrix<double> hessian;
-        no_.getHessian(q, hessian);
         VectorXd gradient;
-        no_.getGradient(q, gradient);
-        double energy = no_.getEnergy(q);
+        double energy = no_.getEnergyAndDerivatives(q, gradient, hessian);
 
         if(isnan(energy))
             return BAD_INPUT;
@@ -31,7 +29,7 @@ Newton::SolverStatus Newton::solve(NewtonParameters params, const VectorXd &gues
         if(gradient.norm() < params.tol)
             break;
 
-        SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
+        SimplicialLDLT<SparseMatrix<double> > solver;
         solver.compute(hessian);
         VectorXd searchdir = -solver.solve(gradient);
 

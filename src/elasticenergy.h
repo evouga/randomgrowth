@@ -34,16 +34,7 @@ public:
                                    const ElasticParameters &params,
                                    int derivsRequested);
 
-    static double bendOne(const Eigen::VectorXd &qs, const Eigen::VectorXd &gs,
-                          int centqidx, const std::vector<int> &nbqidx,
-                          const std::vector<int> &spokegidx, const std::vector<int> &oppgidx,
-                          Eigen::VectorXd &dq,
-                          std::vector<Tr> &hq,
-                          std::vector<Tr> &dgdq,
-                          const ElasticParameters &params,
-                          int derivsRequested);
-
-    static double bendTwo(const Eigen::VectorXd &qs, const Eigen::VectorXd &gs,
+    static double bendingEnergy(const Eigen::VectorXd &qs, const Eigen::VectorXd &gs,
                           int centqidx, const std::vector<int> &nbqidx,
                           const std::vector<int> &spokegidx, const std::vector<int> &oppgidx,
                           Eigen::VectorXd &dq,
@@ -69,6 +60,24 @@ private:
                       std::vector<Tr> &dgdq,
                       const ElasticParameters &params,
                       int derivsRequested);
+
+    static double bendOne(const Eigen::VectorXd &qs, const Eigen::VectorXd &gs,
+                          int centqidx, const std::vector<int> &nbqidx,
+                          const std::vector<int> &spokegidx, const std::vector<int> &oppgidx,
+                          Eigen::VectorXd &dq,
+                          std::vector<Tr> &hq,
+                          std::vector<Tr> &dgdq,
+                          const ElasticParameters &params,
+                          int derivsRequested);
+
+    static double bendTwo(const Eigen::VectorXd &qs, const Eigen::VectorXd &gs,
+                          int centqidx, const std::vector<int> &nbqidx,
+                          const std::vector<int> &spokegidx, const std::vector<int> &oppgidx,
+                          Eigen::VectorXd &dq,
+                          std::vector<Tr> &hq,
+                          std::vector<Tr> &dgdq,
+                          const ElasticParameters &params,
+                          int derivsRequested);
 };
 
 #endif // ELASTICENERGY_H

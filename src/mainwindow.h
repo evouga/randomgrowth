@@ -58,11 +58,13 @@ private slots:
 
     void on_relaxEmbeddingButton_clicked();
 
-    void on_maxpoweritersEdit_textEdited(const QString &arg1);
-
-    void on_poweritertolEdit_textEdited(const QString &arg1);
-
     void on_densityEdit_textEdited(const QString &arg1);
+
+    void on_dampingCoeffEdit_textEdited(const QString &arg1);
+
+    void on_eulerTimestepEdit_textEdited(const QString &arg1);
+
+    void on_eulerItersEdit_textEdited(const QString &arg1);
 
 private:
     void updateGL();

@@ -7,15 +7,15 @@
 class NewtonObjective
 {
 public:
+    virtual ~NewtonObjective() {}
     virtual double getEnergy(const Eigen::VectorXd &q) const = 0;
-    virtual void getGradient(const Eigen::VectorXd &q, Eigen::VectorXd &grad) const = 0;
-    virtual void getHessian(const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &hess) const = 0;
+    virtual double getEnergyAndDerivatives(const Eigen::VectorXd &q, Eigen::VectorXd &grad, Eigen::SparseMatrix<double> &hess) const = 0;
     virtual void showCurrentIteration(const Eigen::VectorXd &) const {}
 };
 
 struct NewtonParameters
 {
-    NewtonParameters() : tol(1e-6), maxiters(100), lsmaxiters(100), lmfactor(1e-4) {}
+    NewtonParameters() : tol(1e-6), maxiters(100), lsmaxiters(100), lmfactor(1e-3) {}
     double tol;
     int maxiters;
     int lsmaxiters;
