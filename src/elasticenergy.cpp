@@ -45,16 +45,16 @@ double ElasticEnergy::stretchOne(const VectorXd &qs,
                                  const ElasticParameters &params,
                                  int derivsRequested)
 {
-    // Y/(8(1+v)(1-v)) sqrt(det g) tr(g^-1 a - I)^2
+    // Yh/(8(1+v)(1-v)) sqrt(det g) tr(g^-1 a - I)^2
 
-    double coeff = params.YoungsModulus/8.0/(1.0-params.PoissonRatio*params.PoissonRatio);
+    double coeff = params.YoungsModulus*params.h/8.0/(1.0-params.PoissonRatio*params.PoissonRatio);
 
     double g[3];
     Vector3d q[3];
     for(int i=0; i<3; i++)
     {
-        g[i] = gs[gidx[i]];
-        q[i] = qs.segment<3>(3*qidx[i]);
+        g[i] = params.scale*gs[gidx[i]];
+        q[i] = params.scale*qs.segment<3>(3*qidx[i]);
     }
 
     double detg = g[0]*g[0]*g[1]*g[1] - (g[0]*g[0]+g[1]*g[1]-g[2]*g[2])*(g[0]*g[0]+g[1]*g[1]-g[2]*g[2])/4.0;
@@ -177,16 +177,16 @@ double ElasticEnergy::stretchTwo(const VectorXd &qs,
                                  const ElasticParameters &params,
                                  int derivsRequested)
 {
-    // -Y/(8(1+v)) sqrt(det g) det(g^-1 a - I)
+    // -Yh/(8(1+v)) sqrt(det g) det(g^-1 a - I)
 
-    double coeff = -params.YoungsModulus/(8.0*(1.0+params.PoissonRatio));
+    double coeff = -params.YoungsModulus*params.h/(8.0*(1.0+params.PoissonRatio));
 
     double g[3];
     Vector3d q[3];
     for(int i=0; i<3; i++)
     {
-        g[i] = gs[gidx[i]];
-        q[i] = qs.segment<3>(3*qidx[i]);
+        g[i] = params.scale*gs[gidx[i]];
+        q[i] = params.scale*qs.segment<3>(3*qidx[i]);
     }
 
     double detg = g[0]*g[0]*g[1]*g[1] - (g[0]*g[0]+g[1]*g[1]-g[2]*g[2])*(g[0]*g[0]+g[1]*g[1]-g[2]*g[2])/4.0;
@@ -356,7 +356,7 @@ double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqi
     assert((int)spokegidx.size() == numnbs);
     assert((int)oppgidx.size() == numnbs);
 
-    double coeff = params.YoungsModulus*params.h*params.h/(24.0*(1.0-params.PoissonRatio*params.PoissonRatio));
+    double coeff = params.YoungsModulus*params.h*params.h*params.h/(24.0*(1.0-params.PoissonRatio*params.PoissonRatio));
 
     std::vector<double> A;
     std::vector<double> thetas;
@@ -365,11 +365,11 @@ double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqi
     {
         int nextid = (i+1)%numnbs;
         int previd = (i+numnbs-1)%numnbs;
-        double gi = gs[spokegidx[i]];
-        double gn = gs[spokegidx[nextid]];
-        double gin = gs[oppgidx[i]];
-        double gp = gs[spokegidx[previd]];
-        double gpi = gs[oppgidx[previd]];
+        double gi = params.scale*gs[spokegidx[i]];
+        double gn = params.scale*gs[spokegidx[nextid]];
+        double gin = params.scale*gs[oppgidx[i]];
+        double gp = params.scale*gs[spokegidx[previd]];
+        double gpi = params.scale*gs[oppgidx[previd]];
         double area = 0.5*sqrt(gi*gi*gn*gn - (gi*gi+gn*gn-gin*gin)*(gi*gi+gn*gn-gin*gin)/4.0);
         A.push_back(area);
 
@@ -392,7 +392,7 @@ double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqi
     Vector3d B(0,0,0);
     for(int i=0; i<numnbs; i++)
     {
-        B += 0.5*(thetas[i]+psis[i])*(qs.segment<3>(3*nbqidx[i])-qs.segment<3>(3*centqidx));
+        B += 0.5*(thetas[i]+psis[i])*params.scale*(qs.segment<3>(3*nbqidx[i])-qs.segment<3>(3*centqidx));
     }
 
     if(derivsRequested != DR_NONE)
@@ -459,11 +459,11 @@ double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqi
             {
                 int nextid = (i+1)%numnbs;
                 int previd = (i+numnbs-1)%numnbs;
-                double gi = gs[spokegidx[i]];
-                double gn = gs[spokegidx[nextid]];
-                double gp = gs[spokegidx[previd]];
-                double gin = gs[oppgidx[i]];
-                double gpn = gs[oppgidx[previd]];
+                double gi = params.scale*gs[spokegidx[i]];
+                double gn = params.scale*gs[spokegidx[nextid]];
+                double gp = params.scale*gs[spokegidx[previd]];
+                double gin = params.scale*gs[oppgidx[i]];
+                double gpn = params.scale*gs[oppgidx[previd]];
 
                 double spoke = 1.0/24.0*(gi*(gn*gn+gin*gin-gi*gi)/A[i] + gi*(gp*gp+gpn*gpn-gi*gi)/A[previd]);
                 double opp = 1.0/24.0*(gin*(gi*gi+gn*gn-gin*gin)/A[i]);
@@ -490,9 +490,9 @@ double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqi
 
             for(int j=0; j<numnbs; j++)
             {
-                dgdB += 0.5*(qs.segment<3>(3*nbqidx[j])-qs.segment<3>(3*centqidx))
+                dgdB += params.scale*0.5*(qs.segment<3>(3*nbqidx[j])-qs.segment<3>(3*centqidx))
                         * (dgdcottheta.col(j)+dgdcotpsi.col(j)).transpose();
-                dgoppdB += 0.5*(qs.segment<3>(3*nbqidx[j])-qs.segment<3>(3*centqidx))
+                dgoppdB += params.scale*0.5*(qs.segment<3>(3*nbqidx[j])-qs.segment<3>(3*centqidx))
                         * (dgoppdcottheta.col(j)+dgoppdcotpsi.col(j)).transpose();
             }
 
@@ -556,7 +556,7 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
     assert((int)spokegidx.size() == numnbs);
     assert((int)oppgidx.size() == numnbs);
 
-    double coeff = -params.YoungsModulus*params.h*params.h/(12.0*(1.0+params.PoissonRatio));
+    double coeff = -params.YoungsModulus*params.h*params.h*params.h/(12.0*(1.0+params.PoissonRatio));
 
     std::vector<double> A;
     std::vector<double> qA;
@@ -566,15 +566,15 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
     for(int i=0; i<numnbs; i++)
     {
         int nextid = (i+1)%numnbs;
-        double gi = gs[spokegidx[i]];
-        double gn = gs[spokegidx[nextid]];
-        double gin = gs[oppgidx[i]];
+        double gi = params.scale*gs[spokegidx[i]];
+        double gn = params.scale*gs[spokegidx[nextid]];
+        double gin = params.scale*gs[oppgidx[i]];
         double area = 0.5*sqrt(gi*gi*gn*gn - (gi*gi+gn*gn-gin*gin)*(gi*gi+gn*gn-gin*gin)/4.0);
 
 
-        Vector3d qi = qs.segment<3>(3*nbqidx[i]);
-        Vector3d qn = qs.segment<3>(3*nbqidx[nextid]);
-        Vector3d qc = qs.segment<3>(3*centqidx);
+        Vector3d qi = params.scale*qs.segment<3>(3*nbqidx[i]);
+        Vector3d qn = params.scale*qs.segment<3>(3*nbqidx[nextid]);
+        Vector3d qc = params.scale*qs.segment<3>(3*centqidx);
 
         double qarea = 0.5*sqrt((qi-qc).dot(qi-qc)*(qn-qc).dot(qn-qc) - (qi-qc).dot(qn-qc)*(qi-qc).dot(qn-qc));
 
@@ -611,10 +611,10 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
         {
             int nextid = (i+1)%numnbs;
             int previd = (i+numnbs-1)%numnbs;
-            Vector3d qi = qs.segment<3>(3*nbqidx[i]);
-            Vector3d qn = qs.segment<3>(3*nbqidx[nextid]);
-            Vector3d qc = qs.segment<3>(3*centqidx);
-            Vector3d qp = qs.segment<3>(3*nbqidx[previd]);
+            Vector3d qi = params.scale*qs.segment<3>(3*nbqidx[i]);
+            Vector3d qn = params.scale* qs.segment<3>(3*nbqidx[nextid]);
+            Vector3d qc = params.scale*qs.segment<3>(3*centqidx);
+            Vector3d qp = params.scale*qs.segment<3>(3*nbqidx[previd]);
             dqdD.col(i) = -1.0/(2.0*(qi-qc).dot(qi-qc))*
                     ( ((qi-qc).dot(qn-qc)*(qi-qc) - (qi-qc).dot(qi-qc)*(qn-qc))/qA[i]
                       + ((qp-qc).dot(qi-qc)*(qi-qc) - (qi-qc).dot(qi-qc)*(qp-qc))/qA[previd]);
@@ -643,10 +643,10 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
             {
                 int nextid = (i+1)%numnbs;
                 int previd = (i+numnbs-1)%numnbs;
-                Vector3d qi = qs.segment<3>(3*nbqidx[i]);
-                Vector3d qn = qs.segment<3>(3*nbqidx[nextid]);
-                Vector3d qc = qs.segment<3>(3*centqidx);
-                Vector3d qp = qs.segment<3>(3*nbqidx[previd]);
+                Vector3d qi = params.scale*qs.segment<3>(3*nbqidx[i]);
+                Vector3d qn = params.scale*qs.segment<3>(3*nbqidx[nextid]);
+                Vector3d qc = params.scale*qs.segment<3>(3*centqidx);
+                Vector3d qp = params.scale*qs.segment<3>(3*nbqidx[previd]);
 
                 Matrix3d id;
                 id.setIdentity();
@@ -774,9 +774,9 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
             for(int i=0; i<numnbs; i++)
             {
                 int nextid = (i+1)%numnbs;
-                Vector3d qi = qs.segment<3>(3*nbqidx[i]);
-                Vector3d qn = qs.segment<3>(3*nbqidx[nextid]);
-                Vector3d qc = qs.segment<3>(3*centqidx);
+                Vector3d qi = params.scale*qs.segment<3>(3*nbqidx[i]);
+                Vector3d qn = params.scale*qs.segment<3>(3*nbqidx[nextid]);
+                Vector3d qc = params.scale*qs.segment<3>(3*centqidx);
 
                 Matrix3d id;
                 id.setIdentity();
@@ -821,11 +821,11 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
             {
                 int nextid = (i+1)%numnbs;
                 int previd = (i+numnbs-1)%numnbs;
-                double gi = gs[spokegidx[i]];
-                double gn = gs[spokegidx[nextid]];
-                double gp = gs[spokegidx[previd]];
-                double gin = gs[oppgidx[i]];
-                double gpn = gs[oppgidx[previd]];
+                double gi = params.scale*gs[spokegidx[i]];
+                double gn = params.scale*gs[spokegidx[nextid]];
+                double gp = params.scale*gs[spokegidx[previd]];
+                double gin = params.scale*gs[oppgidx[i]];
+                double gpn = params.scale*gs[oppgidx[previd]];
 
                 double spoke = 1.0/24.0*(gi*(gn*gn+gin*gin-gi*gi)/A[i] + gi*(gp*gp+gpn*gpn-gi*gi)/A[previd]);
                 double opp = 1.0/24.0*(gin*(gi*gi+gn*gn-gin*gin)/A[i]);

@@ -16,17 +16,26 @@ MainWindow::MainWindow(QWidget *parent) :
     cont_(NULL)
 {
     ui->setupUi(this);
+    repainttimer_ = new QTimer(this);
+    repainttimer_->start(20);
+    connect(repainttimer_, SIGNAL(timeout()), this, SLOT(tick()));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete repainttimer_;
 }
 
 void MainWindow::setController(Controller &cont)
 {
     cont_ = &cont;
     ui->GLwidget->setController(cont);
+}
+
+void MainWindow::tick()
+{
+    repaintMesh();
 }
 
 void MainWindow::showError(string error)
@@ -88,15 +97,18 @@ void MainWindow::setParameters(ProblemParameters params)
     ui->youngsModulusEdit->setText(QString::number(params.YoungsModulus));
     ui->poissonRatioEdit->setText(QString::number(params.PoissonRatio));
     ui->thicknessEdit->setText(QString::number(params.h));
-    ui->maxitersEdit->setText(QString::number(params.maxiters));
-    ui->maxlsitersEdit->setText(QString::number(params.maxlinesearchiters));
-    ui->tolEdit->setText(QString::number(params.tol));
     ui->wireframeCheckBox->setChecked(params.showWireframe);
     ui->smoothShadeCheckBox->setChecked(params.smoothShade);
     ui->densityEdit->setText(QString::number(params.rho));
     ui->dampingCoeffEdit->setText(QString::number(params.dampingCoeff));
     ui->eulerItersEdit->setText(QString::number(params.numEulerIters));
     ui->eulerTimestepEdit->setText(QString::number(params.eulerTimestep));
+    ui->growthAmountEdit->setText(QString::number(params.growthAmount));
+    ui->growthRadiusEdit->setText(QString::number(params.growthRadius));
+    ui->growthTimeEdit->setText(QString::number(params.growthTime));
+    ui->newGrowthRateEdit->setText(QString::number(params.newGrowthRate));
+    ui->scaleEdit->setText(QString::number(params.scale));
+    ui->outputEdit->setText(QString::fromStdString(params.outputDir));
 }
 
 ProblemParameters MainWindow::getParameters()
@@ -105,15 +117,18 @@ ProblemParameters MainWindow::getParameters()
     result.YoungsModulus = ui->youngsModulusEdit->text().toDouble();
     result.PoissonRatio  = ui->poissonRatioEdit->text().toDouble();
     result.h = ui->thicknessEdit->text().toDouble();
-    result.maxiters = ui->maxitersEdit->text().toInt();
-    result.maxlinesearchiters = ui->maxlsitersEdit->text().toInt();
-    result.tol = ui->tolEdit->text().toDouble();
     result.showWireframe = ui->wireframeCheckBox->isChecked();
     result.smoothShade = ui->smoothShadeCheckBox->isChecked();
     result.rho = ui->densityEdit->text().toDouble();
     result.dampingCoeff = ui->dampingCoeffEdit->text().toDouble();
     result.eulerTimestep = ui->eulerTimestepEdit->text().toDouble();
     result.numEulerIters = ui->eulerItersEdit->text().toInt();
+    result.growthAmount = ui->growthAmountEdit->text().toDouble();
+    result.growthRadius = ui->growthRadiusEdit->text().toDouble();
+    result.growthTime = ui->growthTimeEdit->text().toInt();
+    result.newGrowthRate = ui->newGrowthRateEdit->text().toInt();
+    result.scale = ui->scaleEdit->text().toDouble();
+    result.outputDir = ui->outputEdit->text().toStdString();
     return result;
 }
 
@@ -184,26 +199,6 @@ void MainWindow::on_thicknessEdit_textEdited(const QString &)
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
-void MainWindow::on_findMetricButton_clicked()
-{
-    QMetaObject::invokeMethod(cont_, "findMetric");
-}
-
-void MainWindow::on_maxitersEdit_textEdited(const QString &)
-{
-    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
-}
-
-void MainWindow::on_maxlsitersEdit_textEdited(const QString &)
-{
-    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
-}
-
-void MainWindow::on_tolEdit_textEdited(const QString &)
-{
-    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
-}
-
 void MainWindow::on_relaxEmbeddingButton_clicked()
 {
     QMetaObject::invokeMethod(cont_, "relaxEmbedding");
@@ -225,6 +220,36 @@ void MainWindow::on_eulerTimestepEdit_textEdited(const QString &)
 }
 
 void MainWindow::on_eulerItersEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_growthRadiusEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_growthAmountEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_growthTimeEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_newGrowthRateEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_scaleEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_outputEdit_textEdited(const QString &arg1)
 {
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }

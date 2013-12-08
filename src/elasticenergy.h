@@ -3,6 +3,7 @@
 
 #include <Eigen/Core>
 #include <Eigen/Sparse>
+#include <iosfwd>
 
 const double PI = 3.14159265359;
 
@@ -15,6 +16,17 @@ struct ElasticParameters
     double h;
     double PoissonRatio;
     double YoungsModulus;
+    double scale;
+
+    virtual void dumpParameters(std::ostream &os)
+    {
+        os << "scale " << scale << std::endl;
+        os << "h " << h << std::endl;
+        os << "YoungsModulus " << YoungsModulus << std::endl;
+        os << "PoissonRatio " << PoissonRatio << std::endl;
+    }
+
+    virtual ~ElasticParameters() {}
 };
 
 

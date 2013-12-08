@@ -27,9 +27,6 @@ typedef OpenMesh::TriMesh_ArrayKernelT<MyTraits> OMMesh;
 struct ProblemParameters : public ElasticParameters
 {
     // simulation
-    int maxiters;
-    int maxlinesearchiters;
-    double tol;
     double rho;
 
     double eulerTimestep;
@@ -39,6 +36,16 @@ struct ProblemParameters : public ElasticParameters
     // rendering
     bool showWireframe;
     bool smoothShade;
+
+    // problem
+    double growthRadius;
+    int growthTime;
+    int newGrowthRate;
+    double growthAmount;
+
+    std::string outputDir;
+
+    virtual void dumpParameters(std::ostream &os);
 };
 
 class Mesh
@@ -48,7 +55,6 @@ public:
 
     enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
 
-    bool relaxEnergy(Controller &cont, RelaxationType type);
     bool simulate(Controller &cont);
 
     int numdofs() const;
@@ -65,10 +71,6 @@ public:
     bool exportOBJ(const char *filename);
     bool importOBJ(const char *filename);
 
-    friend class EmbeddingMinimizer;
-    friend class MetricFit;
-    friend class ImplicitEulerStep;
-
 private:
     void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
     void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);
@@ -78,11 +80,18 @@ private:
     double triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const;
     double infinityNorm(const Eigen::VectorXd &v) const;
     void buildMassMatrix(const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &M) const;
+    void buildInvMassMatrix(const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &M) const;
     double barycentricDualArea(const Eigen::VectorXd &q, int vidx) const;
     double faceArea(const Eigen::VectorXd &q, int fidx) const;
 
     double strainDensity(int edgeidx) const;
     double vertexStrainDensity(int vertidx) const;
+    double cotanWeight(int edgeid, const Eigen::VectorXd &q) const;
+    void buildExtrinsicDirichletLaplacian(const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &L) const;
+    void gaussianCurvatureDensity(const Eigen::VectorXd &q, Eigen::VectorXd &Kdensity) const;
+    void meanCurvatureDensity(const Eigen::VectorXd &q, Eigen::VectorXd &Hdensity) const;
+    Eigen::Vector3d averageNormal(const Eigen::VectorXd &q, int vidx) const;
+    Eigen::Vector3d faceNormal(const Eigen::VectorXd &q, int fidx) const;
 
     void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
                        double &energyB,
@@ -91,12 +100,19 @@ private:
                        Eigen::SparseMatrix<double> &hessq, Eigen::SparseMatrix<double> &gradggradq,
                        int derivativesRequested) const;
 
+    void growPlanarDisk(Eigen::Vector2d center, double radius, double strainincrement, double maxstrain);
+    void dumpFrame();
+
 
     Eigen::Vector3d colormap(double val) const;
     Eigen::Vector3d colormap(double val, double max) const;
     Eigen::Vector3d HSLtoRGB(const Eigen::Vector3d &hsl) const;
 
+    double randomRange(double min, double max) const;
+
     OMMesh *mesh_;
+    OMMesh *undeformedMesh_;
+    int frameno_;
     ProblemParameters params_;
 
     // The rendering thread reads the mesh and its edge data. Any function must lock this before writing to
