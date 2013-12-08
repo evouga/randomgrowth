@@ -69,6 +69,8 @@ private slots:
 
     void on_scaleEdit_textEdited(const QString &arg1);
 
+    void on_outputEdit_textEdited(const QString &arg1);
+
 private:
     void updateGL();
     void saveScreenshot();
