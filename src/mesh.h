@@ -11,6 +11,9 @@ class Controller;
 
 struct MyTraits : public OpenMesh::DefaultTraits
 {
+    typedef OpenMesh::Vec3d Point; // use double-values points
+    typedef OpenMesh::Vec3d Normal; // use double-values points
+
     EdgeTraits
     {
     private:
@@ -88,8 +91,8 @@ private:
     double vertexStrainDensity(int vertidx) const;
     double cotanWeight(int edgeid, const Eigen::VectorXd &q) const;
     void buildExtrinsicDirichletLaplacian(const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &L) const;
-    void gaussianCurvatureDensity(const Eigen::VectorXd &q, Eigen::VectorXd &Kdensity) const;
-    void meanCurvatureDensity(const Eigen::VectorXd &q, Eigen::VectorXd &Hdensity) const;
+    void gaussianCurvature(const Eigen::VectorXd &q, Eigen::VectorXd &Kdensity) const;
+    void meanCurvature(const Eigen::VectorXd &q, Eigen::VectorXd &Hdensity) const;
     Eigen::Vector3d averageNormal(const Eigen::VectorXd &q, int vidx) const;
     Eigen::Vector3d faceNormal(const Eigen::VectorXd &q, int fidx) const;
 

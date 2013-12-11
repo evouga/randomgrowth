@@ -199,7 +199,7 @@ bool Mesh::simulate(Controller &cont)
 
         v -= h*Minv*gradq + h*Minv*params_.dampingCoeff*v;
         dofsToGeometry(q, g);
-        if(i%10 == 0)
+        if(i%500 == 0)
             dumpFrame();
 
         growPlanarDisk(o, params_.growthRadius, params_.growthAmount/params_.growthTime, 1.0+4.0*params_.growthAmount);
@@ -220,8 +220,8 @@ void Mesh::buildMassMatrix(const VectorXd &q, Eigen::SparseMatrix<double> &M) co
         int vidx = vi.handle().idx();
         double area = barycentricDualArea(q, vidx);
         double mass = area*params_.rho*params_.h*params_.scale*params_.scale*params_.scale;
-        if(mesh_->is_boundary(vi.handle()))
-            mass = std::numeric_limits<double>::infinity();
+//        if(mesh_->is_boundary(vi.handle()))
+//            mass = std::numeric_limits<double>::infinity();
         for(int i=0; i<3; i++)
             entries.push_back(Tr(3*vidx+i, 3*vidx+i, mass));
     }
@@ -238,8 +238,8 @@ void Mesh::buildInvMassMatrix(const VectorXd &q, Eigen::SparseMatrix<double> &Mi
         int vidx = vi.handle().idx();
         double area = barycentricDualArea(q, vidx);
         double invmass = 1.0/area/params_.rho/params_.h/params_.scale/params_.scale/params_.scale;
-        if(mesh_->is_boundary(vi.handle()))
-            invmass = 0;
+//        if(mesh_->is_boundary(vi.handle()))
+//            invmass = 0;
         for(int i=0; i<3; i++)
             entries.push_back(Tr(3*vidx+i, 3*vidx+i, invmass));
     }
@@ -276,7 +276,7 @@ double Mesh::faceArea(const VectorXd &q, int fidx) const
     return 0.5*A;
 }
 
-void Mesh::gaussianCurvatureDensity(const VectorXd &q, VectorXd &Kdensity) const
+void Mesh::gaussianCurvature(const VectorXd &q, VectorXd &Kdensity) const
 {
     int numverts = mesh_->n_vertices();
     Kdensity.resize(numverts);
@@ -315,7 +315,7 @@ void Mesh::gaussianCurvatureDensity(const VectorXd &q, VectorXd &Kdensity) const
     }
 }
 
-void Mesh::meanCurvatureDensity(const VectorXd &q, VectorXd &Hdensity) const
+void Mesh::meanCurvature(const VectorXd &q, VectorXd &Hdensity) const
 {
     int numverts = mesh_->n_vertices();
     VectorXd x(numverts), y(numverts), z(numverts);
@@ -343,7 +343,7 @@ void Mesh::meanCurvatureDensity(const VectorXd &q, VectorXd &Hdensity) const
         if(avnormal.dot(Hnormal) < 0)
             sign = -1.0;
 
-        Hdensity[i] = sign * Hnormal.norm()/area;
+        Hdensity[i] = sign * Hnormal.norm();///area;
     }
 }
 

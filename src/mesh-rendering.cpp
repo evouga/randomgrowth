@@ -42,10 +42,10 @@ void Mesh::render()
         pos.clear();
         normal.clear();
 
-        VectorXd Hdensity;
+        VectorXd H;
         VectorXd q,g;
         dofsFromGeometry(q, g);
-        meanCurvatureDensity(q, Hdensity);
+        meanCurvature(q, H);
 
         for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
         {
@@ -53,7 +53,7 @@ void Mesh::render()
             {
                 double strain = vertexStrainDensity(fvi.handle().idx());
                 Vector3d color = colormap(strain, 0.5);
-                color = colormap(Hdensity[fvi.handle().idx()], 100);
+                color = colormap(H[fvi.handle().idx()], .05);
 
                 OMMesh::VertexHandle v = fvi.handle();
                 OMMesh::Point pt = mesh_->point(v);

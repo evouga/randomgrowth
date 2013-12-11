@@ -26,6 +26,7 @@ Mesh::Mesh() : meshLock_(QMutex::Recursive)
 
     params_.smoothShade = true;
     params_.showWireframe = true;
+    params_.outputDir = "output";
 
     mesh_ = new OMMesh();
     undeformedMesh_ = new OMMesh();
@@ -310,8 +311,8 @@ void Mesh::dumpFrame()
     VectorXd q,g;
     dofsFromGeometry(q, g);
     VectorXd Hdensity, Kdensity;
-    meanCurvatureDensity(q, Hdensity);
-    gaussianCurvatureDensity(q, Kdensity);
+    meanCurvature(q, Hdensity);
+    gaussianCurvature(q, Kdensity);
 
     for(int i=0; i<(int)mesh_->n_vertices(); i++)
     {
