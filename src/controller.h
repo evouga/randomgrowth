@@ -24,6 +24,7 @@ public slots:
     void quit();
     void centerCamera();
     void updateGL();
+    void exportSpectrum();
 
 private:    
     MainWindow &mw_;

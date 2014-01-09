@@ -41,10 +41,9 @@ struct ProblemParameters : public ElasticParameters
     bool smoothShade;
 
     // problem
-    double growthRadius;
-    int growthTime;
-    int newGrowthRate;
     double growthAmount;
+    double maxEdgeStrain;
+    double baseGrowthProbability;
 
     std::string outputDir;
 
@@ -74,6 +73,8 @@ public:
     bool exportOBJ(const char *filename);
     bool importOBJ(const char *filename);
 
+    bool calculateHarmonicModes(const char *filename);
+
 private:
     void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
     void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);
@@ -82,17 +83,24 @@ private:
     double triangleInequalityLineSearch(const Eigen::VectorXd &g, const Eigen::VectorXd &dg) const;
     double triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const;
     double infinityNorm(const Eigen::VectorXd &v) const;
-    void buildMassMatrix(const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &M) const;
-    void buildInvMassMatrix(const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &M) const;
-    double barycentricDualArea(const Eigen::VectorXd &q, int vidx) const;
+    void buildMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
+    void buildGeometricMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
+    void buildInvMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
+    double barycentricDualArea(const Eigen::VectorXd &g, int vidx) const;
+    double deformedBarycentricDualArea(const Eigen::VectorXd &q, int vidx) const;
     double faceArea(const Eigen::VectorXd &q, int fidx) const;
 
-    double strainDensity(int edgeidx) const;
-    double vertexStrainDensity(int vertidx) const;
+    double restFaceArea(const Eigen::VectorXd &g, int fidx) const;
+    void undeformedDofsFromGeometry(Eigen::VectorXd &undefq, Eigen::VectorXd &undefg) const;
+    double vertexAreaRatio(const Eigen::VectorXd &undefq, const Eigen::VectorXd &g, int vidx);
+
+    double intrinsicCotanWeight(int edgeid, const Eigen::VectorXd &g) const;
     double cotanWeight(int edgeid, const Eigen::VectorXd &q) const;
+    void buildIntrinsicDirichletLaplacian(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &L) const;
     void buildExtrinsicDirichletLaplacian(const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &L) const;
-    void gaussianCurvature(const Eigen::VectorXd &q, Eigen::VectorXd &Kdensity) const;
+    void gaussianCurvature(const Eigen::VectorXd &q, Eigen::VectorXd &K) const;
     void meanCurvature(const Eigen::VectorXd &q, Eigen::VectorXd &Hdensity) const;
+    void vertexAreas(const Eigen::VectorXd &q, Eigen::VectorXd &vareas) const;
     Eigen::Vector3d averageNormal(const Eigen::VectorXd &q, int vidx) const;
     Eigen::Vector3d faceNormal(const Eigen::VectorXd &q, int fidx) const;
 
@@ -103,7 +111,14 @@ private:
                        Eigen::SparseMatrix<double> &hessq, Eigen::SparseMatrix<double> &gradggradq,
                        int derivativesRequested) const;
 
-    void growPlanarDisk(Eigen::Vector2d center, double radius, double strainincrement, double maxstrain);
+    double vertexStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int vidx) const;
+    double faceStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int fidx) const;
+
+    void probabilisticallyGrowDisks(const Eigen::VectorXd &q,
+                                    const Eigen::VectorXd &g,
+                                    double baseprob, double increment, double maxstrain,
+                                    Eigen::VectorXd &newg);
+
     void dumpFrame();
 
 

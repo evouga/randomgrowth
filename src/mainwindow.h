@@ -59,17 +59,17 @@ private slots:
 
     void on_eulerItersEdit_textEdited(const QString &arg1);
 
-    void on_growthRadiusEdit_textEdited(const QString &arg1);
-
     void on_growthAmountEdit_textEdited(const QString &arg1);
-
-    void on_growthTimeEdit_textEdited(const QString &arg1);
-
-    void on_newGrowthRateEdit_textEdited(const QString &arg1);
 
     void on_scaleEdit_textEdited(const QString &arg1);
 
     void on_outputEdit_textEdited(const QString &arg1);
+
+    void on_maxStrainEdit_textEdited(const QString &arg1);
+
+    void on_baseProbabilityEdit_textEdited(const QString &arg1);
+
+    void on_actionSpectrum_Data_triggered();
 
 private:
     void updateGL();

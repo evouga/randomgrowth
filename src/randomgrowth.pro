@@ -8,11 +8,12 @@ QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = inversemorpho
+TARGET = randomgrowth
 TEMPLATE = app
 
 INCLUDEPATH += ../ext/openmesh ../ext/eigen
 QMAKE_LIBDIR += ../ext/openmesh/build/Build/lib/OpenMesh
+QMAKE_CXXFLAGS += -g
 LIBS += -lOpenMeshCore -lpng -lGL -lGLU
 
 

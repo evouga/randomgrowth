@@ -19,10 +19,9 @@ Mesh::Mesh() : meshLock_(QMutex::Recursive)
     params_.eulerTimestep = 1e-6;
     params_.numEulerIters = 500000;
 
-    params_.growthAmount = 0.05;
-    params_.growthRadius = 0.2;
-    params_.growthTime = 1000;
-    params_.newGrowthRate = 1000;
+    params_.growthAmount = 50;
+    params_.maxEdgeStrain = 1e8;
+    params_.baseGrowthProbability = 0.5;
 
     params_.smoothShade = true;
     params_.showWireframe = true;
@@ -41,9 +40,8 @@ void ProblemParameters::dumpParameters(ostream &os)
     os << "eulerTimestep " << eulerTimestep << endl;
     os << "numEulerIters " << numEulerIters << endl;
     os << "growthAmount " << growthAmount << endl;
-    os << "growthRadius " << growthRadius << endl;
-    os << "growthTime " << growthTime << endl;
-    os << "newGrowthRate " << newGrowthRate << endl;
+    os << "baseGrowthProbability " << baseGrowthProbability << endl;
+    os << "maxEdgeStrain " << maxEdgeStrain << endl;
 }
 
 int Mesh::numdofs() const
@@ -71,6 +69,23 @@ void Mesh::dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const
     for(int i=0; i<(int)mesh_->n_edges(); i++)
     {
         g[i] = mesh_->data(mesh_->edge_handle(i)).restlen();
+    }
+}
+
+void Mesh::undeformedDofsFromGeometry(VectorXd &undefq, VectorXd &undefg) const
+{
+    undefq.resize(numdofs());
+
+    for(int i=0; i<(int)undeformedMesh_->n_vertices(); i++)
+    {
+        OMMesh::Point pt = undeformedMesh_->point(undeformedMesh_->vertex_handle(i));
+        for(int j=0; j<3; j++)
+            undefq[3*i+j] = pt[j];
+    }
+
+    for(int i=0; i<(int)undeformedMesh_->n_edges(); i++)
+    {
+        undefg[i] = undeformedMesh_->data(undeformedMesh_->edge_handle(i)).restlen();
     }
 }
 
@@ -161,94 +176,6 @@ void Mesh::setIntrinsicLengthsToCurrentLengths()
     meshLock_.unlock();
 }
 
-void Mesh::growPlanarDisk(Vector2d center, double radius, double strainincrement, double maxstrain)
-{
-    assert(mesh_->n_edges() == undeformedMesh_->n_edges());
-    meshLock_.lock();
-    {
-        for(OMMesh::EdgeIter ei = undeformedMesh_->edges_begin(); ei != undeformedMesh_->edges_end(); ++ei)
-        {
-            OMMesh::HalfedgeHandle heh = undeformedMesh_->halfedge_handle(ei.handle(), 0);
-            OMMesh::VertexHandle v1 = undeformedMesh_->from_vertex_handle(heh);
-            OMMesh::VertexHandle v2 = undeformedMesh_->to_vertex_handle(heh);
-            Vector2d v1p, v2p;
-            for(int j=0; j<2; j++)
-            {
-                v1p[j] = undeformedMesh_->point(v1)[j];
-                v2p[j] = undeformedMesh_->point(v2)[j];
-            }
-
-            double dist1 = (v1p-center).norm();
-            double dist2 = (v2p-center).norm();
-
-            double fracinside = 0;
-
-            if(dist1 > radius && dist2 > radius)
-            {
-                // both points outside
-                continue;
-            }
-            else if(dist1 <= radius && dist2 <= radius)
-            {
-                // both points inside
-                fracinside = 1;
-            }
-            else
-            {
-                if(dist1 > radius)
-                    swap(v1p, v2p);
-
-                //(v1-center).(v1-center) + 2t(v1-center).(v2-v1)+t^2(v2-v1).(v2-v1) = radius^2
-                double a = (v2p-v1p).dot(v2p-v1p);
-                double b = 2.0*(v1p-center).dot(v2p-v1p);
-                double c = (v1p-center).dot(v1p-center) - radius*radius;
-                double t = (-b + sqrt(b*b-4.0*a*c))/(2.0*a);
-                assert(t >= 0 && t <= 1.0);
-                Vector2d intpt = v1p + t*(v2p-v1p);
-                fracinside = (intpt-v1p).norm()/(v2p-v1p).norm();
-            }
-
-            double origlen = (v2p-v1p).norm();
-            OMMesh::EdgeHandle defeh = mesh_->edge_handle(ei.handle().idx());
-            double curlen = mesh_->data(defeh).restlen();
-
-            double maxlen = maxstrain*origlen;
-            double newlen = fracinside*(1.0+strainincrement)*curlen + (1.0-fracinside)*curlen;
-            newlen = min(newlen, maxlen);
-            mesh_->data(defeh).setRestlen(newlen);
-        }
-    }
-    meshLock_.unlock();
-}
-
-double Mesh::strainDensity(int edgeidx) const
-{
-    OMMesh::EdgeHandle eh = mesh_->edge_handle(edgeidx);
-    OMMesh::HalfedgeHandle heh = mesh_->halfedge_handle(eh, 0);
-    OMMesh::VertexHandle vh1 = mesh_->to_vertex_handle(heh);
-    OMMesh::VertexHandle vh2 = mesh_->from_vertex_handle(heh);
-    OMMesh::Point pt1 = mesh_->point(vh1);
-    OMMesh::Point pt2 = mesh_->point(vh2);
-
-    Vector3d edgevec(pt1[0]-pt2[0], pt1[1]-pt2[1],pt1[2]-pt2[2]);
-    double l = edgevec.norm();
-    double L = undeformedMesh_->data(undeformedMesh_->edge_handle(edgeidx)).restlen();//mesh_->data(eh).restlen();
-    return (l-L)/L;
-}
-
-double Mesh::vertexStrainDensity(int vertidx) const
-{
-    OMMesh::VertexHandle vh = mesh_->vertex_handle(vertidx);
-    double totstrain = 0;
-    int numedges = 0;
-    for(OMMesh::VertexEdgeIter vei = mesh_->ve_iter(vh); vei; ++vei)
-    {
-        totstrain += strainDensity(vei.handle().idx());
-        numedges ++;
-    }
-    return totstrain/numedges;
-}
-
 Vector3d Mesh::averageNormal(const VectorXd &q, int vidx) const
 {
     OMMesh::VertexHandle vh = mesh_->vertex_handle(vidx);
@@ -310,13 +237,14 @@ void Mesh::dumpFrame()
     ofstream ofs(ss2.str().c_str());
     VectorXd q,g;
     dofsFromGeometry(q, g);
-    VectorXd Hdensity, Kdensity;
+    VectorXd Hdensity, Kdensity, vareas;
     meanCurvature(q, Hdensity);
     gaussianCurvature(q, Kdensity);
+    vertexAreas(q, vareas);
 
     for(int i=0; i<(int)mesh_->n_vertices(); i++)
     {
-        ofs << i << " " << Hdensity[i] << " " << Kdensity[i] << endl;
+        ofs << i << " " << Hdensity[i] << " " << Kdensity[i] << " " << vareas[i] << endl;
     }
 
     frameno_++;

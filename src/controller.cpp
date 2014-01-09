@@ -50,6 +50,11 @@ void Controller::importOBJ(string filename)
     }
 }
 
+void Controller::exportSpectrum()
+{
+    m_.calculateHarmonicModes("spectrum.dat");
+}
+
 void Controller::updateParameters(ProblemParameters params)
 {    
     m_.setParameters(params);

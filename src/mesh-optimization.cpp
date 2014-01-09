@@ -1,4 +1,4 @@
-#include "mesh.h"
+﻿#include "mesh.h"
 #include <iomanip>
 #include "controller.h"
 #include <Eigen/Dense>
@@ -108,6 +108,157 @@ void Mesh::elasticEnergy(const VectorXd &q,
         gradggradq.setFromTriplets(dgdqcoeffs.begin(), dgdqcoeffs.end());
 }
 
+double Mesh::vertexStrainEnergy(const VectorXd &q, const VectorXd &g, int vidx) const
+{
+    assert(q.size() == numdofs());
+    assert(g.size() == numedges());
+    VectorXd gradq;
+    vector<Tr> hessq, dgdq;
+
+    int derivs = ElasticEnergy::DR_NONE;
+
+    vector<int> spokeidx;
+    vector<int> rightoppidx;
+    vector<int> nbidx;
+
+    VertexHandle vh = mesh_->vertex_handle(vidx);
+    double energy = 0;
+
+    if(!mesh_->is_boundary(vh))
+    {
+        for(OMMesh::VertexOHalfedgeIter voh = mesh_->voh_iter(vh); voh; ++voh)
+        {
+            OMMesh::HalfedgeHandle heh = voh.handle();
+            int eidx = mesh_->edge_handle(heh).idx();
+            spokeidx.push_back(eidx);
+
+            OMMesh::VertexOHalfedgeIter nextoh = voh;
+            ++nextoh;
+            if(!nextoh)
+                nextoh = mesh_->voh_iter(vh);
+
+            OMMesh::VertexHandle nextvert = mesh_->to_vertex_handle(nextoh.handle());
+
+            OMMesh::HalfedgeHandle opp = mesh_->next_halfedge_handle(heh);;
+            if(mesh_->to_vertex_handle(opp) != nextvert)
+            {
+                opp = mesh_->prev_halfedge_handle(mesh_->opposite_halfedge_handle(heh));
+                assert(mesh_->from_vertex_handle(opp) == nextvert);
+            }
+
+            int oidx = mesh_->edge_handle(opp).idx();
+            rightoppidx.push_back(oidx);
+
+            OMMesh::VertexHandle vh = mesh_->to_vertex_handle(heh);
+            nbidx.push_back(vh.idx());
+        }
+
+        int centidx = vidx;
+
+        energy += ElasticEnergy::bendingEnergy(q, g, centidx, nbidx, spokeidx, rightoppidx, gradq, hessq, dgdq, params_, derivs);
+    }
+
+    for(OMMesh::VertexFaceIter it = mesh_->vf_iter(vh); it; ++it)
+    {
+        int qidx[3];
+        int gidx[3];
+
+        int idx=0;
+        for(OMMesh::FaceHalfedgeIter fhi = mesh_->fh_iter(it.handle()); fhi; ++fhi)
+        {
+            assert(idx < 3);
+            OMMesh::HalfedgeHandle heh = fhi.handle();
+            OMMesh::EdgeHandle eh = mesh_->edge_handle(heh);
+            OMMesh::VertexHandle from = mesh_->from_vertex_handle(heh);
+            gidx[idx] = eh.idx();
+            qidx[(idx+1)%3] = from.idx();
+            idx++;
+        }
+        assert(idx == 3);
+
+        energy += 1.0/3.0*ElasticEnergy::stretchingEnergy(q, g, qidx, gidx, gradq, hessq, dgdq, params_, derivs);
+    }
+
+    return energy;
+}
+
+double Mesh::faceStrainEnergy(const VectorXd &q, const VectorXd &g, int fidx) const
+{
+    assert(q.size() == numdofs());
+    assert(g.size() == numedges());
+    VectorXd gradq;
+    vector<Tr> hessq, dgdq;
+
+    int derivs = ElasticEnergy::DR_NONE;
+
+    FaceHandle fh = mesh_->face_handle(fidx);
+    double energy = 0;
+
+    for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fh); fvi; ++fvi)
+    {
+        OMMesh::VertexHandle vh = fvi.handle();
+
+        if(!mesh_->is_boundary(vh))
+        {
+            vector<int> spokeidx;
+            vector<int> rightoppidx;
+            vector<int> nbidx;
+
+            for(OMMesh::VertexOHalfedgeIter voh = mesh_->voh_iter(vh); voh; ++voh)
+            {
+                OMMesh::HalfedgeHandle heh = voh.handle();
+                int eidx = mesh_->edge_handle(heh).idx();
+                spokeidx.push_back(eidx);
+
+                OMMesh::VertexOHalfedgeIter nextoh = voh;
+                ++nextoh;
+                if(!nextoh)
+                    nextoh = mesh_->voh_iter(vh);
+
+                OMMesh::VertexHandle nextvert = mesh_->to_vertex_handle(nextoh.handle());
+
+                OMMesh::HalfedgeHandle opp = mesh_->next_halfedge_handle(heh);;
+                if(mesh_->to_vertex_handle(opp) != nextvert)
+                {
+                    opp = mesh_->prev_halfedge_handle(mesh_->opposite_halfedge_handle(heh));
+                    assert(mesh_->from_vertex_handle(opp) == nextvert);
+                }
+
+                int oidx = mesh_->edge_handle(opp).idx();
+                rightoppidx.push_back(oidx);
+
+                OMMesh::VertexHandle tovh = mesh_->to_vertex_handle(heh);
+                nbidx.push_back(tovh.idx());
+            }
+
+            int centidx = vh.idx();
+
+            double vertenergy = ElasticEnergy::bendingEnergy(q, g, centidx, nbidx, spokeidx, rightoppidx, gradq, hessq, dgdq, params_, derivs);
+            energy += vertenergy / nbidx.size();
+        }
+    }
+/*
+    int qidx[3];
+    int gidx[3];
+
+    int idx=0;
+    for(OMMesh::FaceHalfedgeIter fhi = mesh_->fh_iter(fh); fhi; ++fhi)
+    {
+        assert(idx < 3);
+        OMMesh::HalfedgeHandle heh = fhi.handle();
+        OMMesh::EdgeHandle eh = mesh_->edge_handle(heh);
+        OMMesh::VertexHandle from = mesh_->from_vertex_handle(heh);
+        gidx[idx] = eh.idx();
+        qidx[(idx+1)%3] = from.idx();
+        idx++;
+    }
+    assert(idx == 3);
+
+    energy += ElasticEnergy::stretchingEnergy(q, g, qidx, gidx, gradq, hessq, dgdq, params_, derivs);
+*/
+    return energy;
+}
+
 double Mesh::triangleInequalityLineSearch(const VectorXd &g, const VectorXd &dg) const
 {
     assert(g.size() == numedges());
@@ -171,11 +322,12 @@ bool Mesh::simulate(Controller &cont)
     v.setZero();
     int numsteps = params_.numEulerIters;
 
-    Vector2d o(0,0);
+    //Vector2d o(0,0);
 
     for(int i=0; i<numsteps; i++)
     {
-        if(i%params_.newGrowthRate == 0)
+        std::cout << "iter " << i << std::endl;
+        /*if(i%params_.newGrowthRate == 0)
         {
             double x,y;
             do
@@ -186,24 +338,28 @@ bool Mesh::simulate(Controller &cont)
             while(x*x+y*y > 1);
             o[0] = x;
             o[1] = y;
-        }
+        }*/
         q += h*v;
         int derivs = ElasticEnergy::DR_DQ;
         VectorXd gradq;
         double energyB, energyS;
         SparseMatrix<double> hessq, gradggradq;
+        std::cout << "computing energy" << std::endl;
         elasticEnergy(q, g, energyB, energyS, gradq, hessq, gradggradq, derivs);        
 
         SparseMatrix<double> Minv;
-        buildInvMassMatrix(q, Minv);
+        buildInvMassMatrix(g, Minv);
 
         v -= h*Minv*gradq + h*Minv*params_.dampingCoeff*v;
         dofsToGeometry(q, g);
         if(i%500 == 0)
             dumpFrame();
 
-        growPlanarDisk(o, params_.growthRadius, params_.growthAmount/params_.growthTime, 1.0+4.0*params_.growthAmount);
-        dofsFromGeometry(q, g);
+        std::cout << "growing disk" << std::endl;
+        VectorXd newg;
+        probabilisticallyGrowDisks(q, g, params_.baseGrowthProbability, params_.growthAmount*h, params_.maxEdgeStrain, newg);
+        g = newg;
+        std::cout << "done" << std::endl;
     }
 
     dofsToGeometry(q, g);
@@ -211,14 +367,14 @@ bool Mesh::simulate(Controller &cont)
     return true;
 }
 
-void Mesh::buildMassMatrix(const VectorXd &q, Eigen::SparseMatrix<double> &M) const
+void Mesh::buildMassMatrix(const VectorXd &g, Eigen::SparseMatrix<double> &M) const
 {
     M.resize(numdofs(), numdofs());
     vector<Tr> entries;
     for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
     {
         int vidx = vi.handle().idx();
-        double area = barycentricDualArea(q, vidx);
+        double area = barycentricDualArea(g, vidx);
         double mass = area*params_.rho*params_.h*params_.scale*params_.scale*params_.scale;
 //        if(mesh_->is_boundary(vi.handle()))
 //            mass = std::numeric_limits<double>::infinity();
@@ -229,14 +385,31 @@ void Mesh::buildMassMatrix(const VectorXd &q, Eigen::SparseMatrix<double> &M) co
     M.setFromTriplets(entries.begin(), entries.end());
 }
 
-void Mesh::buildInvMassMatrix(const VectorXd &q, Eigen::SparseMatrix<double> &Minv) const
+void Mesh::buildGeometricMassMatrix(const VectorXd &g, Eigen::SparseMatrix<double> &M) const
+{
+    M.resize(mesh_->n_vertices(), mesh_->n_vertices());
+    vector<Tr> entries;
+    for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
+    {
+        int vidx = vi.handle().idx();
+        double area = barycentricDualArea(g, vidx);
+        double mass = area*params_.scale*params_.scale*params_.scale;
+//        if(mesh_->is_boundary(vi.handle()))
+//            mass = std::numeric_limits<double>::infinity();
+        entries.push_back(Tr(vidx, vidx, mass));
+    }
+
+    M.setFromTriplets(entries.begin(), entries.end());
+}
+
+void Mesh::buildInvMassMatrix(const VectorXd &g, Eigen::SparseMatrix<double> &Minv) const
 {
     Minv.resize(numdofs(), numdofs());
     vector<Tr> entries;
     for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
     {
         int vidx = vi.handle().idx();
-        double area = barycentricDualArea(q, vidx);
+        double area = barycentricDualArea(g, vidx);
         double invmass = 1.0/area/params_.rho/params_.h/params_.scale/params_.scale/params_.scale;
 //        if(mesh_->is_boundary(vi.handle()))
 //            invmass = 0;
@@ -247,7 +420,18 @@ void Mesh::buildInvMassMatrix(const VectorXd &q, Eigen::SparseMatrix<double> &Mi
     Minv.setFromTriplets(entries.begin(), entries.end());
 }
 
-double Mesh::barycentricDualArea(const VectorXd &q, int vidx) const
+double Mesh::barycentricDualArea(const VectorXd &g, int vidx) const
+{
+    double result = 0;
+    OMMesh::VertexHandle vh = mesh_->vertex_handle(vidx);
+    for(OMMesh::VertexFaceIter vfi = mesh_->vf_iter(vh); vfi; ++vfi)
+    {
+        result += restFaceArea(g, vfi.handle().idx());
+    }
+    return result/3.0;
+}
+
+double Mesh::deformedBarycentricDualArea(const VectorXd &q, int vidx) const
 {
     double result = 0;
     OMMesh::VertexHandle vh = mesh_->vertex_handle(vidx);
@@ -276,11 +460,11 @@ double Mesh::faceArea(const VectorXd &q, int fidx) const
     return 0.5*A;
 }
 
-void Mesh::gaussianCurvature(const VectorXd &q, VectorXd &Kdensity) const
+void Mesh::gaussianCurvature(const VectorXd &q, VectorXd &K) const
 {
     int numverts = mesh_->n_vertices();
-    Kdensity.resize(numverts);
-    Kdensity.setZero();
+    K.resize(numverts);
+    K.setZero();
 
     for(int i=0; i<numverts; i++)
     {
@@ -309,9 +493,21 @@ void Mesh::gaussianCurvature(const VectorXd &q, VectorXd &Kdensity) const
             angsum += atan2(sintheta, costheta);
         }
 
-        Kdensity[i] = 2*PI-angsum;
-        double area = barycentricDualArea(q, i);
-        Kdensity[i] /= area;
+        K[i] = 2*PI-angsum;
+        double area =  deformedBarycentricDualArea(q, i);
+        K[i] /= area;
+    }
+}
+
+void Mesh::vertexAreas(const VectorXd &q, VectorXd &vareas) const
+{
+    int numverts = mesh_->n_vertices();
+    vareas.resize(numverts);
+    vareas.setZero();
+    for(int i=0; i<numverts; i++)
+    {
+        double area = deformedBarycentricDualArea(q, i);
+        vareas[i] = area;
     }
 }
 
@@ -335,7 +531,6 @@ void Mesh::meanCurvature(const VectorXd &q, VectorXd &Hdensity) const
     Hdensity.resize(numverts);
     for(int i=0; i<numverts; i++)
     {
-        double area = barycentricDualArea(q, i);
         Vector3d Hnormal(Hx[i], Hy[i], Hz[i]);
         double sign = 1.0;
 
@@ -343,8 +538,35 @@ void Mesh::meanCurvature(const VectorXd &q, VectorXd &Hdensity) const
         if(avnormal.dot(Hnormal) < 0)
             sign = -1.0;
 
-        Hdensity[i] = sign * Hnormal.norm();///area;
+        Hdensity[i] = sign * Hnormal.norm();
     }
+}
+
+double Mesh::intrinsicCotanWeight(int edgeid, const VectorXd &g) const
+{
+    OMMesh::EdgeHandle eh = mesh_->edge_handle(edgeid);
+    double c = g[eh.idx()];
+    double weight = 0;
+    for(int i=0; i<2; i++)
+    {
+        OMMesh::HalfedgeHandle heh = mesh_->halfedge_handle(eh,i);
+
+        if(mesh_->is_boundary(heh))
+            continue;
+        OMMesh::HalfedgeHandle next = mesh_->next_halfedge_handle(heh);
+        OMMesh::EdgeHandle edge1 = mesh_->edge_handle(next);
+        double a = g[edge1.idx()];
+
+        OMMesh::HalfedgeHandle prev = mesh_->prev_halfedge_handle(heh);
+        OMMesh::EdgeHandle edge2 = mesh_->edge_handle(prev);
+        double b = g[edge2.idx()];
+
+        double denom = 4.0*a*a*b*b-(a*a+b*b-c*c)*(a*a+b*b-c*c);
+        if(denom < 0)
+            denom = 0;
+        weight += 0.5*(a*a+b*b-c*c)/sqrt(denom);
+    }
+    return weight;
 }
 
 double Mesh::cotanWeight(int edgeid, const VectorXd &q) const
@@ -370,6 +592,33 @@ double Mesh::cotanWeight(int edgeid, const VectorXd &q) const
         weight += 0.5*cosang/sinang;
     }
     return weight;
+}
+
+void Mesh::buildIntrinsicDirichletLaplacian(const VectorXd &g, Eigen::SparseMatrix<double> &L) const
+{
+    int numverts = mesh_->n_vertices();
+    L.resize(numverts, numverts);
+
+    vector<Tr> Lcoeffs;
+
+    for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
+    {
+        if(mesh_->is_boundary(vi.handle()))
+            continue;
+
+        double totweight = 0;
+        OMMesh::VertexHandle cent = vi.handle();
+        for(OMMesh::VertexOHalfedgeIter voh = mesh_->voh_iter(cent); voh; ++voh)
+        {
+            OMMesh::EdgeHandle eh = mesh_->edge_handle(voh.handle());
+            OMMesh::VertexHandle to = mesh_->to_vertex_handle(voh.handle());
+            double weight = intrinsicCotanWeight(eh.idx(), g);
+            Lcoeffs.push_back(Tr(cent.idx(), to.idx(), weight));
+            totweight += weight;
+        }
+        Lcoeffs.push_back(Tr(cent.idx(), cent.idx(), -totweight));
+    }
+    L.setFromTriplets(Lcoeffs.begin(), Lcoeffs.end());
 }
 
 void Mesh::buildExtrinsicDirichletLaplacian(const VectorXd &q, Eigen::SparseMatrix<double> &L) const
@@ -398,4 +647,154 @@ void Mesh::buildExtrinsicDirichletLaplacian(const VectorXd &q, Eigen::SparseMatr
         Lcoeffs.push_back(Tr(cent.idx(), cent.idx(), -totweight));
     }
     L.setFromTriplets(Lcoeffs.begin(), Lcoeffs.end());
+}
+
+double Mesh::restFaceArea(const VectorXd &g, int fidx) const
+{
+    OMMesh::FaceHandle fh = mesh_->face_handle(fidx);
+    double gs[3];
+    int idx=0;
+    for(OMMesh::FaceEdgeIter fei = mesh_->fe_iter(fh); fei; ++fei)
+    {
+        gs[idx++] = g[fei.handle().idx()];
+    }
+
+    double s = 0.5*(gs[0]+gs[1]+gs[2]);
+    return sqrt(s*(s-gs[0])*(s-gs[1])*(s-gs[2]));
+}
+
+double Mesh::vertexAreaRatio(const VectorXd &undefq, const VectorXd &g, int vidx)
+{
+    double restarea = 0;
+    double curarea = 0;
+    OMMesh::VertexHandle vh = mesh_->vertex_handle(vidx);
+    for(OMMesh::VertexFaceIter vfi = mesh_->vf_iter(vh); vfi; ++vfi)
+    {
+        int fidx = vfi.handle().idx();
+        restarea += faceArea(undefq, fidx);
+        curarea += restFaceArea(g, fidx);
+    }
+
+    return curarea/restarea;
+}
+
+void Mesh::probabilisticallyGrowDisks(const VectorXd &q,
+                                      const VectorXd &g,
+                                      double baseprob,
+                                      double increment,
+                                      double maxstrain,
+                                      VectorXd &newg)
+{
+    newg = g;
+    VectorXd undefq(numdofs()), undefg(numedges());
+    undeformedDofsFromGeometry(undefq, undefg);
+
+    int growths = 0;
+    double straintot = 0;
+    for(OMMesh::EdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
+    {
+        OMMesh::HalfedgeHandle heh = mesh_->halfedge_handle(ei.handle(),0);
+        int v1 = mesh_->to_vertex_handle(heh).idx();
+        int v2 = mesh_->from_vertex_handle(heh).idx();
+        double extdist = (q.segment<3>(3*v1)-q.segment<3>(3*v2)).norm();
+        double intdist = g[ei.handle().idx()];
+
+        double straindensity = (intdist-extdist)/intdist;
+        if(straindensity < 0)
+            straindensity=0;
+
+        straintot += straindensity;
+
+        double cutoff;
+        if(straindensity > maxstrain)
+            cutoff = 0;
+        else if(straindensity < 0) //???
+            cutoff = 1.0;
+        else
+            cutoff = exp(1.0/(maxstrain)/(maxstrain) - 1.0/(straindensity-maxstrain)/(straindensity-maxstrain));
+
+        double prob = randomRange(0.0, 1.0);
+        if(prob < baseprob*cutoff)
+        {
+            growths++;
+            newg[ei.handle().idx()] += undefg[ei.handle().idx()]*increment;
+        }
+    }
+
+    std::cout << "Grew " << growths << " edges, av strain " << straintot/mesh_->n_edges() << std::endl;
+}
+
+bool Mesh::calculateHarmonicModes(const char *filename)
+{
+    string name = params_.outputDir + "/" + filename;
+    ofstream ofs(name.c_str());
+    if(!ofs)
+        return false;
+    VectorXd undefg(mesh_->n_edges());
+    VectorXd undefq(3*mesh_->n_vertices());
+    undeformedDofsFromGeometry(undefq, undefg);
+
+    SparseMatrix<double> L;
+    buildIntrinsicDirichletLaplacian(undefg, L);
+
+    SparseMatrix<double> M;
+    buildGeometricMassMatrix(undefg, M);
+
+    int numinterior=0;
+
+    vector<Tr> Pcoeffs;
+    for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
+    {
+        if(!mesh_->is_boundary(vi.handle()))
+        {
+            Pcoeffs.push_back(Tr(vi.handle().idx(), numinterior, 1.0));
+            numinterior++;
+        }
+    }
+    SparseMatrix<double> P(mesh_->n_vertices(), numinterior);
+    P.setFromTriplets(Pcoeffs.begin(), Pcoeffs.end());
+
+    SparseMatrix<double> intL = P.transpose()*L*P;
+    SparseMatrix<double> intM = P.transpose()*M*P;
+    MatrixXd Ldense(intL);
+    MatrixXd Mdense(intM);
+
+    double lscale = Ldense.trace()/numinterior;
+    double mscale = Mdense.trace()/numinterior;
+    Ldense /= lscale;
+    Mdense /= mscale;
+
+    std::cout << "Computing spectrum" << std::endl;
+    GeneralizedSelfAdjointEigenSolver<MatrixXd> solver(Ldense, Mdense);
+    std::cout << "done" << std::endl;
+
+    int nummodes = numinterior;
+    ofs << nummodes << endl;
+    for(int i=0; i<nummodes; i++)
+    {
+        double freq = solver.eigenvalues()[i]*lscale/mscale;
+        ofs << freq*freq << " ";
+        VectorXd evec = (P*solver.eigenvectors().col(i));
+        evec /= evec.norm();
+        ofs << evec.transpose() << endl;
+    }
+
+    SimplicialLDLT<SparseMatrix<double> > linsolver(intL);
+
+    int numbdry = mesh_->n_vertices() - numinterior;
+    ofs << numbdry << endl;
+    for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
+    {
+        if(!mesh_->is_boundary(vi.handle()))
+            continue;
+        int idx = vi.handle().idx();
+        VectorXd bdry(mesh_->n_vertices());
+        bdry.setZero();
+        bdry[idx] = 1.0;
+        VectorXd rhs = -P.transpose()*L*bdry;
+        VectorXd intharmonic = linsolver.solve(rhs);
+        VectorXd fullharmonic = bdry+P*intharmonic;
+        ofs << idx << " " << fullharmonic.transpose() << endl;
+    }
+    return ofs;
 }

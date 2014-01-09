@@ -412,19 +412,6 @@
            <property name="title">
             <string>Problem</string>
            </property>
-           <widget class="QLabel" name="growthRadiusLabel">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>30</y>
-              <width>111</width>
-              <height>17</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>Growth Radius</string>
-            </property>
-           </widget>
            <widget class="QLabel" name="growthAmountLabel">
             <property name="geometry">
              <rect>
@@ -438,7 +425,7 @@
              <string>Growth Amount</string>
             </property>
            </widget>
-           <widget class="QLabel" name="newGrowthRateLabel">
+           <widget class="QLabel" name="baseProbabilityLabel">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -448,10 +435,10 @@
              </rect>
             </property>
             <property name="text">
-             <string>New Growth Rate</string>
+             <string>Base Probability</string>
             </property>
            </widget>
-           <widget class="QLabel" name="growthTimeLabel">
+           <widget class="QLabel" name="maxStrainLabel">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -461,17 +448,7 @@
              </rect>
             </property>
             <property name="text">
-             <string>Growth Time</string>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="growthRadiusEdit">
-            <property name="geometry">
-             <rect>
-              <x>130</x>
-              <y>30</y>
-              <width>61</width>
-              <height>20</height>
-             </rect>
+             <string>Max Strain</string>
             </property>
            </widget>
            <widget class="QLineEdit" name="growthAmountEdit">
@@ -484,7 +461,7 @@
              </rect>
             </property>
            </widget>
-           <widget class="QLineEdit" name="growthTimeEdit">
+           <widget class="QLineEdit" name="maxStrainEdit">
             <property name="geometry">
              <rect>
               <x>130</x>
@@ -494,7 +471,7 @@
              </rect>
             </property>
            </widget>
-           <widget class="QLineEdit" name="newGrowthRateEdit">
+           <widget class="QLineEdit" name="baseProbabilityEdit">
             <property name="geometry">
              <rect>
               <x>130</x>
@@ -537,8 +514,15 @@
     <addaction name="actionTake_Screenshot"/>
     <addaction name="actionExport_OBJ"/>
    </widget>
+   <widget class="QMenu" name="menuExport">
+    <property name="title">
+     <string>Export</string>
+    </property>
+    <addaction name="actionSpectrum_Data"/>
+   </widget>
    <addaction name="menuVViewer"/>
    <addaction name="menuView"/>
+   <addaction name="menuExport"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionExit">
@@ -564,6 +548,11 @@
   <action name="actionImport_OBJ">
    <property name="text">
     <string>Import OBJ</string>
+   </property>
+  </action>
+  <action name="actionSpectrum_Data">
+   <property name="text">
+    <string>Spectrum Data</string>
    </property>
   </action>
  </widget>

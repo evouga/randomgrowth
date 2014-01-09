@@ -355,12 +355,13 @@ double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqi
     int numnbs = nbqidx.size();
     assert((int)spokegidx.size() == numnbs);
     assert((int)oppgidx.size() == numnbs);
+    assert(numnbs < 10);
 
     double coeff = params.YoungsModulus*params.h*params.h*params.h/(24.0*(1.0-params.PoissonRatio*params.PoissonRatio));
 
-    std::vector<double> A;
-    std::vector<double> thetas;
-    std::vector<double> psis;
+    double A[10];
+    double thetas[10];
+    double psis[10];
     for(int i=0; i<numnbs; i++)
     {
         int nextid = (i+1)%numnbs;
@@ -371,17 +372,17 @@ double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqi
         double gp = params.scale*gs[spokegidx[previd]];
         double gpi = params.scale*gs[oppgidx[previd]];
         double area = 0.5*sqrt(gi*gi*gn*gn - (gi*gi+gn*gn-gin*gin)*(gi*gi+gn*gn-gin*gin)/4.0);
-        A.push_back(area);
+        A[i] = area;
 
         double thetanum = gp*gp+gpi*gpi-gi*gi;
         double thetadenom = sqrt(4.0*gp*gp*gpi*gpi - (gp*gp+gpi*gpi-gi*gi)*(gp*gp+gpi*gpi-gi*gi));
 
-        thetas.push_back(thetanum/thetadenom);
+        thetas[i] = thetanum/thetadenom;
 
         double psinum = gn*gn+gin*gin-gi*gi;
         double psidenom = sqrt(4.0*gn*gn*gin*gin - (gn*gn+gin*gin-gi*gi)*(gn*gn+gin*gin-gi*gi));
 
-        psis.push_back(psinum/psidenom);
+        psis[i] = psinum/psidenom;
     }
 
     double rtdetg = 0;
@@ -555,13 +556,14 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
     int numnbs = nbqidx.size();
     assert((int)spokegidx.size() == numnbs);
     assert((int)oppgidx.size() == numnbs);
+    assert(numnbs < 10);
 
     double coeff = -params.YoungsModulus*params.h*params.h*params.h/(12.0*(1.0+params.PoissonRatio));
 
-    std::vector<double> A;
-    std::vector<double> qA;
+    double A[10];
+    double qA[10];
 
-    std::vector<double> angles;
+    double angles[10];
 
     for(int i=0; i<numnbs; i++)
     {
@@ -581,10 +583,10 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
         double sinangle = 2.0*qarea;
         double cosangle = (qi-qc).dot(qn-qc);
 
-        angles.push_back(atan2(sinangle, cosangle));
+        angles[i] = atan2(sinangle, cosangle);
 
-        A.push_back(area);
-        qA.push_back(qarea);
+        A[i] = area;
+        qA[i] = qarea;
     }
 
     double rtdetg = 0;

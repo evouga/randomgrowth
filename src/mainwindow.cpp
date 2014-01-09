@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     repainttimer_ = new QTimer(this);
-    repainttimer_->start(20);
+    repainttimer_->start(50);
     connect(repainttimer_, SIGNAL(timeout()), this, SLOT(tick()));
 }
 
@@ -104,9 +104,8 @@ void MainWindow::setParameters(ProblemParameters params)
     ui->eulerItersEdit->setText(QString::number(params.numEulerIters));
     ui->eulerTimestepEdit->setText(QString::number(params.eulerTimestep));
     ui->growthAmountEdit->setText(QString::number(params.growthAmount));
-    ui->growthRadiusEdit->setText(QString::number(params.growthRadius));
-    ui->growthTimeEdit->setText(QString::number(params.growthTime));
-    ui->newGrowthRateEdit->setText(QString::number(params.newGrowthRate));
+    ui->baseProbabilityEdit->setText(QString::number(params.baseGrowthProbability));
+    ui->maxStrainEdit->setText(QString::number(params.maxEdgeStrain));
     ui->scaleEdit->setText(QString::number(params.scale));
     ui->outputEdit->setText(QString::fromStdString(params.outputDir));
 }
@@ -124,9 +123,8 @@ ProblemParameters MainWindow::getParameters()
     result.eulerTimestep = ui->eulerTimestepEdit->text().toDouble();
     result.numEulerIters = ui->eulerItersEdit->text().toInt();
     result.growthAmount = ui->growthAmountEdit->text().toDouble();
-    result.growthRadius = ui->growthRadiusEdit->text().toDouble();
-    result.growthTime = ui->growthTimeEdit->text().toInt();
-    result.newGrowthRate = ui->newGrowthRateEdit->text().toInt();
+    result.baseGrowthProbability = ui->baseProbabilityEdit->text().toDouble();
+    result.maxEdgeStrain = ui->maxStrainEdit->text().toDouble();
     result.scale = ui->scaleEdit->text().toDouble();
     result.outputDir = ui->outputEdit->text().toStdString();
     return result;
@@ -224,22 +222,7 @@ void MainWindow::on_eulerItersEdit_textEdited(const QString &)
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
-void MainWindow::on_growthRadiusEdit_textEdited(const QString &)
-{
-    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
-}
-
 void MainWindow::on_growthAmountEdit_textEdited(const QString &)
-{
-    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
-}
-
-void MainWindow::on_growthTimeEdit_textEdited(const QString &)
-{
-    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
-}
-
-void MainWindow::on_newGrowthRateEdit_textEdited(const QString &)
 {
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
@@ -249,7 +232,22 @@ void MainWindow::on_scaleEdit_textEdited(const QString &)
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
-void MainWindow::on_outputEdit_textEdited(const QString &arg1)
+void MainWindow::on_outputEdit_textEdited(const QString &)
 {
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_maxStrainEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_baseProbabilityEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_actionSpectrum_Data_triggered()
+{
+    QMetaObject::invokeMethod(cont_, "exportSpectrum");
 }
