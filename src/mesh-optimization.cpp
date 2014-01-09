@@ -393,7 +393,7 @@ void Mesh::buildGeometricMassMatrix(const VectorXd &g, Eigen::SparseMatrix<doubl
     {
         int vidx = vi.handle().idx();
         double area = barycentricDualArea(g, vidx);
-        double mass = area*params_.scale*params_.scale*params_.scale;
+        double mass = area;
 //        if(mesh_->is_boundary(vi.handle()))
 //            mass = std::numeric_limits<double>::infinity();
         entries.push_back(Tr(vidx, vidx, mass));
@@ -796,5 +796,9 @@ bool Mesh::calculateHarmonicModes(const char *filename)
         VectorXd fullharmonic = bdry+P*intharmonic;
         ofs << idx << " " << fullharmonic.transpose() << endl;
     }
+
+    ofs << mesh_->n_vertices() << endl;
+    for(int i=0; i<(int)mesh_->n_vertices(); i++)
+        ofs << M.coeff(i,i) << endl;
     return ofs;
 }

@@ -40,6 +40,7 @@ HEADERS  += mainwindow.h \
     camera.h \
     yimage.h \
     controller.h \
-    elasticenergy.h
+    elasticenergy.h \
+    omtypes.h
 
 FORMS    += mainwindow.ui
