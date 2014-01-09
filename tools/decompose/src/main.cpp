@@ -4,9 +4,23 @@
 #include <iostream>
 #include <Eigen/Core>
 #include <fstream>
+#include <Eigen/Sparse>
+
+typedef Eigen::Triplet<double> Tr;
 
 using namespace std;
 using namespace Eigen;
+
+void decomposeIntoEigenbasis(const MatrixXd &eigenmodes, const SparseMatrix<double> &M, const VectorXd &q, VectorXd &modecoeffs)
+{
+    int modes = eigenmodes.cols();
+    modecoeffs.resize(modes);
+    for(int i=0; i<modes; i++)
+    {
+        VectorXd mode = eigenmodes.col(i);
+        modecoeffs[i] = q.dot(M*mode);
+    }
+}
 
 void removeHarmonicComponents(const OMMesh &mesh, const MatrixXd &harmonics, VectorXd &q)
 {
@@ -40,7 +54,7 @@ bool checkCompatible(OMMesh &mesh1, OMMesh &mesh2)
     return true;
 }
 
-bool readSpectrumData(const char *filename, const OMMesh &mesh, VectorXd &eigenvalues, MatrixXd &eigenmodes, MatrixXd &harmonicfuncs)
+bool readSpectrumData(const char *filename, const OMMesh &mesh, VectorXd &eigenvalues, MatrixXd &eigenmodes, MatrixXd &harmonicfuncs, SparseMatrix<double> &M)
 {
     ifstream ifs(filename);
     if(!ifs)
@@ -70,6 +84,22 @@ bool readSpectrumData(const char *filename, const OMMesh &mesh, VectorXd &eigenv
         for(int j=0; j<numverts; j++)
             ifs >> harmonicfuncs.coeffRef(j, i);
     }
+
+    int nummassentries;
+    ifs >> nummassentries;
+    if(nummassentries != numverts)
+        return false;
+
+    vector<Tr> Mentries;
+    for(int i=0; i<numverts; i++)
+    {
+        double m;
+        ifs >> m;
+        Mentries.push_back(Tr(i,i,m));
+    }
+    M.resize(numverts, numverts);
+    M.setFromTriplets(Mentries.begin(), Mentries.end());
+
     return ifs;
 }
 
@@ -112,7 +142,8 @@ int main(int argc, char *argv[])
     VectorXd eigenvalues;
     MatrixXd eigenmodes;
     MatrixXd harmonics;
-    if(!readSpectrumData(argv[3], sourcemesh, eigenvalues, eigenmodes, harmonics))
+    SparseMatrix<double> M;
+    if(!readSpectrumData(argv[3], sourcemesh, eigenvalues, eigenmodes, harmonics, M))
     {
         cerr << "Couldn't read spectrum data: " << argv[3] << endl;
         return -1;
@@ -144,5 +175,12 @@ int main(int argc, char *argv[])
         pt[2] = q[i];
     }
     OpenMesh::IO::write_mesh(sourcemesh, "nonharmonic.obj", opt);
+    cout << "Decomposing into eigenbasis" << endl;
+    int nummodes = eigenmodes.cols();
+    VectorXd modecoeffs(nummodes);
+    decomposeIntoEigenbasis(eigenmodes, M, q, modecoeffs);
+    ofstream ofs("modecoeffs.dat");
+    ofs << modecoeffs.transpose() << endl;
+    cout << "Done" << endl;
     return 0;
 }
