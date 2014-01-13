@@ -7,11 +7,34 @@
 #include <Eigen/Sparse>
 #include <sstream>
 #include <iomanip>
+#include <Eigen/Geometry>
 
 typedef Eigen::Triplet<double> Tr;
 
 using namespace std;
 using namespace Eigen;
+
+double computeArea(const OMMesh &mesh)
+{
+    double totarea = 0;
+    for(OMMesh::ConstFaceIter cfi = mesh.faces_begin(); cfi != mesh.faces_end(); ++cfi)
+    {
+        OMMesh::ConstFaceVertexIter cfvi = mesh.cfv_iter(cfi.handle());
+        OMMesh::Point p0 = mesh.point(cfvi.handle());
+        ++cfvi;
+        OMMesh::Point p1 = mesh.point(cfvi.handle());
+        ++cfvi;
+        OMMesh::Point p2 = mesh.point(cfvi.handle());
+        Vector3d e1, e2;
+        for(int j=0; j<3; j++)
+        {
+            e1[j] = p1[j]-p0[j];
+            e2[j] = p2[j]-p0[j];
+        }
+        totarea += 0.5*(e1.cross(e2)).norm();
+    }
+    return totarea;
+}
 
 string craftInputFilename(const char *folder, int num)
 {
@@ -115,18 +138,17 @@ bool readSpectrumData(const char *filename, const OMMesh &mesh, VectorXd &eigenv
 
 int main(int argc, char *argv[])
 {
-    if(argc != 4)
+    if(argc != 5)
     {
-        cerr << "Usage: decompose (.obj folder) (spectrum data file) (output folder)" << endl;
+        cerr << "Usage: decompose (.obj folder) (undeformed .obj) (spectrum data file) (output folder)" << endl;
         return -1;
     }
 
     OMMesh sourcemesh;
     OpenMesh::IO::Options opt;
-    string firstmeshname = craftInputFilename(argv[1], 0);
-    if(!OpenMesh::IO::read_mesh(sourcemesh, firstmeshname.c_str(), opt))
+    if(!OpenMesh::IO::read_mesh(sourcemesh, argv[2], opt))
     {
-        cerr << "Couldn't' read initial .obj file: " << argv[1] << endl;
+        cerr << "Couldn't' read initial .obj file: " << argv[2] << endl;
         return -1;
     }
 
@@ -135,9 +157,17 @@ int main(int argc, char *argv[])
     MatrixXd eigenmodes;
     MatrixXd harmonics;
     SparseMatrix<double> M;
-    if(!readSpectrumData(argv[2], sourcemesh, eigenvalues, eigenmodes, harmonics, M))
+    if(!readSpectrumData(argv[3], sourcemesh, eigenvalues, eigenmodes, harmonics, M))
     {
-        cerr << "Couldn't read spectrum data: " << argv[2] << endl;
+        cerr << "Couldn't read spectrum data: " << argv[3] << endl;
+        return -1;
+    }
+
+    string areafilename = string(argv[4]) + "/area.dat";
+    ofstream areafile(areafilename.c_str());
+    if(!areafile)
+    {
+        cerr << "Couldn't open area output file " << areafilename << endl;
         return -1;
     }
 
@@ -186,7 +216,7 @@ int main(int argc, char *argv[])
         int nummodes = eigenmodes.cols();
         VectorXd modecoeffs(nummodes);
         decomposeIntoEigenbasis(eigenmodes, M, q, modecoeffs);
-        string outname = craftOuputFilename(argv[3], curframe);
+        string outname = craftOuputFilename(argv[4], curframe);
         ofstream ofs(outname.c_str());
         if(!ofs)
         {
@@ -194,6 +224,12 @@ int main(int argc, char *argv[])
             return -1;
         }
         ofs << modecoeffs.transpose() << endl;
+
+        cout << "  Computing area: ";
+        double area = computeArea(displacedmesh);
+        cout << area << endl;
+        areafile << area << endl;
+
         curframe++;
     }
     return 0;
