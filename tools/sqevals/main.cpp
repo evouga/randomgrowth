@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 			cout << " ";
 		cout << sqeval;
 	}
+	cout << endl;
 	if(!ifs)
 	{
 		cerr << "Error reading spectrum file " << argv[1] << endl;

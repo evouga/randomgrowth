@@ -700,16 +700,14 @@ void Mesh::probabilisticallyGrowDisks(const VectorXd &q,
         double intdist = g[ei.handle().idx()];
 
         double straindensity = (intdist-extdist)/intdist;
-        if(straindensity < 0)
-            straindensity=0;
 
-        straintot += straindensity;
+        straintot += fabs(straindensity);
 
         double cutoff;
         if(straindensity > maxstrain)
             cutoff = 0;
-        else if(straindensity < 0) //???
-            cutoff = 1.0;
+        /*else if(straindensity < 0) //???
+            cutoff = 1.0;*/
         else
             cutoff = exp(1.0/(maxstrain)/(maxstrain) - 1.0/(straindensity-maxstrain)/(straindensity-maxstrain));
 

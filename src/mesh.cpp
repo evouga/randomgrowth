@@ -234,6 +234,11 @@ void Mesh::dumpFrame()
     ss2 << "/frame_";
     ss2 << setfill('0') << setw(8) << frameno_ << ".geo";
 
+    stringstream ss3;
+    ss3 << params_.outputDir;
+    ss3 << "/frame_";
+    ss3 << setfill('0') << setw(8) << frameno_ << ".g";
+
     ofstream ofs(ss2.str().c_str());
     VectorXd q,g;
     dofsFromGeometry(q, g);
@@ -246,6 +251,9 @@ void Mesh::dumpFrame()
     {
         ofs << i << " " << Hdensity[i] << " " << Kdensity[i] << " " << vareas[i] << endl;
     }
+
+    ofstream gofs(ss3.str().c_str());
+    gofs << g;
 
     frameno_++;
 }

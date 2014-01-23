@@ -133,6 +133,13 @@ bool readSpectrumData(const char *filename, const OMMesh &mesh, VectorXd &eigenv
     M.resize(numverts, numverts);
     M.setFromTriplets(Mentries.begin(), Mentries.end());
 
+
+    // rescale modes
+    for(int i=0; i<nummodes; i++)
+    {
+        double mag = eigenmodes.col(i).transpose()*M*eigenmodes.col(i);
+        eigenmodes.col(i) /= sqrt(mag);
+    }
     return ifs;
 }
 
