@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     repainttimer_ = new QTimer(this);
-    repainttimer_->start(50);
+    repainttimer_->start(100);
     connect(repainttimer_, SIGNAL(timeout()), this, SLOT(tick()));
 }
 
@@ -78,6 +78,16 @@ string MainWindow::launchImportOBJDialog()
                                                    tr("Open Mesh"),
                                                    "",
                                                    tr("Mesh Files (*.obj *.ply)")).toStdString();
+
+    return filename;
+}
+
+string MainWindow::launchImportMetricDialog()
+{
+    string filename = QFileDialog::getOpenFileName(this,
+                                                   tr("Open Metric"),
+                                                   "",
+                                                   tr("Metric Files (*.g)")).toStdString();
 
     return filename;
 }
@@ -247,7 +257,53 @@ void MainWindow::on_baseProbabilityEdit_textEdited(const QString &)
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
-void MainWindow::on_actionSpectrum_Data_triggered()
+void MainWindow::on_actionImport_Metric_triggered()
 {
-    QMetaObject::invokeMethod(cont_, "exportSpectrum");
+    string filename = launchImportMetricDialog();
+    QMetaObject::invokeMethod(cont_, "importMetric", Q_ARG(std::string, filename));
+}
+
+void MainWindow::on_actionAdd_Noise_triggered()
+{
+    QMetaObject::invokeMethod(cont_, "addNoise");
+}
+
+void MainWindow::on_actionSet_No_Target_Metric_triggered()
+{
+    QMetaObject::invokeMethod(cont_, "setNoTargetMetric");
+}
+
+void MainWindow::on_actionSet_Negative_K_Target_Metric_triggered()
+{
+    QMetaObject::invokeMethod(cont_, "setNegativeCurvatureTargetMetric");
+}
+
+void MainWindow::on_actionMinimize_with_Newton_triggered()
+{
+    QMetaObject::invokeMethod(cont_, "extremizeWithNewton");
+}
+
+void MainWindow::on_actionSymmetrize_triggered()
+{
+    QMetaObject::invokeMethod(cont_, "symmetrize");
+}
+
+void MainWindow::on_actionEigenvalues_triggered()
+{
+    QMetaObject::invokeMethod(cont_, "printHessianEigenvalues");
+}
+
+void MainWindow::on_actionMake_Cone_triggered()
+{
+    QMetaObject::invokeMethod(cont_, "makeCone");
+}
+
+void MainWindow::on_crushButton_clicked()
+{
+    QMetaObject::invokeMethod(cont_, "crush");
+}
+
+void MainWindow::on_actionMake_Flat_Cone_triggered()
+{
+    QMetaObject::invokeMethod(cont_, "makeFlatCone");
 }

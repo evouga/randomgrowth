@@ -355,13 +355,13 @@ double ElasticEnergy::bendOne(const VectorXd &qs, const VectorXd &gs, int centqi
     int numnbs = nbqidx.size();
     assert((int)spokegidx.size() == numnbs);
     assert((int)oppgidx.size() == numnbs);
-    assert(numnbs < 10);
+    assert(numnbs < 15);
 
     double coeff = params.YoungsModulus*params.h*params.h*params.h/(24.0*(1.0-params.PoissonRatio*params.PoissonRatio));
 
-    double A[10];
-    double thetas[10];
-    double psis[10];
+    double A[15];
+    double thetas[15];
+    double psis[15];
     for(int i=0; i<numnbs; i++)
     {
         int nextid = (i+1)%numnbs;
@@ -556,14 +556,14 @@ double ElasticEnergy::bendTwo(const VectorXd &qs, const VectorXd &gs, int centqi
     int numnbs = nbqidx.size();
     assert((int)spokegidx.size() == numnbs);
     assert((int)oppgidx.size() == numnbs);
-    assert(numnbs < 10);
+    assert(numnbs < 15);
 
     double coeff = -params.YoungsModulus*params.h*params.h*params.h/(12.0*(1.0+params.PoissonRatio));
 
-    double A[10];
-    double qA[10];
+    double A[15];
+    double qA[15];
 
-    double angles[10];
+    double angles[15];
 
     for(int i=0; i<numnbs; i++)
     {

@@ -171,6 +171,19 @@
             <string>Relax Embedding</string>
            </property>
           </widget>
+          <widget class="QPushButton" name="crushButton">
+           <property name="geometry">
+            <rect>
+             <x>60</x>
+             <y>60</y>
+             <width>99</width>
+             <height>27</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Crush</string>
+           </property>
+          </widget>
          </widget>
         </item>
         <item>
@@ -504,6 +517,7 @@
      <string>File</string>
     </property>
     <addaction name="actionImport_OBJ"/>
+    <addaction name="actionImport_Metric"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -514,15 +528,23 @@
     <addaction name="actionTake_Screenshot"/>
     <addaction name="actionExport_OBJ"/>
    </widget>
-   <widget class="QMenu" name="menuExport">
+   <widget class="QMenu" name="menuActions">
     <property name="title">
-     <string>Export</string>
+     <string>Actions</string>
     </property>
-    <addaction name="actionSpectrum_Data"/>
+    <addaction name="actionAdd_Noise"/>
+    <addaction name="actionMinimize_with_Newton"/>
+    <addaction name="actionSymmetrize"/>
+    <addaction name="actionEigenvalues"/>
+    <addaction name="separator"/>
+    <addaction name="actionSet_No_Target_Metric"/>
+    <addaction name="actionSet_Negative_K_Target_Metric"/>
+    <addaction name="actionMake_Cone"/>
+    <addaction name="actionMake_Flat_Cone"/>
    </widget>
    <addaction name="menuVViewer"/>
    <addaction name="menuView"/>
-   <addaction name="menuExport"/>
+   <addaction name="menuActions"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionExit">
@@ -550,9 +572,49 @@
     <string>Import OBJ</string>
    </property>
   </action>
-  <action name="actionSpectrum_Data">
+  <action name="actionImport_Metric">
    <property name="text">
-    <string>Spectrum Data</string>
+    <string>Import Metric</string>
+   </property>
+  </action>
+  <action name="actionAdd_Noise">
+   <property name="text">
+    <string>Add Noise</string>
+   </property>
+  </action>
+  <action name="actionSet_No_Target_Metric">
+   <property name="text">
+    <string>Set No Target Metric</string>
+   </property>
+  </action>
+  <action name="actionSet_Negative_K_Target_Metric">
+   <property name="text">
+    <string>Set Negative K Target Metric</string>
+   </property>
+  </action>
+  <action name="actionMinimize_with_Newton">
+   <property name="text">
+    <string>Minimize with Newton</string>
+   </property>
+  </action>
+  <action name="actionSymmetrize">
+   <property name="text">
+    <string>Symmetrize</string>
+   </property>
+  </action>
+  <action name="actionEigenvalues">
+   <property name="text">
+    <string>Eigenvalues</string>
+   </property>
+  </action>
+  <action name="actionMake_Cone">
+   <property name="text">
+    <string>Make Cone</string>
+   </property>
+  </action>
+  <action name="actionMake_Flat_Cone">
+   <property name="text">
+    <string>Make Flat Cone</string>
    </property>
   </action>
  </widget>

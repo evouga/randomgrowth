@@ -12,10 +12,14 @@ struct MyTraits : public OpenMesh::DefaultTraits
     {
     private:
         double restlen_;
+        double targetlen_;
     public:
         EdgeT() : restlen_(0) {}
         double restlen() const {return restlen_;}
         void setRestlen(double l) {restlen_=l;}
+
+        double targetlen() const {return targetlen_;}
+        void setTargetlen(double l) {targetlen_=l;}
     };
 };
 

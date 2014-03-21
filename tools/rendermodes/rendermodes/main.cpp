@@ -20,7 +20,7 @@ string craftOuputFilename(const char *folder, int num)
 }
 
 
-bool readSpectrumData(const char *filename, const OMMesh &mesh, VectorXd &eigenvalues, MatrixXd &eigenmodes, MatrixXd &harmonicfuncs, SparseMatrix<double> &M)
+bool readSpectrumData(const char *filename, const OMMesh &mesh, VectorXd &eigenvalues, MatrixXd &eigenmodes)
 {
     ifstream ifs(filename);
     if(!ifs)
@@ -30,42 +30,17 @@ bool readSpectrumData(const char *filename, const OMMesh &mesh, VectorXd &eigenv
     int nummodes;
     ifs >> nummodes;
     eigenvalues.resize(nummodes);
-    eigenmodes.resize(numverts, nummodes);
+    eigenmodes.resize(3*numverts, nummodes);
     for(int i=0; i<nummodes; i++)
     {
         ifs >> eigenvalues[i];
-        for(int j=0; j<numverts; j++)
+    }
+
+    for(int i=0; i<nummodes; i++)
+    {
+        for(int j=0; j<3*numverts; j++)
             ifs >> eigenmodes.coeffRef(j, i);
     }
-    int numbdry;
-    ifs >> numbdry;
-    harmonicfuncs.resize(numverts, numbdry);
-    for(int i=0; i<numbdry; i++)
-    {
-        int bdid;
-        ifs >> bdid;
-        OMMesh::VertexHandle bdvert = mesh.vertex_handle(bdid);
-        if(!mesh.is_boundary(bdvert))
-            return false;
-        for(int j=0; j<numverts; j++)
-            ifs >> harmonicfuncs.coeffRef(j, i);
-    }
-
-    int nummassentries;
-    ifs >> nummassentries;
-    if(nummassentries != numverts)
-        return false;
-
-    vector<Tr> Mentries;
-    for(int i=0; i<numverts; i++)
-    {
-        double m;
-        ifs >> m;
-        Mentries.push_back(Tr(i,i,m));
-    }
-    M.resize(numverts, numverts);
-    M.setFromTriplets(Mentries.begin(), Mentries.end());
-
     return ifs;
 }
 
@@ -88,9 +63,7 @@ int main(int argc, char *argv[])
     cout << "Reading spectrum data" << endl;
     VectorXd eigenvalues;
     MatrixXd eigenmodes;
-    MatrixXd harmonics;
-    SparseMatrix<double> M;
-    if(!readSpectrumData(argv[2], sourcemesh, eigenvalues, eigenmodes, harmonics, M))
+    if(!readSpectrumData(argv[2], sourcemesh, eigenvalues, eigenmodes))
     {
         cerr << "Couldn't read spectrum data: " << argv[2] << endl;
         return -1;
@@ -100,23 +73,26 @@ int main(int argc, char *argv[])
     nummodes = min(nummodes, (int)eigenmodes.cols());
 
     double ampl = strtod(argv[4], NULL);
+    int numverts = sourcemesh.n_vertices();
+
     for(int mode = 0; mode < nummodes; mode++)
     {
+        OMMesh thismesh = sourcemesh;
         VectorXd evec = eigenmodes.col(mode);
         double maxval = 0;
-        for(int j=0; j<(int)sourcemesh.n_vertices(); j++)
+        for(int j=0; j<(int)3*numverts; j++)
         {
             maxval = max(maxval, fabs(evec[j]));
         }
         evec *= ampl/maxval;
-        for(OMMesh::VertexIter vh = sourcemesh.vertices_begin(); vh != sourcemesh.vertices_end(); ++vh)
+        for(OMMesh::VertexIter vh = thismesh.vertices_begin(); vh != thismesh.vertices_end(); ++vh)
         {
-            double z = evec[vh.handle().idx()];
-            sourcemesh.point(vh.handle())[2] = z;
+            for(int j=0; j<3; j++)
+                thismesh.point(vh.handle())[j] += evec[3*vh.handle().idx()+j];
         }
 
         string outname = craftOuputFilename(argv[5], mode);
-        if(OpenMesh::IO::write_mesh(sourcemesh, outname.c_str(), opt))
+        if(OpenMesh::IO::write_mesh(thismesh, outname.c_str(), opt))
         {
             cout << "Wrote mode " << mode << endl;
         }

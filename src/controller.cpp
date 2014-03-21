@@ -50,15 +50,24 @@ void Controller::importOBJ(string filename)
     }
 }
 
-void Controller::exportSpectrum()
+void Controller::importMetric(string filename)
 {
-    m_.calculateHarmonicModes("spectrum.dat");
+    if(!m_.importMetric(filename.c_str()))
+    {
+        string err = string("Couldn't load metric: ") + filename;
+        QMetaObject::invokeMethod(&mw_, "showError", Q_ARG(std::string, err));
+    }
 }
 
 void Controller::updateParameters(ProblemParameters params)
 {    
     m_.setParameters(params);
     updateGL();
+}
+
+void Controller::crush()
+{
+    m_.crush(*this, 3.0, 0.5);
 }
 
 void Controller::relaxEmbedding()
@@ -77,4 +86,45 @@ void Controller::centerCamera()
 void Controller::updateGL()
 {
     QMetaObject::invokeMethod(&mw_, "repaintMesh");
+}
+
+void Controller::addNoise()
+{
+    m_.addRandomNoise(1e-6);
+    updateGL();
+}
+
+void Controller::setNoTargetMetric()
+{
+    m_.setNoTargetMetric();
+}
+
+void Controller::setNegativeCurvatureTargetMetric()
+{
+    m_.setNegativeGaussianCurvatureTargetMetric();
+}
+
+void Controller::extremizeWithNewton()
+{
+    m_.extremizeWithNewton();
+}
+
+void Controller::symmetrize()
+{
+    m_.symmetrize(3);
+}
+
+void Controller::printHessianEigenvalues()
+{
+    m_.printHessianEigenvalues();
+}
+
+void Controller::makeCone()
+{
+    m_.setConeHeights(3.0);
+}
+
+void Controller::makeFlatCone()
+{
+    m_.setFlatCone(3.0);
 }

@@ -69,7 +69,25 @@ private slots:
 
     void on_baseProbabilityEdit_textEdited(const QString &arg1);
 
-    void on_actionSpectrum_Data_triggered();
+    void on_actionImport_Metric_triggered();
+
+    void on_actionAdd_Noise_triggered();
+
+    void on_actionSet_No_Target_Metric_triggered();
+
+    void on_actionSet_Negative_K_Target_Metric_triggered();
+
+    void on_actionMinimize_with_Newton_triggered();
+
+    void on_actionSymmetrize_triggered();
+
+    void on_actionEigenvalues_triggered();
+
+    void on_actionMake_Cone_triggered();
+
+    void on_crushButton_clicked();
+
+    void on_actionMake_Flat_Cone_triggered();
 
 private:
     void updateGL();
@@ -77,6 +95,7 @@ private:
     void saveScreenshot(const std::string &filename);
     ProblemParameters getParameters();
     std::string launchImportOBJDialog();
+    std::string launchImportMetricDialog();
 
     Ui::MainWindow *ui;
     Controller *cont_;

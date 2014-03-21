@@ -40,6 +40,7 @@ public:
     enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
 
     bool simulate(Controller &cont);
+    bool crush(Controller &cont, double coneHeight, double endHeight);
 
     int numdofs() const;
     int numedges() const;
@@ -54,8 +55,16 @@ public:
 
     bool exportOBJ(const char *filename);
     bool importOBJ(const char *filename);
+    bool importMetric(const char *filename);
 
-    bool calculateHarmonicModes(const char *filename);
+    void addRandomNoise(double magnitude);
+    void setNegativeGaussianCurvatureTargetMetric();
+    void setNoTargetMetric();
+    void extremizeWithNewton();
+    void symmetrize(int nfold);
+    void printHessianEigenvalues();
+    void setConeHeights(double height);
+    void setFlatCone(double height);
 
 private:
     void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
@@ -72,8 +81,14 @@ private:
     double deformedBarycentricDualArea(const Eigen::VectorXd &q, int vidx) const;
     double faceArea(const Eigen::VectorXd &q, int fidx) const;
 
+    double sampleHeight(const Eigen::Vector2d pos, const Eigen::VectorXd &q);
+    void enforceConstraints(Eigen::VectorXd &q,
+                            const Eigen::VectorXd &startq,
+                            double planeHeight);
+
     double restFaceArea(const Eigen::VectorXd &g, int fidx) const;
-    void undeformedDofsFromGeometry(Eigen::VectorXd &undefq, Eigen::VectorXd &undefg) const;
+    void targetMetricFromGeometry(Eigen::VectorXd &targetg) const;
+    void targetMetricToGeometry(const Eigen::VectorXd &targetg);
     double vertexAreaRatio(const Eigen::VectorXd &undefq, const Eigen::VectorXd &g, int vidx);
 
     double intrinsicCotanWeight(int edgeid, const Eigen::VectorXd &g) const;
@@ -96,22 +111,19 @@ private:
     double vertexStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int vidx) const;
     double faceStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int fidx) const;
 
-    void probabilisticallyGrowDisks(const Eigen::VectorXd &q,
-                                    const Eigen::VectorXd &g,
-                                    double baseprob, double increment, double maxstrain,
-                                    Eigen::VectorXd &newg);
-
     void dumpFrame();
-
+    void deleteBadFlatConeFaces();
 
     Eigen::Vector3d colormap(double val) const;
     Eigen::Vector3d colormap(double val, double max) const;
     Eigen::Vector3d HSLtoRGB(const Eigen::Vector3d &hsl) const;
 
     double randomRange(double min, double max) const;
+    double truncatedConeVolume(double startHeight, double curHeight);
+    void pressureForce(const Eigen::VectorXd &q, double pressure, Eigen::VectorXd &F);
 
     OMMesh *mesh_;
-    OMMesh *undeformedMesh_;
+
     int frameno_;
     ProblemParameters params_;
 

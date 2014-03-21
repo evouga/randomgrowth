@@ -25,9 +25,9 @@ void Mesh::elasticEnergy(const VectorXd &q,
     {
         gradq.resize(numdofs());
         gradq.setZero();
-        if(derivativesRequested & ElasticEnergy::DR_HQ)
-            hessq.resize(numdofs(), numdofs());
     }
+    if(derivativesRequested & ElasticEnergy::DR_HQ)
+        hessq.resize(numdofs(), numdofs());
 
     if(derivativesRequested & ElasticEnergy::DR_DGDQ)
     {
@@ -101,6 +101,7 @@ void Mesh::elasticEnergy(const VectorXd &q,
 
         energyS += ElasticEnergy::stretchingEnergy(q, g, qidx, gidx, gradq, Hqcoeffs, dgdqcoeffs, params_, derivativesRequested);
     }
+
 
     if(derivativesRequested & ElasticEnergy::DR_HQ)
         hessq.setFromTriplets(Hqcoeffs.begin(), Hqcoeffs.end());
@@ -322,23 +323,15 @@ bool Mesh::simulate(Controller &cont)
     v.setZero();
     int numsteps = params_.numEulerIters;
 
-    //Vector2d o(0,0);
+    VectorXd targetg;
+    targetMetricFromGeometry(targetg);
+
+
+    const int growthTime = 5000;
 
     for(int i=0; i<numsteps; i++)
     {
         std::cout << "iter " << i << std::endl;
-        /*if(i%params_.newGrowthRate == 0)
-        {
-            double x,y;
-            do
-            {
-                x = randomRange(-1.0,1.0);
-                y = randomRange(-1.0,1.0);
-            }
-            while(x*x+y*y > 1);
-            o[0] = x;
-            o[1] = y;
-        }*/
         q += h*v;
         int derivs = ElasticEnergy::DR_DQ;
         VectorXd gradq;
@@ -346,23 +339,100 @@ bool Mesh::simulate(Controller &cont)
         SparseMatrix<double> hessq, gradggradq;
         std::cout << "computing energy" << std::endl;
         elasticEnergy(q, g, energyB, energyS, gradq, hessq, gradggradq, derivs);        
-
+        std::cout << "force magnitude: " << gradq.norm() << std::endl;
         SparseMatrix<double> Minv;
         buildInvMassMatrix(g, Minv);
 
         v -= h*Minv*gradq + h*Minv*params_.dampingCoeff*v;
         dofsToGeometry(q, g);
-        if(i%500 == 0)
+        if(i%100 == 0)
             dumpFrame();
-
-        std::cout << "growing disk" << std::endl;
-        VectorXd newg;
-        probabilisticallyGrowDisks(q, g, params_.baseGrowthProbability, params_.growthAmount*h, params_.maxEdgeStrain, newg);
-        g = newg;
+        if(i<=growthTime)
+        {
+            g = double(growthTime-i)/double(growthTime) * g + double(i)/double(growthTime) * targetg;
+        }
         std::cout << "done" << std::endl;
     }
 
-    dofsToGeometry(q, g);
+    dofsToGeometry(q,g);
+
+    cont.updateGL();
+    return true;
+}
+
+double Mesh::truncatedConeVolume(double startHeight, double curHeight)
+{
+    double base = PI;
+    double totV = base*startHeight/3.0;
+    double topr = curHeight/startHeight;
+    double topbase = PI*topr*topr;
+    double topV = topbase*(startHeight-curHeight)/3.0;
+    return totV-topV;
+}
+
+bool Mesh::crush(Controller &cont, double coneHeight, double endHeight)
+{
+    {
+        string name = params_.outputDir + "/parameters";
+        ofstream paramfile(name.c_str());
+        params_.dumpParameters(paramfile);
+    }
+
+    VectorXd q(numdofs());
+    VectorXd g(numedges());
+    dofsFromGeometry(q, g);
+
+    double h = params_.eulerTimestep;
+    VectorXd v(numdofs());
+    v.setZero();
+    int numsteps = params_.numEulerIters;
+
+    VectorXd startq = q;
+
+    const int crushTime = 100000;
+
+    double initialV = truncatedConeVolume(coneHeight, coneHeight);
+    double airpressure = 101325;
+
+    for(int i=0; i<numsteps; i++)
+    {        
+        std::cout << "iter " << i << std::endl;
+
+        double t = i;
+        if(t > crushTime)
+            t = crushTime;
+        double planeZ = (i*endHeight + (crushTime-i)*coneHeight)/double(crushTime);
+
+        q += h*v;
+        int derivs = ElasticEnergy::DR_DQ;
+        VectorXd gradq;
+        double energyB, energyS;
+        SparseMatrix<double> hessq, gradggradq;
+        std::cout << "computing energy" << std::endl;
+        elasticEnergy(q, g, energyB, energyS, gradq, hessq, gradggradq, derivs);
+        std::cout << "force magnitude: " << gradq.norm() << std::endl;
+        SparseMatrix<double> Minv;
+        buildInvMassMatrix(g, Minv);
+        VectorXd F = -gradq;
+
+        double curV = truncatedConeVolume(coneHeight, planeZ);
+        double pressure = airpressure*(initialV/curV - 1.0);
+        VectorXd pressureF;
+        pressureForce(q,pressure, pressureF);
+
+        F += pressureF;
+
+        v += h*Minv*F - h*Minv*params_.dampingCoeff*v;
+        dofsToGeometry(q, g);
+        if(i%100 == 0)
+            dumpFrame();
+        // enforce constraints
+        enforceConstraints(q, startq, planeZ);
+        std::cout << "done" << std::endl;
+    }
+
+    dofsToGeometry(q,g);
+
     cont.updateGL();
     return true;
 }
@@ -678,125 +748,193 @@ double Mesh::vertexAreaRatio(const VectorXd &undefq, const VectorXd &g, int vidx
     return curarea/restarea;
 }
 
-void Mesh::probabilisticallyGrowDisks(const VectorXd &q,
-                                      const VectorXd &g,
-                                      double baseprob,
-                                      double increment,
-                                      double maxstrain,
-                                      VectorXd &newg)
+void Mesh::setNegativeGaussianCurvatureTargetMetric()
 {
-    newg = g;
-    VectorXd undefq(numdofs()), undefg(numedges());
-    undeformedDofsFromGeometry(undefq, undefg);
+    VectorXd q, g;
+    dofsFromGeometry(q, g);
 
-    int growths = 0;
-    double straintot = 0;
     for(OMMesh::EdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
     {
         OMMesh::HalfedgeHandle heh = mesh_->halfedge_handle(ei.handle(),0);
         int v1 = mesh_->to_vertex_handle(heh).idx();
         int v2 = mesh_->from_vertex_handle(heh).idx();
-        double extdist = (q.segment<3>(3*v1)-q.segment<3>(3*v2)).norm();
-        double intdist = g[ei.handle().idx()];
-
-        double straindensity = (intdist-extdist)/intdist;
-
-        straintot += fabs(straindensity);
-
-        double cutoff;
-        if(straindensity > maxstrain)
-            cutoff = 0;
-        /*else if(straindensity < 0) //???
-            cutoff = 1.0;*/
-        else
-            cutoff = exp(1.0/(maxstrain)/(maxstrain) - 1.0/(straindensity-maxstrain)/(straindensity-maxstrain));
-
-        double prob = randomRange(0.0, 1.0);
-        if(prob < baseprob*cutoff)
-        {
-            growths++;
-            newg[ei.handle().idx()] += undefg[ei.handle().idx()]*increment;
-        }
+        double len = (q.segment<2>(3*v1)-q.segment<2>(3*v2)).norm();
+        Vector2d midpt = 0.5*(q.segment<2>(3*v1)+q.segment<2>(3*v2));
+        double newlen = len/(1.07085 - 0.201335 * midpt.squaredNorm());
+        double randfact = randomRange(-0.01,0.01);
+        newlen *= (1.0+randfact);
+        g[ei.handle().idx()] = newlen;
     }
-
-    std::cout << "Grew " << growths << " edges, av strain " << straintot/mesh_->n_edges() << std::endl;
+    targetMetricToGeometry(g);
 }
 
-bool Mesh::calculateHarmonicModes(const char *filename)
+void Mesh::extremizeWithNewton()
 {
-    string name = params_.outputDir + "/" + filename;
-    ofstream ofs(name.c_str());
-    if(!ofs)
-        return false;
-    VectorXd undefg(mesh_->n_edges());
-    VectorXd undefq(3*mesh_->n_vertices());
-    undeformedDofsFromGeometry(undefq, undefg);
+    VectorXd q, g;
+    dofsFromGeometry(q, g);
+    double energyB, energyS;
+    VectorXd gradq;
+    SparseMatrix<double> hessq, dgddq;
 
-    SparseMatrix<double> L;
-    buildIntrinsicDirichletLaplacian(undefg, L);
+    int derivs = ElasticEnergy::DR_DQ | ElasticEnergy::DR_HQ;
 
-    SparseMatrix<double> M;
-    buildGeometricMassMatrix(undefg, M);
-
-    int numinterior=0;
-
-    vector<Tr> Pcoeffs;
-    for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
+    for(int i=0; i<1000; i++)
     {
-        if(!mesh_->is_boundary(vi.handle()))
+        elasticEnergy(q, g, energyB, energyS, gradq, hessq, dgddq, derivs);
+
+        cout << "E before " << energyB + energyS;
+        SimplicialLDLT<SparseMatrix<double> > solver(hessq);
+        VectorXd dq = solver.solve(-gradq);
+        q += dq;
+
+        int eonly = ElasticEnergy::DR_NONE;
+        elasticEnergy(q, g, energyB, energyS, gradq, hessq, dgddq, eonly);
+        cout << " after " << energyB+energyS << endl;
+        dofsToGeometry(q, g);
+    }
+}
+
+double Mesh::sampleHeight(const Vector2d pos, const VectorXd &q)
+{
+    for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
+    {
+        int verts[3];
+        int idx=0;
+        for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fi.handle()); fvi; ++fvi)
         {
-            Pcoeffs.push_back(Tr(vi.handle().idx(), numinterior, 1.0));
-            numinterior++;
+            verts[idx++] = fvi.handle().idx();
+        }
+        assert(idx==3);
+
+        Vector2d e1 = q.segment<2>(3*verts[1])-q.segment<2>(3*verts[0]);
+        Vector2d e2 = q.segment<2>(3*verts[2])-q.segment<2>(3*verts[0]);
+
+        Matrix2d M;
+        M << e1[0], e2[0], e1[1], e2[1];
+        Vector2d rhs = pos - q.segment<2>(3*verts[0]);
+        Matrix2d Minv = M.inverse();
+        Vector2d barycoords = Minv*rhs;
+        if(barycoords[0] > 0 && barycoords[1] > 0 && barycoords[0]+barycoords[1] <= 1.0)
+        {
+            return barycoords[0]*q[3*verts[1]+2] + barycoords[1]*q[3*verts[2]+2] + (1-barycoords[0]-barycoords[1])*q[3*verts[0]+2];
         }
     }
-    SparseMatrix<double> P(mesh_->n_vertices(), numinterior);
-    P.setFromTriplets(Pcoeffs.begin(), Pcoeffs.end());
 
-    SparseMatrix<double> intL = P.transpose()*L*P;
-    SparseMatrix<double> intM = P.transpose()*M*P;
-    MatrixXd Ldense(intL);
-    MatrixXd Mdense(intM);
-
-    double lscale = Ldense.trace()/numinterior;
-    double mscale = Mdense.trace()/numinterior;
-    Ldense /= lscale;
-    Mdense /= mscale;
-
-    std::cout << "Computing spectrum" << std::endl;
-    GeneralizedSelfAdjointEigenSolver<MatrixXd> solver(Ldense, Mdense);
-    std::cout << "done" << std::endl;
-
-    int nummodes = numinterior;
-    ofs << nummodes << endl;
-    for(int i=0; i<nummodes; i++)
+    double closestdist = std::numeric_limits<double>::infinity();
+    double result = std::numeric_limits<double>::infinity();
+    for(int i=0; i<(int)mesh_->n_vertices(); i++)
     {
-        double freq = solver.eigenvalues()[i]*lscale/mscale;
-        ofs << freq*freq << " ";
-        VectorXd evec = (P*solver.eigenvectors().col(i));
-        evec /= evec.norm();
-        ofs << evec.transpose() << endl;
+        Vector2d vpos = q.segment<2>(3*i);
+        double dist = (vpos-pos).norm();
+        if(dist < closestdist)
+        {
+            closestdist = dist;
+            result = q[3*i+2];
+        }
     }
 
-    SimplicialLDLT<SparseMatrix<double> > linsolver(intL);
+    return result;
+}
 
-    int numbdry = mesh_->n_vertices() - numinterior;
-    ofs << numbdry << endl;
+void Mesh::symmetrize(int nfold)
+{
+    VectorXd q, g;
+    dofsFromGeometry(q, g);
+    VectorXd newq = q;
+
+    double angle = 2*PI/nfold;
+    Matrix2d rot;
+    rot << cos(angle), sin(angle), -sin(angle), cos(angle);
+
+    for(int i=0; i<(int)mesh_->n_vertices(); i++)
+    {
+        Vector2d pos = q.segment<2>(3*i);
+        double totz = q[3*i+2];
+        int numz = 1;
+        for(int j=0; j<nfold; j++)
+        {
+            pos = rot*pos;
+            double newz = sampleHeight(pos, q);
+            if(newz != numeric_limits<double>::infinity())
+            {
+                totz += newz;
+                numz++;
+            }
+        }
+        newq[3*i+2] = totz/numz;
+    }
+
+    dofsToGeometry(newq, g);
+}
+
+void Mesh::printHessianEigenvalues()
+{
+    cout << "Computing eigenvalues" << endl;
+    VectorXd q, g, gradq;
+    dofsFromGeometry(q, g);
+    SparseMatrix<double> hq, dgdq;
+    double eB, eS;
+
+    int derivs = ElasticEnergy::DR_HQ;
+
+    elasticEnergy(q, g, eB, eS, gradq, hq, dgdq, derivs);
+
+    cout << "Constructing matrix..." << endl;
+    MatrixXd dense(hq);
+
+    cout << "Performing solve..." << endl;
+    SelfAdjointEigenSolver<MatrixXd> solver(dense);
+
+    stringstream ss;
+    ss << params_.outputDir;
+    ss << "/spectrum.dat";
+
+    ofstream ofs(ss.str().c_str());
+    int nummodes = solver.eigenvalues().size();
+    ofs << nummodes << endl;
+
+    ofs << solver.eigenvalues().transpose() << endl;
+
+    for(int mode=0;  mode<nummodes; mode++)
+    {
+        ofs << solver.eigenvectors().col(mode).transpose() << endl;
+    }
+
+    cout << "done." << endl;
+}
+
+void Mesh::enforceConstraints(VectorXd &q, const VectorXd &startq, double planeHeight)
+{
+    int numverts = mesh_->n_vertices();
+
+    for(int i=0; i<numverts; i++)
+    {
+        double z = q[3*i+2];
+        if(z > planeHeight)
+            q[3*i+2] = planeHeight;
+    }
+    // pin boundary
+    for(int i=0; i<numverts; i++)
+    {
+        OMMesh::VertexHandle vh = mesh_->vertex_handle(i);
+        if(mesh_->is_boundary(vh))
+        {
+            Vector3d startpos = startq.segment<3>(3*i);
+            double rsq = startpos[0]*startpos[0]+startpos[1]*startpos[1];
+            if(rsq > 0.9)
+                q[3*i+2] = 0;
+        }
+    }
+}
+
+void Mesh::pressureForce(const VectorXd &q, double pressure, VectorXd &F)
+{
+    F.resize(q.size());
     for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
     {
-        if(!mesh_->is_boundary(vi.handle()))
-            continue;
-        int idx = vi.handle().idx();
-        VectorXd bdry(mesh_->n_vertices());
-        bdry.setZero();
-        bdry[idx] = 1.0;
-        VectorXd rhs = -P.transpose()*L*bdry;
-        VectorXd intharmonic = linsolver.solve(rhs);
-        VectorXd fullharmonic = bdry+P*intharmonic;
-        ofs << idx << " " << fullharmonic.transpose() << endl;
+        Vector3d normal = this->averageNormal(q, vi.handle().idx());
+        double area = params_.scale*params_.scale*this->deformedBarycentricDualArea(q, vi.handle().idx());
+        for(int i=0; i<3; i++)
+            F[3*vi.handle().idx()+i] = pressure*normal[i]*area;
     }
-
-    ofs << mesh_->n_vertices() << endl;
-    for(int i=0; i<(int)mesh_->n_vertices(); i++)
-        ofs << M.coeff(i,i) << endl;
-    return ofs;
 }
