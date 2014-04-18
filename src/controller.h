@@ -34,6 +34,7 @@ public slots:
     void makeCone();
     void makeFlatCone();
     void crush();
+    void setIntrinsicLengthsToCurrentLengths();
 
 private:    
     MainWindow &mw_;

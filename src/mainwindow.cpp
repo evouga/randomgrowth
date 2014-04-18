@@ -307,3 +307,8 @@ void MainWindow::on_actionMake_Flat_Cone_triggered()
 {
     QMetaObject::invokeMethod(cont_, "makeFlatCone");
 }
+
+void MainWindow::on_actionSet_Current_Lengths_as_Intrinsic_triggered()
+{
+    QMetaObject::invokeMethod(cont_, "setIntrinsicLengthsToCurrentLengths");
+}

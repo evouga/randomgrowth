@@ -89,6 +89,8 @@ private slots:
 
     void on_actionMake_Flat_Cone_triggered();
 
+    void on_actionSet_Current_Lengths_as_Intrinsic_triggered();
+
 private:
     void updateGL();
     void saveScreenshot();

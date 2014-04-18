@@ -90,7 +90,7 @@ void Controller::updateGL()
 
 void Controller::addNoise()
 {
-    m_.addRandomNoise(1e-6);
+    m_.addRandomNoise(1e-3);
     updateGL();
 }
 
@@ -127,4 +127,9 @@ void Controller::makeCone()
 void Controller::makeFlatCone()
 {
     m_.setFlatCone(3.0);
+}
+
+void Controller::setIntrinsicLengthsToCurrentLengths()
+{
+    m_.setIntrinsicLengthsToCurrentLengths();
 }

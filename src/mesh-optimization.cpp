@@ -362,11 +362,11 @@ bool Mesh::simulate(Controller &cont)
 
 double Mesh::truncatedConeVolume(double startHeight, double curHeight)
 {
-    double base = PI;
-    double totV = base*startHeight/3.0;
-    double topr = curHeight/startHeight;
+    double base = params_.scale*params_.scale*PI;
+    double totV = base*params_.scale*startHeight/3.0;
+    double topr = params_.scale*curHeight/startHeight;
     double topbase = PI*topr*topr;
-    double topV = topbase*(startHeight-curHeight)/3.0;
+    double topV = topbase*params_.scale*(startHeight-curHeight)/3.0;
     return totV-topV;
 }
 
@@ -401,7 +401,7 @@ bool Mesh::crush(Controller &cont, double coneHeight, double endHeight)
         double t = i;
         if(t > crushTime)
             t = crushTime;
-        double planeZ = (i*endHeight + (crushTime-i)*coneHeight)/double(crushTime);
+        double planeZ = (t*endHeight + (crushTime-t)*coneHeight)/double(crushTime);
 
         q += h*v;
         int derivs = ElasticEnergy::DR_DQ;
@@ -419,6 +419,8 @@ bool Mesh::crush(Controller &cont, double coneHeight, double endHeight)
         double pressure = airpressure*(initialV/curV - 1.0);
         VectorXd pressureF;
         pressureForce(q,pressure, pressureF);
+
+        std::cout << "Regular force " << F.norm() << " pressure force " << pressureF.norm() << std::endl;
 
         F += pressureF;
 
@@ -480,7 +482,7 @@ void Mesh::buildInvMassMatrix(const VectorXd &g, Eigen::SparseMatrix<double> &Mi
     {
         int vidx = vi.handle().idx();
         double area = barycentricDualArea(g, vidx);
-        double invmass = 1.0/area/params_.rho/params_.h/params_.scale/params_.scale/params_.scale;
+        double invmass = 1.0/area/params_.rho/params_.h/params_.scale/params_.scale;
 //        if(mesh_->is_boundary(vi.handle()))
 //            invmass = 0;
         for(int i=0; i<3; i++)
@@ -932,7 +934,7 @@ void Mesh::pressureForce(const VectorXd &q, double pressure, VectorXd &F)
     F.resize(q.size());
     for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
     {
-        Vector3d normal = this->averageNormal(q, vi.handle().idx());
+        Vector3d normal = this->surfaceAreaNormal(q, vi.handle().idx());
         double area = params_.scale*params_.scale*this->deformedBarycentricDualArea(q, vi.handle().idx());
         for(int i=0; i<3; i++)
             F[3*vi.handle().idx()+i] = pressure*normal[i]*area;

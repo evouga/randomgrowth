@@ -388,8 +388,6 @@ void Mesh::deleteBadFlatConeFaces()
         newmesh->add_vertex(pt);
     }
 
-    std::cout << "ad faces" << std::endl;
-
     for(int i=0; i<(int)mesh_->n_faces(); i++)
     {
         if(badfaces.count(i) > 0)
@@ -412,4 +410,20 @@ void Mesh::deleteBadFlatConeFaces()
         mesh_ = newmesh;
     }
     meshLock_.unlock();
+}
+
+Vector3d Mesh::surfaceAreaNormal(const VectorXd &q, int vidx)
+{
+    OMMesh::VertexHandle vh = mesh_->vertex_handle(vidx);
+    Vector3d result;
+    result.setZero();
+
+    for(OMMesh::VertexFaceIter vfi = mesh_->vf_iter(vh); vfi; ++vfi)
+    {
+        double area = faceArea(q, vfi.handle().idx());
+        Vector3d N = this->faceNormal(q, vfi.handle().idx());
+        result += area*N;
+    }
+    result /= result.norm();
+    return result;
 }

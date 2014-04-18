@@ -541,6 +541,7 @@
     <addaction name="actionSet_Negative_K_Target_Metric"/>
     <addaction name="actionMake_Cone"/>
     <addaction name="actionMake_Flat_Cone"/>
+    <addaction name="actionSet_Current_Lengths_as_Intrinsic"/>
    </widget>
    <addaction name="menuVViewer"/>
    <addaction name="menuView"/>
@@ -615,6 +616,11 @@
   <action name="actionMake_Flat_Cone">
    <property name="text">
     <string>Make Flat Cone</string>
+   </property>
+  </action>
+  <action name="actionSet_Current_Lengths_as_Intrinsic">
+   <property name="text">
+    <string>Set Current Lengths as Intrinsic</string>
    </property>
   </action>
  </widget>
