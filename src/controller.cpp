@@ -65,11 +65,6 @@ void Controller::updateParameters(ProblemParameters params)
     updateGL();
 }
 
-void Controller::crush()
-{
-    m_.crush(*this, 3.0, 0.5);
-}
-
 void Controller::relaxEmbedding()
 {
     m_.simulate(*this);
@@ -102,21 +97,6 @@ void Controller::setNoTargetMetric()
 void Controller::setNegativeCurvatureTargetMetric()
 {
     m_.setNegativeGaussianCurvatureTargetMetric();
-}
-
-void Controller::extremizeWithNewton()
-{
-    m_.extremizeWithNewton();
-}
-
-void Controller::symmetrize()
-{
-    m_.symmetrize(3);
-}
-
-void Controller::printHessianEigenvalues()
-{
-    m_.printHessianEigenvalues();
 }
 
 void Controller::makeCone()

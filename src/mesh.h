@@ -4,8 +4,8 @@
 #include "omtypes.h"
 #include <Eigen/Core>
 #include <Eigen/Sparse>
-#include "elasticenergy.h"
 #include <QMutex>
+#include "midedge.h"
 
 class Controller;
 
@@ -61,7 +61,6 @@ public:
     void setNegativeGaussianCurvatureTargetMetric();
     void setNoTargetMetric();
     void extremizeWithNewton();
-    void symmetrize(int nfold);
     void printHessianEigenvalues();
     void setConeHeights(double height);
     void setFlatCone(double height);
@@ -81,7 +80,6 @@ private:
     double deformedBarycentricDualArea(const Eigen::VectorXd &q, int vidx) const;
     double faceArea(const Eigen::VectorXd &q, int fidx) const;
 
-    double sampleHeight(const Eigen::Vector2d pos, const Eigen::VectorXd &q);
     void enforceConstraints(Eigen::VectorXd &q,
                             const Eigen::VectorXd &startq,
                             double planeHeight);

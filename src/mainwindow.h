@@ -77,15 +77,7 @@ private slots:
 
     void on_actionSet_Negative_K_Target_Metric_triggered();
 
-    void on_actionMinimize_with_Newton_triggered();
-
-    void on_actionSymmetrize_triggered();
-
-    void on_actionEigenvalues_triggered();
-
     void on_actionMake_Cone_triggered();
-
-    void on_crushButton_clicked();
 
     void on_actionMake_Flat_Cone_triggered();
 

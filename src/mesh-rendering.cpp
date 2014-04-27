@@ -5,6 +5,8 @@ using namespace std;
 using namespace OpenMesh;
 using namespace Eigen;
 
+const double PI = 3.1415926535898;
+
 void Mesh::render()
 {
     meshLock_.lock();
@@ -49,7 +51,7 @@ void Mesh::render()
 
         for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
         {
-            Vector3d color = colormap(faceStrainEnergy(q, g, fi.handle().idx())/restFaceArea(g, fi.handle().idx()), 0.5);
+            Vector3d color = colormap(0, 0.5);
             for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fi.handle()); fvi; ++fvi)
             {
                 //Vector3d color = colormap(H[fvi.handle().idx()], .05);

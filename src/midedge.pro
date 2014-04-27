@@ -8,7 +8,7 @@ QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = randomgrowth
+TARGET = midedge
 TEMPLATE = app
 
 INCLUDEPATH += ../ext/openmesh ../ext/eigen
@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     controller.cpp \
     mesh-rendering.cpp \
     mesh-optimization.cpp \
-    elasticenergy.cpp
+    elasticenergy.cpp \
+    midedge.cpp
 
 HEADERS  += mainwindow.h \
     mesh.h \
@@ -41,6 +42,7 @@ HEADERS  += mainwindow.h \
     yimage.h \
     controller.h \
     elasticenergy.h \
-    omtypes.h
+    omtypes.h \
+    midedge.h
 
 FORMS    += mainwindow.ui

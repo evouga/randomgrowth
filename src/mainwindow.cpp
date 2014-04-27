@@ -278,29 +278,9 @@ void MainWindow::on_actionSet_Negative_K_Target_Metric_triggered()
     QMetaObject::invokeMethod(cont_, "setNegativeCurvatureTargetMetric");
 }
 
-void MainWindow::on_actionMinimize_with_Newton_triggered()
-{
-    QMetaObject::invokeMethod(cont_, "extremizeWithNewton");
-}
-
-void MainWindow::on_actionSymmetrize_triggered()
-{
-    QMetaObject::invokeMethod(cont_, "symmetrize");
-}
-
-void MainWindow::on_actionEigenvalues_triggered()
-{
-    QMetaObject::invokeMethod(cont_, "printHessianEigenvalues");
-}
-
 void MainWindow::on_actionMake_Cone_triggered()
 {
     QMetaObject::invokeMethod(cont_, "makeCone");
-}
-
-void MainWindow::on_crushButton_clicked()
-{
-    QMetaObject::invokeMethod(cont_, "crush");
 }
 
 void MainWindow::on_actionMake_Flat_Cone_triggered()
