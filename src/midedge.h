@@ -2,7 +2,6 @@
 #define MIDEDGE_H
 
 #include <Eigen/Core>
-#include <Eigen/Sparse>
 #include <vector>
 #include "omtypes.h"
 
@@ -24,14 +23,15 @@ struct ElasticParameters
     virtual ~ElasticParameters() {}
 };
 
-typedef Eigen::Triplet<double> Tr;
-
 class Midedge
 {
 public:
     Midedge();
 
-//private:
+    static double elasticEnergy(const OMMesh &mesh, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params);
+    static void DelasticEnergy(const OMMesh &mesh, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params, Eigen::VectorXd &result);
+
+private:
     static Eigen::Matrix3d crossMatrix(const Eigen::Vector3d &v);
 
     static Eigen::Vector4d gbar(const OMMesh &mesh, int faceid, const Eigen::VectorXd &g);
@@ -70,22 +70,24 @@ public:
     static void Db(const Eigen::Vector3d &q1, const Eigen::Vector3d &q2, const Eigen::Vector3d &q3, const Eigen::Vector3d &n1, const Eigen::Vector3d &n2,const Eigen::Vector3d &n3, std::vector<Eigen::Matrix3d> &partials);
 
     static Eigen::Vector3d edgeNormal(const OMMesh &mesh, int edgeid, const Eigen::VectorXd &q);
-    static void DedgeNormal(const OMMesh &mesh, int edgeid, const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &partials);
+    static void DedgeNormal(const OMMesh &mesh, int edgeid, const Eigen::VectorXd &q, const Eigen::Vector3d &prefactor, Eigen::VectorXd &partials);
 
     static Eigen::Vector4d g(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q);
-    static void Dg(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &partials);
+    static void Dg(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, const Eigen::Vector4d &prefactor, Eigen::VectorXd &partials);
 
     static Eigen::Vector4d b(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q);
-    static void Db(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &partials);
+    static void Db(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, const Eigen::Vector4d &prefactor, Eigen::VectorXd &partials);
 
     static Eigen::Vector4d c(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q);
-    static void Dc(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &partials);
+    static void Dc(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, const Eigen::Vector4d &prefactor, Eigen::VectorXd &partials);
 
     static double elasticEnergyOne(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params);
     static void DelasticEnergyOne(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params, Eigen::VectorXd &result);
 
     static double elasticEnergyTwo(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params);
     static void DelasticEnergyTwo(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params, Eigen::VectorXd &result);
+
+    static double intrinsicArea(const OMMesh &mesh, int faceid, const Eigen::VectorXd &gbar, const ElasticParameters &params);
 };
 
 #endif // MIDEDGE_H

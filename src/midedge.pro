@@ -13,7 +13,7 @@ TEMPLATE = app
 
 INCLUDEPATH += ../ext/openmesh ../ext/eigen
 QMAKE_LIBDIR += ../ext/openmesh/build/Build/lib/OpenMesh
-QMAKE_CXXFLAGS += -g
+QMAKE_CXXFLAGS += -g -fno-omit-frame-pointer
 LIBS += -lOpenMeshCore -lpng -lGL -lGLU
 
 

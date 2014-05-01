@@ -11,43 +11,22 @@ using namespace OpenMesh;
 
 const double PI = 3.1415926535898;
 
+typedef Eigen::Triplet<double> Tr;
+
 void Mesh::elasticEnergy(const VectorXd &q,
                          const VectorXd &g,
-                         double &energyB,
-                         double &energyS,
+                         double &energy,
                          VectorXd &gradq,
-                         Eigen::SparseMatrix<double> &hessq,
-                         Eigen::SparseMatrix<double> &gradggradq,
-                         int derivativesRequested) const
+                         bool derivativesRequested) const
 {
     assert(q.size() == numdofs());
     assert(g.size() == numedges());
-    energyB = energyS = 0;
+    energy = Midedge::elasticEnergy(*mesh_, q, g, g, params_);
 
-    for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
+    if(derivativesRequested)
     {
-        double w2 = Midedge::elasticEnergyTwo(*mesh_, fi.handle().idx(), q, g, g, params_);
-        VectorXd deriv;
-        Midedge::DelasticEnergyTwo(*mesh_, fi.handle().idx(), q, g, g, params_, deriv);
-
-        std::cout << fi.handle().idx() << " " << w2 << endl;
-
-        double eps = 1e-8;
-        for(int i=0; i<q.size(); i++)
-        {
-            VectorXd perturb(q.size());
-            perturb.setZero();
-            VectorXd newq = q;
-            newq[i] += eps;
-            perturb[i] = 1.0;
-            double w2prime = Midedge::elasticEnergyTwo(*mesh_, fi.handle().idx(), newq, g, g, params_);\
-            double findiff = (w2prime-w2)/eps;
-            double exactd = deriv.dot(perturb);
-            std::cout << i << " " << fabs(findiff-exactd) << std::endl;
-        }
+        Midedge::DelasticEnergy(*mesh_, q, g, g, params_, gradq);
     }
-    exit(0);
-
 }
 
 double Mesh::triangleInequalityLineSearch(const VectorXd &g, const VectorXd &dg) const
@@ -124,12 +103,26 @@ bool Mesh::simulate(Controller &cont)
         std::cout << "iter " << i << std::endl;
         q += h*v;
         VectorXd gradq;
-        double energyB, energyS;
-        int derivs = 0;
-        SparseMatrix<double> hessq, gradggradq;
+        double energy;
         std::cout << "computing energy" << std::endl;
-        elasticEnergy(q, g, energyB, energyS, gradq, hessq, gradggradq, derivs);
-        std::cout << "force magnitude: " << gradq.norm() << std::endl;
+        elasticEnergy(q, g, energy, gradq, true);
+        std::cout << "energy " << energy << " force magnitude: " << gradq.norm() << std::endl;
+
+//        const double eps = 1e-10;
+//        double newE;
+//        for(int i=0; i<q.size(); i++)
+//        {
+//            VectorXd deltaq = q;
+//            deltaq[i] += eps;
+//            elasticEnergy(deltaq, g, newE, gradq, false);
+//            double findiff = (newE-energy)/eps;
+//            VectorXd delta(q.size());
+//            delta.setZero();
+//            delta[i] = 1.0;
+//            double exact = gradq.dot(delta);
+//            std::cout << i << " " << fabs(exact-findiff) << " " << exact << " " << findiff << std::endl;
+//        }
+
         SparseMatrix<double> Minv;
         buildInvMassMatrix(g, Minv);
 
@@ -137,10 +130,10 @@ bool Mesh::simulate(Controller &cont)
         dofsToGeometry(q, g);
         if(i%100 == 0)
             dumpFrame();
-        if(i<=growthTime)
+/*        if(i<=growthTime)
         {
             g = double(growthTime-i)/double(growthTime) * g + double(i)/double(growthTime) * targetg;
-        }
+        }*/
         std::cout << "done" << std::endl;
     }
 

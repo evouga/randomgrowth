@@ -100,11 +100,9 @@ private:
     Eigen::Vector3d faceNormal(const Eigen::VectorXd &q, int fidx) const;
 
     void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
-                       double &energyB,
-                       double &energyS,
+                       double &energy,
                        Eigen::VectorXd &gradq,
-                       Eigen::SparseMatrix<double> &hessq, Eigen::SparseMatrix<double> &gradggradq,
-                       int derivativesRequested) const;
+                       bool derivativesRequested) const;
 
     double vertexStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int vidx) const;
     double faceStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int fidx) const;
