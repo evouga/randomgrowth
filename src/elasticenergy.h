@@ -4,6 +4,7 @@
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 #include <iosfwd>
+#include "midedge.h"
 
 const double PI = 3.14159265359;
 
@@ -11,7 +12,7 @@ typedef Eigen::Triplet<double> Tr;
 
 
 
-struct ElasticParameters
+/*struct ElasticParameters
 {
     double h;
     double PoissonRatio;
@@ -27,7 +28,7 @@ struct ElasticParameters
     }
 
     virtual ~ElasticParameters() {}
-};
+};*/
 
 
 class ElasticEnergy

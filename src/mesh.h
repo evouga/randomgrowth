@@ -99,7 +99,7 @@ private:
     Eigen::Vector3d averageNormal(const Eigen::VectorXd &q, int vidx) const;
     Eigen::Vector3d faceNormal(const Eigen::VectorXd &q, int fidx) const;
 
-    void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
+    void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g1, const Eigen::VectorXd &g2,
                        double &energy,
                        Eigen::VectorXd &gradq,
                        bool derivativesRequested) const;

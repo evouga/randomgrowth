@@ -47,7 +47,7 @@ double ElasticEnergy::stretchOne(const VectorXd &qs,
 {
     // Yh/(8(1+v)(1-v)) sqrt(det g) tr(g^-1 a - I)^2
 
-    double coeff = params.YoungsModulus*params.h/8.0/(1.0-params.PoissonRatio*params.PoissonRatio);
+    double coeff = params.YoungsModulus*params.h/8.0/(1.0-params.PoissonRatio*params.PoissonRatio)/2.0;
 
     double g[3];
     Vector3d q[3];
@@ -179,7 +179,7 @@ double ElasticEnergy::stretchTwo(const VectorXd &qs,
 {
     // -Yh/(8(1+v)) sqrt(det g) det(g^-1 a - I)
 
-    double coeff = -params.YoungsModulus*params.h/(8.0*(1.0+params.PoissonRatio));
+    double coeff = -params.YoungsModulus*params.h/(8.0*(1.0+params.PoissonRatio))/2.0;
 
     double g[3];
     Vector3d q[3];

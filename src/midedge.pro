@@ -14,6 +14,8 @@ TEMPLATE = app
 INCLUDEPATH += ../ext/openmesh ../ext/eigen
 QMAKE_LIBDIR += ../ext/openmesh/build/Build/lib/OpenMesh
 QMAKE_CXXFLAGS += -g -fno-omit-frame-pointer
+QMAKE_CXXFLAGS_RELEASE -= -O2
+QMAKE_CXXFLAGS_RELEASE += -O3 -DNDEBUG
 LIBS += -lOpenMeshCore -lpng -lGL -lGLU
 
 

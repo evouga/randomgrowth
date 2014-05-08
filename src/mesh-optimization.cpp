@@ -14,19 +14,22 @@ const double PI = 3.1415926535898;
 typedef Eigen::Triplet<double> Tr;
 
 void Mesh::elasticEnergy(const VectorXd &q,
-                         const VectorXd &g,
+                         const VectorXd &g1,
+                         const VectorXd &g2,
                          double &energy,
                          VectorXd &gradq,
                          bool derivativesRequested) const
 {
     assert(q.size() == numdofs());
-    assert(g.size() == numedges());
-    energy = Midedge::elasticEnergy(*mesh_, q, g, g, params_);
-
+    assert(g1.size() == numedges());
+    assert(g2.size() == numedges());
+    VectorXd *derivs = NULL;
     if(derivativesRequested)
     {
-        Midedge::DelasticEnergy(*mesh_, q, g, g, params_, gradq);
+        gradq.resize(q.size());
+        derivs = &gradq;
     }
+    Midedge::elasticEnergy(*mesh_, q, g1, g2, params_, derivs);
 }
 
 double Mesh::triangleInequalityLineSearch(const VectorXd &g, const VectorXd &dg) const
@@ -95,26 +98,35 @@ bool Mesh::simulate(Controller &cont)
     VectorXd targetg;
     targetMetricFromGeometry(targetg);
 
-
-    const int growthTime = 5000;
-
-    for(int i=0; i<numsteps; i++)
+    VectorXd stretchq = q;
+    for(int i=0; i<q.size()/3; i++)
     {
-        std::cout << "iter " << i << std::endl;
+        stretchq[3*i+1] *= (1+params_.h);
+    }
+    dofsToGeometry(stretchq, g);
+    setIntrinsicLengthsToCurrentLengths();
+    VectorXd g2;
+    dofsFromGeometry(stretchq, g2);
+    dofsToGeometry(q, g);
+    const int growthTime = 5000;    
+
+    for(int iter=0; iter<numsteps; iter++)
+    {
+        std::cout << "iter " << iter << std::endl;
         q += h*v;
         VectorXd gradq;
         double energy;
         std::cout << "computing energy" << std::endl;
-        elasticEnergy(q, g, energy, gradq, true);
+        elasticEnergy(q, g, g2, energy, gradq, true);
         std::cout << "energy " << energy << " force magnitude: " << gradq.norm() << std::endl;
 
-//        const double eps = 1e-10;
+//        const double eps = 1e-9;
 //        double newE;
 //        for(int i=0; i<q.size(); i++)
 //        {
 //            VectorXd deltaq = q;
 //            deltaq[i] += eps;
-//            elasticEnergy(deltaq, g, newE, gradq, false);
+//            elasticEnergy(deltaq, g, g2, newE, gradq, false);
 //            double findiff = (newE-energy)/eps;
 //            VectorXd delta(q.size());
 //            delta.setZero();
@@ -122,13 +134,14 @@ bool Mesh::simulate(Controller &cont)
 //            double exact = gradq.dot(delta);
 //            std::cout << i << " " << fabs(exact-findiff) << " " << exact << " " << findiff << std::endl;
 //        }
+//exit(0);
 
         SparseMatrix<double> Minv;
         buildInvMassMatrix(g, Minv);
 
         v -= h*Minv*gradq + h*Minv*params_.dampingCoeff*v;
         dofsToGeometry(q, g);
-        if(i%100 == 0)
+        if(iter%100 == 0)
             dumpFrame();
 /*        if(i<=growthTime)
         {
@@ -314,7 +327,7 @@ void Mesh::meanCurvature(const VectorXd &q, VectorXd &Hdensity) const
         if(avnormal.dot(Hnormal) < 0)
             sign = -1.0;
 
-        Hdensity[i] = sign * Hnormal.norm();
+        Hdensity[i] = 0.5*sign * Hnormal.norm();
     }
 }
 
