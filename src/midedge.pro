@@ -11,12 +11,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = midedge
 TEMPLATE = app
 
-INCLUDEPATH += ../ext/openmesh ../ext/eigen
+INCLUDEPATH += ../ext/openmesh ../ext/eigen /usr/include/suitesparse
 QMAKE_LIBDIR += ../ext/openmesh/build/Build/lib/OpenMesh
 QMAKE_CXXFLAGS += -g -fno-omit-frame-pointer
 QMAKE_CXXFLAGS_RELEASE -= -O2
-QMAKE_CXXFLAGS_RELEASE += -O3 -DNDEBUG
-LIBS += -lOpenMeshCore -lpng -lGL -lGLU
+QMAKE_CXXFLAGS_RELEASE += -O3 #-DNDEBUG
+LIBS += -lOpenMeshCore -lpng -lGL -lGLU -lspqr -lcholmod
 
 
 SOURCES += main.cpp\
@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     mesh-rendering.cpp \
     mesh-optimization.cpp \
     elasticenergy.cpp \
-    midedge.cpp
+    midedge.cpp \
+    robustleastsquares.cpp
 
 HEADERS  += mainwindow.h \
     mesh.h \
@@ -45,6 +46,7 @@ HEADERS  += mainwindow.h \
     controller.h \
     elasticenergy.h \
     omtypes.h \
-    midedge.h
+    midedge.h \
+    robustleastsquares.h
 
 FORMS    += mainwindow.ui

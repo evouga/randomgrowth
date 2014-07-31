@@ -19,18 +19,26 @@ public:
 public slots:
     void exportOBJ(std::string filename);
     void importOBJ(std::string filename);
-    void importMetric(std::string filename);
     void updateParameters(ProblemParameters params);
     void relaxEmbedding();
     void quit();
     void centerCamera();
     void updateGL();
     void addNoise();
-    void setNoTargetMetric();
-    void setNegativeCurvatureTargetMetric();
     void makeCone();
+    void makeCylinder();
     void makeFlatCone();
-    void setIntrinsicLengthsToCurrentLengths();
+    void flattenMesh();
+    void setInducedMetric();
+    void setEquilibriumMetric();
+    void swapYandZ();
+    void swapXandZ();
+    void reflectY();
+    void subdivideLinear();
+    void subdivideLoop();
+    void flattenFromUV();
+    void deleteSmallUVFaces();
+    void relaxConfiguration();
 
 private:    
     MainWindow &mw_;

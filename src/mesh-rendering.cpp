@@ -44,17 +44,42 @@ void Mesh::render()
         pos.clear();
         normal.clear();
 
-        VectorXd H;
-        VectorXd q,g;
-        dofsFromGeometry(q, g);
-//        meanCurvature(q, H);
+        VectorXd q;
+        dofsFromGeometry(q);
+        VectorXd energies;
+        if(params_.colorMode == ProblemParameters::CRM_STRAIN)
+            Midedge::elasticEnergies(*mesh_, q, g1_, g2_, params_, energies);
+        else if(params_.colorMode == ProblemParameters::CRM_MEAN)
+            Midedge::meanCurvature(*mesh_, q, energies);
 
         for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
         {
-            Vector3d color = colormap(0, 0.5);
+            double area = faceArea(q, fi.handle().idx());
+            Vector3d color(0,0,0);
+            switch(params_.colorMode)
+            {
+                case ProblemParameters::CRM_STRAIN:
+                    color = colormap(energies[fi.handle().idx()]/area, params_.colorCutoff);
+                    break;
+                case ProblemParameters::CRM_GROWTHU:
+                    color = colormap(colors1_[fi.handle().idx()],params_.colorCutoff);
+                    break;
+                case ProblemParameters::CRM_GROWTHL:
+                    color = colormap(colors2_[fi.handle().idx()],params_.colorCutoff);
+                    break;
+                case ProblemParameters::CRM_GROWTHDIFF:
+                    color = colormap(colors1_[fi.handle().idx()]-colors2_[fi.handle().idx()],params_.colorCutoff);
+                    break;
+                case ProblemParameters::CRM_GROWTHAV:
+                    color = colormap(0.5*(colors1_[fi.handle().idx()]+colors2_[fi.handle().idx()]),params_.colorCutoff);
+                    break;
+                case ProblemParameters::CRM_MEAN:
+                    color = colormap(energies[fi.handle().idx()], params_.colorCutoff);
+                    break;
+            }
+
             for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fi.handle()); fvi; ++fvi)
             {
-                //Vector3d color = colormap(H[fvi.handle().idx()], .05);
 
 
                 OMMesh::VertexHandle v = fvi.handle();
@@ -105,8 +130,16 @@ void Mesh::render()
             }
             glEnd();
         }
+
+        //Midedge::visualizeNormals(*mesh_, q, 0.1);
     }
     meshLock_.unlock();
+}
+
+Vector3d Mesh::colormap(double val, double min, double max) const
+{
+    double mapped = (val-min)/(max-min);
+    return colormap(mapped);
 }
 
 Vector3d Mesh::colormap(double val, double max) const

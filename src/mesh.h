@@ -11,6 +11,9 @@ class Controller;
 
 struct ProblemParameters : public ElasticParameters
 {
+    enum colorRenderMode {CRM_STRAIN, CRM_GROWTHU, CRM_GROWTHL, CRM_GROWTHDIFF, CRM_GROWTHAV, CRM_MEAN,
+                          CRM_SIZE //always at end
+                         };
     // simulation
     double rho;
 
@@ -21,6 +24,8 @@ struct ProblemParameters : public ElasticParameters
     // rendering
     bool showWireframe;
     bool smoothShade;
+    double colorCutoff;
+    colorRenderMode colorMode;
 
     // problem
     double growthAmount;
@@ -39,7 +44,8 @@ public:
 
     enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
 
-    bool simulate(Controller &cont);
+    bool simulateGrowth(Controller &cont);
+    bool relaxConfiguration(Controller &cont);
     bool crush(Controller &cont, double coneHeight, double endHeight);
 
     int numdofs() const;
@@ -55,27 +61,34 @@ public:
 
     bool exportOBJ(const char *filename);
     bool importOBJ(const char *filename);
-    bool importMetric(const char *filename);
 
     void addRandomNoise(double magnitude);
-    void setNegativeGaussianCurvatureTargetMetric();
-    void setNoTargetMetric();
     void extremizeWithNewton();
     void printHessianEigenvalues();
     void setConeHeights(double height);
+    void setCylinder();
     void setFlatCone(double height);
-    void setIntrinsicLengthsToCurrentLengths();
+    void flatten();
+    void flattenFromUV(double scale);
+    void setInducedMetric();
+    void setEquilibriumMetric();
+    void swapXandZ();
+    void swapYandZ();
+    void reflectY();
+    void subdivideLoop();
+    void subdivideLinear();
+    void deleteSmallUVFaces(double minarea);
 
 private:
-    void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
-    void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);    
+    void dofsFromGeometry(Eigen::VectorXd &q) const;
+    void dofsToGeometry(const Eigen::VectorXd &q);
+    void metricFromEdgeLengths(const Eigen::VectorXd &q, Eigen::VectorXd &g);
     void edgeEndpoints(OMMesh::EdgeHandle eh, OMMesh::Point &pt1, OMMesh::Point &pt2);
     double triangleInequalityLineSearch(const Eigen::VectorXd &g, const Eigen::VectorXd &dg) const;
     double triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const;
     double infinityNorm(const Eigen::VectorXd &v) const;
     void buildMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
-    void buildGeometricMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
-    void buildInvMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
+    void buildInvMassMatrix(const Eigen::VectorXd &g1, const Eigen::VectorXd &g2, Eigen::SparseMatrix<double> &M) const;
     double barycentricDualArea(const Eigen::VectorXd &g, int vidx) const;
     double deformedBarycentricDualArea(const Eigen::VectorXd &q, int vidx) const;
     double faceArea(const Eigen::VectorXd &q, int fidx) const;
@@ -85,8 +98,6 @@ private:
                             double planeHeight);
 
     double restFaceArea(const Eigen::VectorXd &g, int fidx) const;
-    void targetMetricFromGeometry(Eigen::VectorXd &targetg) const;
-    void targetMetricToGeometry(const Eigen::VectorXd &targetg);
     double vertexAreaRatio(const Eigen::VectorXd &undefq, const Eigen::VectorXd &g, int vidx);
 
     double intrinsicCotanWeight(int edgeid, const Eigen::VectorXd &g) const;
@@ -102,7 +113,11 @@ private:
     void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g1, const Eigen::VectorXd &g2,
                        double &energy,
                        Eigen::VectorXd &gradq,
-                       bool derivativesRequested) const;
+                       bool derivativesRequested);
+
+    void calculateGrowth(const Eigen::VectorXd &q,
+                         Eigen::VectorXd &g1,
+                         Eigen::VectorXd &g2);
 
     double vertexStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int vidx) const;
     double faceStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int fidx) const;
@@ -112,6 +127,7 @@ private:
 
     Eigen::Vector3d colormap(double val) const;
     Eigen::Vector3d colormap(double val, double max) const;
+    Eigen::Vector3d colormap(double val, double min, double max) const;
     Eigen::Vector3d HSLtoRGB(const Eigen::Vector3d &hsl) const;
 
     double randomRange(double min, double max) const;
@@ -120,6 +136,8 @@ private:
     Eigen::Vector3d surfaceAreaNormal(const Eigen::VectorXd &q, int vidx);
 
     OMMesh *mesh_;
+    Eigen::VectorXd colors1_, colors2_;
+    Eigen::VectorXd g1_, g2_;
 
     int frameno_;
     ProblemParameters params_;

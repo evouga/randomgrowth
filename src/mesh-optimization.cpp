@@ -1,9 +1,11 @@
-﻿#include "mesh.h"
+#include "mesh.h"
 #include <iomanip>
 #include "controller.h"
 #include <Eigen/Dense>
 #include <fstream>
 #include "midedge.h"
+#include "robustleastsquares.h"
+#include <Eigen/SPQRSupport>
 
 using namespace std;
 using namespace Eigen;
@@ -18,18 +20,159 @@ void Mesh::elasticEnergy(const VectorXd &q,
                          const VectorXd &g2,
                          double &energy,
                          VectorXd &gradq,
-                         bool derivativesRequested) const
+                         bool derivativesRequested)
 {
     assert(q.size() == numdofs());
-    assert(g1.size() == numedges());
-    assert(g2.size() == numedges());
+    assert(g1.size() == 4*mesh_->n_faces());
+    assert(g2.size() == 4*mesh_->n_faces());
     VectorXd *derivs = NULL;
     if(derivativesRequested)
     {
         gradq.resize(q.size());
         derivs = &gradq;
     }
-    Midedge::elasticEnergy(*mesh_, q, g1, g2, params_, derivs);
+    energy = Midedge::elasticEnergy(*mesh_, q, g1, g2, params_, derivs);
+}
+
+void Mesh::calculateGrowth(const VectorXd &q,
+                     VectorXd &g1,
+                     VectorXd &g2)
+{
+    vector<vector<Tr> > mats;
+    for(int i=0; i<4; i++)
+    {
+        mats.push_back(vector<Tr>());
+    }
+    Midedge::elasticEnergyFactor(*mesh_, q, g1, g2, params_, mats);
+
+    int numfaces = mesh_->n_faces();
+
+    VectorXd scales(2*numfaces+q.size());
+    scales.setZero();
+
+
+    vector<Tr> Lcoeffs;
+    for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
+    {
+        int nbs = 0;
+        for(OMMesh::FaceFaceIter ffi = mesh_->ff_iter(fi.handle()); ffi; ++ffi)
+        {
+            Lcoeffs.push_back(Tr(fi.handle().idx(), ffi.handle().idx(), 1.0));
+            nbs++;
+        }
+        Lcoeffs.push_back(Tr(fi.handle().idx(), fi.handle().idx(), -double(nbs)));
+    }
+    SparseMatrix<double> L(numfaces, numfaces);
+    L.setFromTriplets(Lcoeffs.begin(), Lcoeffs.end());
+
+    vector<Tr> Mcoeffs;
+
+    for(int i=0; i<numfaces; i++)
+    {
+        for(int j=0; j<numfaces; j++)
+        {
+            if(L.coeff(i, j) != 0)
+            {
+                Mcoeffs.push_back(Tr(i, j, L.coeff(i,j)));
+                Mcoeffs.push_back(Tr(i+numfaces, j+numfaces, L.coeff(i,j)));
+            }
+        }
+    }
+    double reg = 1e-5;
+    for(int i=0; i<q.size(); i++)
+    {
+        Mcoeffs.push_back(Tr(2*numfaces+i, 2*numfaces+i, reg));
+    }
+
+
+    vector<Tr> Ncoeffs;
+
+    for(int i=0; i<(int)mats[0].size(); i++)
+    {
+        {
+            Mcoeffs.push_back(Tr(mats[0][i].row() + 2*numfaces, mats[0][i].col(), mats[0][i].value()));
+            Mcoeffs.push_back(Tr(mats[0][i].col(), mats[0][i].row() + 2*numfaces, mats[0][i].value()));
+            Ncoeffs.push_back(mats[0][i]);
+        }
+    }
+    for(int i=0; i<(int)mats[1].size(); i++)
+    {
+        {
+            Mcoeffs.push_back(Tr(mats[1][i].row() + 2*numfaces, numfaces+mats[1][i].col(), mats[1][i].value()));
+            Mcoeffs.push_back(Tr(mats[1][i].col() + numfaces, 2*numfaces+mats[1][i].row(), mats[1][i].value()));
+            Ncoeffs.push_back(Tr(mats[1][i].row(), numfaces+mats[1][i].col(), mats[1][i].value()));
+        }
+    }
+    SparseMatrix<double> M(2*numfaces+q.size(), 2*numfaces+q.size());
+    M.setFromTriplets(Mcoeffs.begin(), Mcoeffs.end());
+
+    SparseMatrix<double> N(q.size(), 2*numfaces);
+    N.setFromTriplets(Ncoeffs.begin(), Ncoeffs.end());
+
+    VectorXd rhs(2*numfaces+q.size());
+    VectorXd nrhs(q.size());
+    rhs.setZero();
+    nrhs.setZero();
+    for(int i=2; i<4; i++)
+    {
+        for(int j=0; j<(int)mats[i].size(); j++)
+        {
+            {
+                rhs[mats[i][j].row()+2*numfaces] -= mats[i][j].value();
+                nrhs[mats[i][j].row()] -= mats[i][j].value();
+            }
+        }
+    }
+
+    double oldenergy;
+    VectorXd gradq;
+    elasticEnergy(q, g1, g2, oldenergy, gradq, true);
+    cout << "old residual " << gradq.norm() << endl;
+
+    //VectorXd lsrhs = rhs - M*scales;
+    //RobustLeastSquares::solve(M, lsrhs, scales, true);
+    RobustLeastSquares::solve(M, rhs, scales, true);
+
+    SPQR<SparseMatrix<double> > ssqr(N);
+    cout << ssqr.rank() << " / " << 2*numfaces << endl;
+
+    std::cout << "scales norm " << scales.norm() << std::endl;
+    std::cout << "minimum scale ";
+    double minval = std::numeric_limits<double>::infinity();
+    for(int i=0; i<2*numfaces; i++)
+    {
+        minval = std::min(minval, scales[i]);
+        if(scales[i] < 0.1)
+            scales[i] = 0.1;
+    }
+    cout << minval << endl;
+
+    std::cout << (M*scales-rhs).norm() << std::endl;
+    std::cout << (N*scales.segment(0,2*numfaces) - nrhs).norm() << std::endl;
+
+    colors1_.resize(numfaces);
+    colors2_.resize(numfaces);
+    for(int i=0; i<numfaces; i++)
+    {
+        colors1_[i] = -1.0+scales[i];
+        colors2_[i] = -1.0+scales[i+numfaces];
+    }
+
+    for(int i=0; i<numfaces; i++)
+        for(int k=0; k<4; k++)
+        {
+            g1[4*i+k] /= (scales[numfaces+i]);
+            g2[4*i+k] /= (scales[i]);
+        }
+
+    VectorXd newq;
+    dofsFromGeometry(newq);
+    double newenergy;
+    VectorXd newgradq(newq.size());
+    newgradq.setZero();
+
+    newenergy = Midedge::elasticEnergy(*mesh_, newq, g1, g2, params_, &newgradq);
+    std::cout << "new residual " << newgradq.norm() << std::endl;
 }
 
 double Mesh::triangleInequalityLineSearch(const VectorXd &g, const VectorXd &dg) const
@@ -78,7 +221,39 @@ double Mesh::triangleInequalityLineSearch(double g0, double g1, double g2, doubl
     return cand;
 }
 
-bool Mesh::simulate(Controller &cont)
+bool Mesh::relaxConfiguration(Controller &cont)
+{
+    VectorXd q(numdofs());
+    dofsFromGeometry(q);
+
+    double h = params_.eulerTimestep;
+    int numsteps = 50000;
+    SparseMatrix<double> Minv;
+    buildInvMassMatrix(g1_, g2_, Minv);
+    VectorXd v(numdofs());
+    v.setZero();
+
+    for(int iter=0; iter<numsteps; iter++)
+    {
+        std::cout << "iter " << iter;
+        VectorXd gradq;
+        q += h*v;
+        double energy;
+        elasticEnergy(q, g1_, g2_, energy, gradq, true);
+
+        std::cout << " energy " << energy << " force magnitude: " << gradq.norm() << " impulse magnitude: " << (h*Minv*gradq).norm() << std::endl;
+
+        v = -h*Minv*gradq;
+        dofsToGeometry(q);
+    }
+
+    dofsToGeometry(q);
+
+    cont.updateGL();
+    return true;
+}
+
+bool Mesh::simulateGrowth(Controller &cont)
 {
     {
         string name = params_.outputDir + "/parameters";
@@ -87,70 +262,50 @@ bool Mesh::simulate(Controller &cont)
     }
 
     VectorXd q(numdofs());
-    VectorXd g(numedges());
-    dofsFromGeometry(q, g);
+    dofsFromGeometry(q);
 
     double h = params_.eulerTimestep;
     VectorXd v(numdofs());
     v.setZero();
-    int numsteps = params_.numEulerIters;
+    int numsteps = params_.numEulerIters;   
 
-    VectorXd targetg;
-    targetMetricFromGeometry(targetg);
+    VectorXd targetg1 = g1_;
+    VectorXd targetg2 = g2_;
 
-    VectorXd stretchq = q;
-    for(int i=0; i<q.size()/3; i++)
-    {
-        stretchq[3*i+1] *= (1+params_.h);
-    }
-    dofsToGeometry(stretchq, g);
-    setIntrinsicLengthsToCurrentLengths();
-    VectorXd g2;
-    dofsFromGeometry(stretchq, g2);
-    dofsToGeometry(q, g);
-    const int growthTime = 5000;    
+    setInducedMetric();
+    VectorXd origg1 = g1_;
+    VectorXd origg2 = g2_;
+
+    int growthsteps = numsteps/10;
 
     for(int iter=0; iter<numsteps; iter++)
     {
-        std::cout << "iter " << iter << std::endl;
+        double t = double(iter);
+        if(t > growthsteps)
+            t = double(growthsteps);
+
+        t /= double(growthsteps);
+
+        g1_ = (1.0-t)*origg1 + t*targetg1;
+        g2_ = (1.0-t)*origg2 + t*targetg2;
+
+        std::cout << "iter " << iter;
         q += h*v;
         VectorXd gradq;
         double energy;
-        std::cout << "computing energy" << std::endl;
-        elasticEnergy(q, g, g2, energy, gradq, true);
-        std::cout << "energy " << energy << " force magnitude: " << gradq.norm() << std::endl;
-
-//        const double eps = 1e-9;
-//        double newE;
-//        for(int i=0; i<q.size(); i++)
-//        {
-//            VectorXd deltaq = q;
-//            deltaq[i] += eps;
-//            elasticEnergy(deltaq, g, g2, newE, gradq, false);
-//            double findiff = (newE-energy)/eps;
-//            VectorXd delta(q.size());
-//            delta.setZero();
-//            delta[i] = 1.0;
-//            double exact = gradq.dot(delta);
-//            std::cout << i << " " << fabs(exact-findiff) << " " << exact << " " << findiff << std::endl;
-//        }
-//exit(0);
+        elasticEnergy(q, g1_, g2_, energy, gradq, true);
 
         SparseMatrix<double> Minv;
-        buildInvMassMatrix(g, Minv);
+        buildInvMassMatrix(g1_, g2_, Minv);
+        std::cout << " energy " << energy << " force magnitude: " << gradq.norm() << " impulse magnitude: " << (h*Minv*gradq).norm() << std::endl;
 
         v -= h*Minv*gradq + h*Minv*params_.dampingCoeff*v;
-        dofsToGeometry(q, g);
+        dofsToGeometry(q);
         if(iter%100 == 0)
             dumpFrame();
-/*        if(i<=growthTime)
-        {
-            g = double(growthTime-i)/double(growthTime) * g + double(i)/double(growthTime) * targetg;
-        }*/
-        std::cout << "done" << std::endl;
     }
 
-    dofsToGeometry(q,g);
+    dofsToGeometry(q);
 
     cont.updateGL();
     return true;
@@ -164,7 +319,7 @@ void Mesh::buildMassMatrix(const VectorXd &g, Eigen::SparseMatrix<double> &M) co
     {
         int vidx = vi.handle().idx();
         double area = barycentricDualArea(g, vidx);
-        double mass = area*params_.rho*params_.h*params_.scale*params_.scale*params_.scale;
+        double mass = area*params_.rho*params_.h;
 //        if(mesh_->is_boundary(vi.handle()))
 //            mass = std::numeric_limits<double>::infinity();
         for(int i=0; i<3; i++)
@@ -174,32 +329,16 @@ void Mesh::buildMassMatrix(const VectorXd &g, Eigen::SparseMatrix<double> &M) co
     M.setFromTriplets(entries.begin(), entries.end());
 }
 
-void Mesh::buildGeometricMassMatrix(const VectorXd &g, Eigen::SparseMatrix<double> &M) const
-{
-    M.resize(mesh_->n_vertices(), mesh_->n_vertices());
-    vector<Tr> entries;
-    for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
-    {
-        int vidx = vi.handle().idx();
-        double area = barycentricDualArea(g, vidx);
-        double mass = area;
-//        if(mesh_->is_boundary(vi.handle()))
-//            mass = std::numeric_limits<double>::infinity();
-        entries.push_back(Tr(vidx, vidx, mass));
-    }
-
-    M.setFromTriplets(entries.begin(), entries.end());
-}
-
-void Mesh::buildInvMassMatrix(const VectorXd &g, Eigen::SparseMatrix<double> &Minv) const
+void Mesh::buildInvMassMatrix(const VectorXd &g1, const VectorXd &g2, Eigen::SparseMatrix<double> &Minv) const
 {
     Minv.resize(numdofs(), numdofs());
     vector<Tr> entries;
     for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
     {
         int vidx = vi.handle().idx();
-        double area = barycentricDualArea(g, vidx);
-        double invmass = 1.0/area/params_.rho/params_.h/params_.scale/params_.scale;
+        double area = barycentricDualArea(g1, vidx);
+        area += barycentricDualArea(g2, vidx);
+        double invmass = 0.5/area/params_.rho/params_.h/params_.scale/params_.scale;
 //        if(mesh_->is_boundary(vi.handle()))
 //            invmass = 0;
         for(int i=0; i<3; i++)
@@ -440,16 +579,7 @@ void Mesh::buildExtrinsicDirichletLaplacian(const VectorXd &q, Eigen::SparseMatr
 
 double Mesh::restFaceArea(const VectorXd &g, int fidx) const
 {
-    OMMesh::FaceHandle fh = mesh_->face_handle(fidx);
-    double gs[3];
-    int idx=0;
-    for(OMMesh::FaceEdgeIter fei = mesh_->fe_iter(fh); fei; ++fei)
-    {
-        gs[idx++] = g[fei.handle().idx()];
-    }
-
-    double s = 0.5*(gs[0]+gs[1]+gs[2]);
-    return sqrt(s*(s-gs[0])*(s-gs[1])*(s-gs[2]));
+    return Midedge::intrinsicArea(fidx, g, params_);
 }
 
 double Mesh::vertexAreaRatio(const VectorXd &undefq, const VectorXd &g, int vidx)
@@ -465,26 +595,6 @@ double Mesh::vertexAreaRatio(const VectorXd &undefq, const VectorXd &g, int vidx
     }
 
     return curarea/restarea;
-}
-
-void Mesh::setNegativeGaussianCurvatureTargetMetric()
-{
-    VectorXd q, g;
-    dofsFromGeometry(q, g);
-
-    for(OMMesh::EdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
-    {
-        OMMesh::HalfedgeHandle heh = mesh_->halfedge_handle(ei.handle(),0);
-        int v1 = mesh_->to_vertex_handle(heh).idx();
-        int v2 = mesh_->from_vertex_handle(heh).idx();
-        double len = (q.segment<2>(3*v1)-q.segment<2>(3*v2)).norm();
-        Vector2d midpt = 0.5*(q.segment<2>(3*v1)+q.segment<2>(3*v2));
-        double newlen = len/(1.07085 - 0.201335 * midpt.squaredNorm());
-        double randfact = randomRange(-0.01,0.01);
-        newlen *= (1.0+randfact);
-        g[ei.handle().idx()] = newlen;
-    }
-    targetMetricToGeometry(g);
 }
 
 void Mesh::enforceConstraints(VectorXd &q, const VectorXd &startq, double planeHeight)

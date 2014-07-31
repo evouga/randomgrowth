@@ -69,19 +69,39 @@ private slots:
 
     void on_baseProbabilityEdit_textEdited(const QString &arg1);
 
-    void on_actionImport_Metric_triggered();
-
     void on_actionAdd_Noise_triggered();
-
-    void on_actionSet_No_Target_Metric_triggered();
-
-    void on_actionSet_Negative_K_Target_Metric_triggered();
 
     void on_actionMake_Cone_triggered();
 
     void on_actionMake_Flat_Cone_triggered();
 
-    void on_actionSet_Current_Lengths_as_Intrinsic_triggered();
+    void on_actionMake_Cylinder_triggered();
+
+    void on_actionSet_Induced_Metric_triggered();
+
+    void on_actionSet_Equilibrium_Metric_triggered();
+
+    void on_actionFlatten_triggered();
+
+    void on_actionSwap_Y_and_Z_triggered();
+
+    void on_colorCutoffEdit_textEdited(const QString &arg1);
+
+    void on_actionSwap_X_and_Z_triggered();
+
+    void on_colorMenuComboBox_currentIndexChanged(int index);
+
+    void on_actionSet_from_UV_triggered();
+
+    void on_actionDelete_Small_Faces_triggered();
+
+    void on_actionRelax_Configuration_triggered();
+
+    void on_actionReflect_Y_triggered();
+
+    void on_actionLinear_triggered();
+
+    void on_actionLoop_triggered();
 
 private:
     void updateGL();
@@ -89,11 +109,12 @@ private:
     void saveScreenshot(const std::string &filename);
     ProblemParameters getParameters();
     std::string launchImportOBJDialog();
-    std::string launchImportMetricDialog();
 
     Ui::MainWindow *ui;
     Controller *cont_;
     QTimer *repainttimer_;
+    const static QString colorMenuOptionsNames_[ProblemParameters::CRM_SIZE];
+    const static ProblemParameters::colorRenderMode colorMenuOptionsVals_[ProblemParameters::CRM_SIZE];
 };
 
 #endif // MAINWINDOW_H

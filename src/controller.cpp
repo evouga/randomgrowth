@@ -50,15 +50,6 @@ void Controller::importOBJ(string filename)
     }
 }
 
-void Controller::importMetric(string filename)
-{
-    if(!m_.importMetric(filename.c_str()))
-    {
-        string err = string("Couldn't load metric: ") + filename;
-        QMetaObject::invokeMethod(&mw_, "showError", Q_ARG(std::string, err));
-    }
-}
-
 void Controller::updateParameters(ProblemParameters params)
 {    
     m_.setParameters(params);
@@ -67,7 +58,7 @@ void Controller::updateParameters(ProblemParameters params)
 
 void Controller::relaxEmbedding()
 {
-    m_.simulate(*this);
+    m_.simulateGrowth(*this);
     updateGL();
 }
 
@@ -89,19 +80,14 @@ void Controller::addNoise()
     updateGL();
 }
 
-void Controller::setNoTargetMetric()
-{
-    m_.setNoTargetMetric();
-}
-
-void Controller::setNegativeCurvatureTargetMetric()
-{
-    m_.setNegativeGaussianCurvatureTargetMetric();
-}
-
 void Controller::makeCone()
 {
     m_.setConeHeights(3.0);
+}
+
+void Controller::makeCylinder()
+{
+    m_.setCylinder();
 }
 
 void Controller::makeFlatCone()
@@ -109,7 +95,57 @@ void Controller::makeFlatCone()
     m_.setFlatCone(3.0);
 }
 
-void Controller::setIntrinsicLengthsToCurrentLengths()
+void Controller::flattenMesh()
 {
-    m_.setIntrinsicLengthsToCurrentLengths();
+    m_.flatten();
+}
+
+void Controller::flattenFromUV()
+{
+    m_.flattenFromUV(0.5);
+}
+
+void Controller::setEquilibriumMetric()
+{
+    m_.setEquilibriumMetric();
+}
+
+void Controller::setInducedMetric()
+{
+    m_.setInducedMetric();
+}
+
+void Controller::swapYandZ()
+{
+    m_.swapYandZ();
+}
+
+void Controller::swapXandZ()
+{
+    m_.swapXandZ();
+}
+
+void Controller::subdivideLinear()
+{
+    m_.subdivideLinear();
+}
+
+void Controller::subdivideLoop()
+{
+    m_.subdivideLoop();
+}
+
+void Controller::deleteSmallUVFaces()
+{
+    m_.deleteSmallUVFaces(0.00004);
+}
+
+void Controller::relaxConfiguration()
+{
+    m_.relaxConfiguration(*this);
+}
+
+void Controller::reflectY()
+{
+    m_.reflectY();
 }

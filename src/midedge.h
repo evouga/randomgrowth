@@ -4,6 +4,9 @@
 #include <Eigen/Core>
 #include <vector>
 #include "omtypes.h"
+#include <Eigen/Sparse>
+
+typedef Eigen::Triplet<double> Tr;
 
 struct ElasticParameters
 {
@@ -36,12 +39,17 @@ class Midedge
 public:
     Midedge();
 
+    static void elasticEnergies(const OMMesh &mesh, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params, Eigen::VectorXd &energies);
     static double elasticEnergy(const OMMesh &mesh, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params, Eigen::VectorXd *derivs);
+    static void elasticEnergyFactor(const OMMesh &mesh, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params, std::vector<std::vector<Tr> > &mats);
+    static Eigen::Vector4d inducedG(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q);
+    static void visualizeNormals(const OMMesh &mesh, const Eigen::VectorXd &q, double scale);
+    static void gaussianCurvature(const OMMesh &mesh, const Eigen::VectorXd &q, Eigen::VectorXd &Ks);
+    static void meanCurvature(const OMMesh &mesh, const Eigen::VectorXd &q, Eigen::VectorXd &Hs);
+    static double intrinsicArea(int faceid, const Eigen::VectorXd &gbar, const ElasticParameters &params);
 
 private:
     static Eigen::Matrix3d crossMatrix(const Eigen::Vector3d &v);
-
-    static Eigen::Vector4d gbar(const OMMesh &mesh, int faceid, const Eigen::VectorXd &g);
 
     static Eigen::Vector4d matMult(const Eigen::Vector4d &m1, const Eigen::Vector4d &m2);
     static void DmatMult(const Eigen::Vector4d &m1, const Eigen::Vector4d &m2, Eigen::Matrix4d &m1partials, Eigen::Matrix4d &m2partials);
@@ -92,9 +100,9 @@ private:
     static void DelasticEnergyOne(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result);
 
     static double elasticEnergyTwo(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params);
-    static void DelasticEnergyTwo(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result);
+    static void DelasticEnergyTwo(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result);    
 
-    static double intrinsicArea(const OMMesh &mesh, int faceid, const Eigen::VectorXd &gbar, const ElasticParameters &params);
+    static void DelasticEnergyTwoFactor(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar1, const Eigen::VectorXd &gbar2, const ElasticParameters &params, double prefactor, std::vector<std::vector<Tr> > &mats);
 
     static void gatherEdgeNormalDerivatives(const OMMesh &mesh, const Eigen::VectorXd &q, EdgeNormalDerivatives &dnormals);
 };
