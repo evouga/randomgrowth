@@ -42,10 +42,11 @@ void Mesh::render()
         pos.clear();
         normal.clear();
 
-        VectorXd H;
+        //VectorXd H;
         VectorXd q,g;
         dofsFromGeometry(q, g);
-//        meanCurvature(q, H);
+        //gaussianCurvature(q, H);
+        //cout << H << std::endl;
 
         for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
         {

@@ -364,7 +364,7 @@ double Mesh::truncatedConeVolume(double startHeight, double curHeight)
 {
     double base = params_.scale*params_.scale*PI;
     double totV = base*params_.scale*startHeight/3.0;
-    double topr = params_.scale*curHeight/startHeight;
+    double topr = params_.scale*(1.0 - curHeight/startHeight);
     double topbase = PI*topr*topr;
     double topV = topbase*params_.scale*(startHeight-curHeight)/3.0;
     return totV-topV;
@@ -391,8 +391,8 @@ bool Mesh::crush(Controller &cont, double coneHeight, double endHeight)
 
     const int crushTime = 100000;
 
-    double initialV = truncatedConeVolume(coneHeight, coneHeight);
-    double airpressure = 101325;
+    //double initialV = truncatedConeVolume(coneHeight, coneHeight);
+    double airpressure = 20000;//101325.0;
 
     for(int i=0; i<numsteps; i++)
     {        
@@ -415,12 +415,14 @@ bool Mesh::crush(Controller &cont, double coneHeight, double endHeight)
         buildInvMassMatrix(g, Minv);
         VectorXd F = -gradq;
 
-        double curV = truncatedConeVolume(coneHeight, planeZ);
-        double pressure = airpressure*(initialV/curV - 1.0);
+        //double curV = truncatedConeVolume(coneHeight, planeZ);
+        //double pressure = airpressure*(initialV/curV - 1.0);
+        //const double leakconst = 1e-6;
+        //initialV = std::max(curV, initialV - leakconst*h*pressure);
         VectorXd pressureF;
-        pressureForce(q,pressure, pressureF);
+        pressureForce(q,airpressure, pressureF);
 
-        std::cout << "Regular force " << F.norm() << " pressure force " << pressureF.norm() << std::endl;
+        //std::cout << "Regular force " << F.norm() << " pressure force " << pressureF.norm() << " pressure " << pressure << " initialV " << initialV << " curV " << curV << std::endl;
 
         F += pressureF;
 
@@ -911,20 +913,21 @@ void Mesh::enforceConstraints(VectorXd &q, const VectorXd &startq, double planeH
 
     for(int i=0; i<numverts; i++)
     {
-        double z = q[3*i+2];
-        if(z > planeHeight)
-            q[3*i+2] = planeHeight;
-    }
-    // pin boundary
-    for(int i=0; i<numverts; i++)
-    {
         OMMesh::VertexHandle vh = mesh_->vertex_handle(i);
+        // pin boundary
         if(mesh_->is_boundary(vh))
         {
             Vector3d startpos = startq.segment<3>(3*i);
-            double rsq = startpos[0]*startpos[0]+startpos[1]*startpos[1];
-            if(rsq > 0.9)
-                q[3*i+2] = 0;
+            q.segment<3>(3*i) = startpos;
+//            double rsq = startpos[0]*startpos[0]+startpos[1]*startpos[1];
+//            if(rsq > 0.9)
+//                q[3*i+2] = 0;
+        }
+        // and crush
+        double z = q[3*i+2];
+        if(z > planeHeight)
+        {
+            q[3*i+2] = planeHeight;
         }
     }
 }

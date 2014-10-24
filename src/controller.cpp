@@ -67,7 +67,7 @@ void Controller::updateParameters(ProblemParameters params)
 
 void Controller::crush()
 {
-    m_.crush(*this, 3.0, 0.5);
+    m_.crush(*this, 3.885, 0.5);
 }
 
 void Controller::relaxEmbedding()
@@ -121,12 +121,12 @@ void Controller::printHessianEigenvalues()
 
 void Controller::makeCone()
 {
-    m_.setConeHeights(3.0);
+    m_.setConeHeights(3.885);
 }
 
 void Controller::makeFlatCone()
 {
-    m_.setFlatCone(3.0);
+    m_.setFlatCone(3.885);
 }
 
 void Controller::setIntrinsicLengthsToCurrentLengths()
