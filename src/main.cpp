@@ -2,6 +2,7 @@
 #include "controller.h"
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QMetaType>
 #include <QThread>
 #include <string>
 
