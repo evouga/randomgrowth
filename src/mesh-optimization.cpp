@@ -392,7 +392,7 @@ bool Mesh::crush(Controller &cont, double coneHeight, double endHeight)
     const int crushTime = 100000;
 
     //double initialV = truncatedConeVolume(coneHeight, coneHeight);
-    double airpressure = 20000;//101325.0;
+    double airpressure = 30000;//101325.0;
 
     for(int i=0; i<numsteps; i++)
     {        
