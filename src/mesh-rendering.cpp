@@ -5,6 +5,8 @@ using namespace std;
 using namespace OpenMesh;
 using namespace Eigen;
 
+const double PI = 3.1415926535;
+
 void Mesh::render()
 {
     meshLock_.lock();
@@ -42,18 +44,18 @@ void Mesh::render()
         pos.clear();
         normal.clear();
 
-        //VectorXd H;
+        VectorXd H;
         VectorXd q,g;
-        dofsFromGeometry(q, g);
+        dofsFromGeometry(q,g);
+        Midedge::meanCurvature(*mesh_, q, H);
         //gaussianCurvature(q, H);
         //cout << H << std::endl;
 
         for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
         {
-            Vector3d color = colormap(faceStrainEnergy(q, g, fi.handle().idx())/restFaceArea(g, fi.handle().idx()), 0.5);
             for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fi.handle()); fvi; ++fvi)
             {
-                //Vector3d color = colormap(H[fvi.handle().idx()], .05);
+                Vector3d color = colormap(H[fvi.handle().idx()], 10.0);
 
 
                 OMMesh::VertexHandle v = fvi.handle();

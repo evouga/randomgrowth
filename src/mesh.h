@@ -4,7 +4,7 @@
 #include "omtypes.h"
 #include <Eigen/Core>
 #include <Eigen/Sparse>
-#include "elasticenergy.h"
+#include "midedge.h"
 #include <QMutex>
 
 class Controller;
@@ -55,7 +55,6 @@ public:
 
     bool exportOBJ(const char *filename);
     bool importOBJ(const char *filename);
-    bool importMetric(const char *filename);
 
     void addRandomNoise(double magnitude);
     void setNegativeGaussianCurvatureTargetMetric();
@@ -65,11 +64,10 @@ public:
     void printHessianEigenvalues();
     void setConeHeights(double height);
     void setFlatCone(double height);
-    void setIntrinsicLengthsToCurrentLengths();
 
 private:
     void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
-    void dofsToGeometry(const Eigen::VectorXd &q, const Eigen::VectorXd &g);    
+    void dofsToGeometry(const Eigen::VectorXd &q);
     void edgeEndpoints(OMMesh::EdgeHandle eh, OMMesh::Point &pt1, OMMesh::Point &pt2);
     double triangleInequalityLineSearch(const Eigen::VectorXd &g, const Eigen::VectorXd &dg) const;
     double triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const;

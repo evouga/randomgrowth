@@ -57,8 +57,6 @@ void Mesh::dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const
 {
     if(q.size() != numdofs())
         q.resize(numdofs());
-    if(g.size() != numedges())
-        g.resize(numedges());
 
     for(int i=0; i<(int)mesh_->n_vertices(); i++)
     {
@@ -67,54 +65,24 @@ void Mesh::dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const
             q[3*i+j] = pt[j];
     }
 
-    for(int i=0; i<(int)mesh_->n_edges(); i++)
-    {
-        g[i] = mesh_->data(mesh_->edge_handle(i)).restlen();
-    }
+    if(g.size() != 4*mesh_->n_faces())
+        g.resize(4*mesh_->n_faces());
+
+    for(int i=0; i<mesh_->n_faces(); i++)
+        g.segment<4>(4*i) = Midedge::inducedG(*mesh_, i, q);
 }
 
-void Mesh::targetMetricFromGeometry(VectorXd &targetg) const
-{
-    if(targetg.size() != numedges())
-        targetg.resize(numedges());
-
-    for(int i=0; i<numedges(); i++)
-    {
-        targetg[i] = mesh_->data(mesh_->edge_handle(i)).targetlen();
-    }
-}
-
-void Mesh::dofsToGeometry(const VectorXd &q, const VectorXd &g)
+void Mesh::dofsToGeometry(const VectorXd &q)
 {    
     meshLock_.lock();
     {
         assert(q.size() == numdofs());
-        assert(g.size() == numedges());
 
         for(int i=0; i<(int)mesh_->n_vertices(); i++)
         {
             OMMesh::Point &pt = mesh_->point(mesh_->vertex_handle(i));
             for(int j=0; j<3; j++)
                 pt[j] = q[3*i+j];
-        }
-
-        for(int i=0; i<(int)mesh_->n_edges(); i++)
-        {
-            mesh_->data(mesh_->edge_handle(i)).setRestlen(g[i]);
-        }
-    }
-    meshLock_.unlock();
-}
-
-void Mesh::targetMetricToGeometry(const VectorXd &targetg)
-{
-    meshLock_.lock();
-    {
-        assert(targetg.size() == numedges());
-
-        for(int i=0; i<(int)numedges(); i++)
-        {
-            mesh_->data(mesh_->edge_handle(i)).setTargetlen(targetg[i]);
         }
     }
     meshLock_.unlock();
@@ -137,61 +105,12 @@ bool Mesh::exportOBJ(const char *filename)
     return OpenMesh::IO::write_mesh(*mesh_, filename, opt);
 }
 
-bool Mesh::importMetric(const char *filename)
-{
-    bool success = true;
-    meshLock_.lock();
-    {
-        VectorXd q, g;
-        dofsFromGeometry(q, g);
-        ifstream ifs(filename);
-        if(!ifs)
-        {
-            success = false;
-        }
-        else
-        {
-            for(int i=0; i<numedges(); i++)
-            {
-                double newelen;
-                ifs >> newelen;
-                if(!ifs)
-                {
-                    success = false;
-                    break;
-                }
-                g[i] = newelen;
-            }
-        }
-
-        if(success)
-        {
-            dofsToGeometry(q, g);
-            setNoTargetMetric();
-        }
-
-    }
-    meshLock_.unlock();
-    return success;
-}
-
 void Mesh::addRandomNoise(double magnitude)
 {
     meshLock_.lock();
     {
         for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
             mesh_->point(vi.handle())[2] += randomRange(-magnitude,magnitude);
-    }
-    meshLock_.unlock();
-}
-
-void Mesh::setNoTargetMetric()
-{
-    meshLock_.lock();
-    {
-        VectorXd q, g;
-        dofsFromGeometry(q, g);
-        targetMetricToGeometry(g);
     }
     meshLock_.unlock();
 }
@@ -206,10 +125,7 @@ bool Mesh::importOBJ(const char *filename)
         mesh_->request_vertex_normals();
         opt.set(OpenMesh::IO::Options::VertexNormal);
         success = OpenMesh::IO::read_mesh(*mesh_, filename, opt);
-        mesh_->update_normals();
-
-        setIntrinsicLengthsToCurrentLengths();
-        setNoTargetMetric();
+        mesh_->update_normals();        
     }
     frameno_ = 0;
     meshLock_.unlock();
@@ -224,19 +140,6 @@ const ProblemParameters &Mesh::getParameters() const
 void Mesh::setParameters(ProblemParameters params)
 {
     params_ = params;
-}
-
-void Mesh::setIntrinsicLengthsToCurrentLengths()
-{
-    meshLock_.lock();
-    {
-        for(OMMesh::EdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
-        {
-            double length = mesh_->calc_edge_length(ei.handle());
-            mesh_->data(ei.handle()).setRestlen(length);
-        }
-    }       
-    meshLock_.unlock();
 }
 
 Vector3d Mesh::averageNormal(const VectorXd &q, int vidx) const
@@ -332,9 +235,7 @@ void Mesh::setConeHeights(double height)
         double newz = height*(1.0 - sqrt(pos[0]*pos[0] + pos[1]*pos[1]));
         q[3*i+2] = newz;
     }
-    dofsToGeometry(q, g);
-    setIntrinsicLengthsToCurrentLengths();
-    setNoTargetMetric();
+    dofsToGeometry(q);
 }
 
 void Mesh::setFlatCone(double height)
@@ -352,9 +253,7 @@ void Mesh::setFlatCone(double height)
         q[3*i+1] = r*sin(theta);
         q[3*i+2] = 0;
     }
-    dofsToGeometry(q, g);
-    setIntrinsicLengthsToCurrentLengths();
-    setNoTargetMetric();
+    dofsToGeometry(q);
 }
 
 void Mesh::deleteBadFlatConeFaces()

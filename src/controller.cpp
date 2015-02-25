@@ -50,15 +50,6 @@ void Controller::importOBJ(string filename)
     }
 }
 
-void Controller::importMetric(string filename)
-{
-    if(!m_.importMetric(filename.c_str()))
-    {
-        string err = string("Couldn't load metric: ") + filename;
-        QMetaObject::invokeMethod(&mw_, "showError", Q_ARG(std::string, err));
-    }
-}
-
 void Controller::updateParameters(ProblemParameters params)
 {    
     m_.setParameters(params);
@@ -68,12 +59,6 @@ void Controller::updateParameters(ProblemParameters params)
 void Controller::crush()
 {
     m_.crush(*this, 3.885, 0.5);
-}
-
-void Controller::relaxEmbedding()
-{
-    m_.simulate(*this);
-    updateGL();
 }
 
 void Controller::centerCamera()
@@ -94,29 +79,9 @@ void Controller::addNoise()
     updateGL();
 }
 
-void Controller::setNoTargetMetric()
-{
-    m_.setNoTargetMetric();
-}
-
-void Controller::setNegativeCurvatureTargetMetric()
-{
-    m_.setNegativeGaussianCurvatureTargetMetric();
-}
-
-void Controller::extremizeWithNewton()
-{
-    m_.extremizeWithNewton();
-}
-
 void Controller::symmetrize()
 {
     m_.symmetrize(3);
-}
-
-void Controller::printHessianEigenvalues()
-{
-    m_.printHessianEigenvalues();
 }
 
 void Controller::makeCone()
@@ -127,9 +92,4 @@ void Controller::makeCone()
 void Controller::makeFlatCone()
 {
     m_.setFlatCone(3.885);
-}
-
-void Controller::setIntrinsicLengthsToCurrentLengths()
-{
-    m_.setIntrinsicLengthsToCurrentLengths();
 }
