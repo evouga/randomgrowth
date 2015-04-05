@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QThread>
+#include <QMetaClassInfo>
 #include <string>
 
 int main(int argc, char *argv[])

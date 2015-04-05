@@ -3,10 +3,10 @@
 
 #include <Eigen/Core>
 #include <vector>
-#include "omtypes.h"
 #include <Eigen/Sparse>
 
 typedef Eigen::Triplet<double> Tr;
+class Mesh;
 
 struct ElasticParameters
 {
@@ -28,10 +28,12 @@ struct ElasticParameters
 
 struct EdgeNormalDerivatives
 {
-    std::vector<int> vertidx;
-    std::vector<Eigen::Matrix3d> partials;
-    std::vector<int> startidx;
+    std::vector<std::vector<Eigen::Matrix3d> > partials;
+    std::vector<std::vector<int> > partialIndices;
     std::vector<Eigen::Vector3d> normals;
+
+    const Eigen::Vector3d &edgeNormal(int face, int vertno) const;
+    void DedgeNormal(int face, int vertno, const Eigen::Vector3d &prefactor, Eigen::VectorXd &partials) const;
 };
 
 class Midedge
@@ -39,12 +41,11 @@ class Midedge
 public:
     Midedge();
 
-    static double elasticEnergy(const OMMesh &mesh, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar, const ElasticParameters &params, Eigen::VectorXd *derivs);
-    static Eigen::Vector4d inducedG(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q);
-    static void visualizeNormals(const OMMesh &mesh, const Eigen::VectorXd &q, double scale);
-    static void gaussianCurvature(const OMMesh &mesh, const Eigen::VectorXd &q, Eigen::VectorXd &Ks);
-    static void meanCurvature(const OMMesh &mesh, const Eigen::VectorXd &q, Eigen::VectorXd &Hs);
-    static double intrinsicArea(int faceid, const Eigen::VectorXd &gbar, const ElasticParameters &params);
+    static double elasticEnergy(const Mesh &mesh, const ElasticParameters &params, Eigen::VectorXd *derivs);
+    static void gaussianCurvature(const Mesh &mesh, Eigen::VectorXd &Ks);
+    static void meanCurvature(const Mesh &mesh, Eigen::VectorXd &Hs);
+    static double intrinsicArea(const Mesh &mesh, int faceid, const ElasticParameters &params);
+    static Eigen::Vector4d g(const Mesh &mesh, int faceid);
 
 private:
     static Eigen::Matrix3d crossMatrix(const Eigen::Vector3d &v);
@@ -52,11 +53,11 @@ private:
     static Eigen::Vector4d matMult(const Eigen::Vector4d &m1, const Eigen::Vector4d &m2);
     static void DmatMult(const Eigen::Vector4d &m1, const Eigen::Vector4d &m2, Eigen::Matrix4d &m1partials, Eigen::Matrix4d &m2partials);
 
-    static double H(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q);
-    static void DH(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, double prefactor, Eigen::VectorXd &partials);
+    static double H(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid);
+    static void DH(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, double prefactor, Eigen::VectorXd &partials);
 
-    static double K(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q);
-    static void DK(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, double prefactor, Eigen::VectorXd &partials);
+    static double K(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid);
+    static void DK(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, double prefactor, Eigen::VectorXd &partials);
 
     static double trace(const Eigen::Vector4d &m1);
     const static Eigen::Vector4d Dtrace;
@@ -82,25 +83,21 @@ private:
     static Eigen::Vector3d b(const Eigen::Vector3d &q1, const Eigen::Vector3d &q2, const Eigen::Vector3d &q3, const Eigen::Vector3d &n1, const Eigen::Vector3d &n2,const Eigen::Vector3d &n3);    
     static void Db(const Eigen::Vector3d &q1, const Eigen::Vector3d &q2, const Eigen::Vector3d &q3, const Eigen::Vector3d &n1, const Eigen::Vector3d &n2,const Eigen::Vector3d &n3, Eigen::Matrix3d *partials);
 
-    static Eigen::Vector3d edgeNormal(int edgeid, const EdgeNormalDerivatives &nderivs);
-    static void DedgeNormal(int edgeid, const EdgeNormalDerivatives &dnormas, const Eigen::Vector3d &prefactor, Eigen::VectorXd &partials);
+    static void Dg(const Mesh &mesh, int faceid, const Eigen::Vector4d &prefactor, Eigen::VectorXd &partials);
 
-    static Eigen::Vector4d g(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q);
-    static void Dg(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q, const Eigen::Vector4d &prefactor, Eigen::VectorXd &partials);
+    static Eigen::Vector4d b(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid);
+    static void Db(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::Vector4d &prefactor, Eigen::VectorXd &partials);
 
-    static Eigen::Vector4d b(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q);
-    static void Db(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::Vector4d &prefactor, Eigen::VectorXd &partials);
+    static Eigen::Vector4d c(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid);
+    static void Dc(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::Vector4d &prefactor, Eigen::VectorXd &partials);
 
-    static Eigen::Vector4d c(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q);
-    static void Dc(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::Vector4d &prefactor, Eigen::VectorXd &partials);
+    static double elasticEnergyOne(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const ElasticParameters &params);
+    static void DelasticEnergyOne(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result);
 
-    static double elasticEnergyOne(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar, const ElasticParameters &params);
-    static void DelasticEnergyOne(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result);
+    static double elasticEnergyTwo(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const ElasticParameters &params);
+    static void DelasticEnergyTwo(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result);
 
-    static double elasticEnergyTwo(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar, const ElasticParameters &params);
-    static void DelasticEnergyTwo(const OMMesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result);
-
-    static void gatherEdgeNormalDerivatives(const OMMesh &mesh, const Eigen::VectorXd &q, EdgeNormalDerivatives &dnormals);
+    static void gatherEdgeNormalDerivatives(const Mesh &mesh, EdgeNormalDerivatives &dnormals);
 };
 
 #endif // MIDEDGE_H

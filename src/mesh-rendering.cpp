@@ -1,16 +1,46 @@
-#include "mesh.h"
+#include "simulationmesh.h"
 #include <GL/gl.h>
+#include <iostream>
 
 using namespace std;
-using namespace OpenMesh;
 using namespace Eigen;
 
 const double PI = 3.1415926535;
 
-void Mesh::render()
+void SimulationMesh::vertexNormals(VectorXd &vertNormals)
+{
+    vertNormals.resize(3*numVertices());
+    int nfaces = numFaces();
+
+    VectorXd faceNormals(3*nfaces);
+    for(int i=0; i<nfaces; i++)
+    {
+        Vector3d normal = faceNormal(i);
+        normal *= deformedFaceArea(i);
+        faceNormals.segment<3>(3*i) = normal;
+    }
+
+    vertNormals.setZero();
+    for(int i=0; i<nfaces; i++)
+    {
+        for(int j=0; j<3; j++)
+        {
+            vertNormals.segment<3>(3*faceVerts(i)[j]) += faceNormals.segment<3>(3*i);
+        }
+    }
+
+    for(int i=0; i<numVertices(); i++)
+    {
+        vertNormals.segment<3>(3*i) /= vertNormals.segment<3>(3*i).norm();
+    }
+}
+
+void SimulationMesh::render()
 {
     meshLock_.lock();
     {
+        Eigen::VectorXd normals;
+        vertexNormals(normals);
         glEnable(GL_LIGHTING);
         glEnable(GL_DITHER);
 
@@ -45,24 +75,18 @@ void Mesh::render()
         normal.clear();
 
         VectorXd H;
-        VectorXd q,g;
-        dofsFromGeometry(q,g);
-        Midedge::meanCurvature(*mesh_, q, H);
+        Midedge::meanCurvature(*this, H);
         //gaussianCurvature(q, H);
         //cout << H << std::endl;
 
-        for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
+        for(int face=0; face<faces_.cols(); face++)
         {
-            for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fi.handle()); fvi; ++fvi)
+            for(int vert=0; vert<3; vert++)
             {
-                Vector3d color = colormap(H[fvi.handle().idx()], 10.0);
-
-
-                OMMesh::VertexHandle v = fvi.handle();
-                OMMesh::Point pt = mesh_->point(v);
-                OMMesh::Point n;
-                mesh_->calc_vertex_normal_correct(v, n);
-                n.normalize();
+                int vertid = faceVerts(face)[vert];
+                Vector3d color = colormap(H[vertid], 10.0);
+                Vector3d pt = vertPos(vertid);
+                Vector3d n = normals.segment<3>(3*vertid);
                 for(int j=0; j<3; j++)
                 {
                     pos.push_back(pt[j]);
@@ -77,12 +101,10 @@ void Mesh::render()
         glColorPointer(3, GL_FLOAT, 0, &colors[0]);
 
         int idx=0;
-        for (int i=0; i<(int)mesh_->n_faces(); i++)
+
+        for (int i=0; i<3*numFaces(); i++)
         {
-            for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(mesh_->face_handle(i)); fvi; ++fvi)
-            {
-                indices.push_back(idx++);
-            }
+            indices.push_back(idx++);
         }
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, &indices[0]);
 
@@ -96,13 +118,16 @@ void Mesh::render()
         {
             glLineWidth(1.0);
             glBegin(GL_LINES);
-            for(OMMesh::ConstEdgeIter ei = mesh_->edges_begin(); ei != mesh_->edges_end(); ++ei)
+            for(int i=0; i<numFaces(); i++)
             {
-                glColor3f(0,0,0);
-                OMMesh::Point pt1, pt2;
-                edgeEndpoints(ei.handle(), pt1, pt2);
-                glVertex3d(pt1[0], pt1[1], pt1[2]);
-                glVertex3d(pt2[0], pt2[1], pt2[2]);
+                for(int j=0; j<3; j++)
+                {
+                    glColor3f(0,0,0);
+                    Vector3d pt1 = vertPos(faceVerts(i)[j]);
+                    Vector3d pt2 = vertPos(faceVerts(i)[(j+1)%3]);
+                    glVertex3d(pt1[0], pt1[1], pt1[2]);
+                    glVertex3d(pt2[0], pt2[1], pt2[2]);
+                }
             }
             glEnd();
         }
@@ -110,13 +135,13 @@ void Mesh::render()
     meshLock_.unlock();
 }
 
-Vector3d Mesh::colormap(double val, double max) const
+Vector3d SimulationMesh::colormap(double val, double max) const
 {
     double mapped = (max+val)/(2.0*max);
     return colormap(mapped);
 }
 
-Vector3d Mesh::colormap(double val) const
+Vector3d SimulationMesh::colormap(double val) const
 {
     Vector3d hsl;
     hsl[0] = (1.0-val)*4.0*PI/3.0;
@@ -125,7 +150,7 @@ Vector3d Mesh::colormap(double val) const
     return HSLtoRGB(hsl);
 }
 
-Vector3d Mesh::HSLtoRGB(const Vector3d &hsl) const
+Vector3d SimulationMesh::HSLtoRGB(const Vector3d &hsl) const
 {
     double chroma = (1.0 - fabs(2.0*hsl[2]-1.0))*hsl[1];
     double Hprime = hsl[0]*6.0/(2.0*PI);
@@ -177,17 +202,17 @@ Vector3d Mesh::HSLtoRGB(const Vector3d &hsl) const
     return rgb;
 }
 
-Vector3d Mesh::centroid()
+Vector3d SimulationMesh::centroid()
 {
     Vector3d centroid(0,0,0);
 
     meshLock_.lock();
     {
-        int numpts = mesh_->n_vertices();
+        int numpts = numVertices();
 
         for(int i=0; i<numpts; i++)
         {
-            OMMesh::Point pt = mesh_->point(mesh_->vertex_handle(i));
+            Vector3d pt = vertPos(i);
             for(int j=0; j<3; j++)
                 centroid[j] += pt[j];
         }
@@ -197,17 +222,17 @@ Vector3d Mesh::centroid()
     return centroid;
 }
 
-double Mesh::radius()
+double SimulationMesh::radius()
 {
     double maxradius = 0;
 
     meshLock_.lock();
     {
         Vector3d cent = centroid();
-        int numpts = mesh_->n_vertices();
+        int numpts = numVertices();
         for(int i=0; i<numpts; i++)
         {
-            OMMesh::Point pt = mesh_->point(mesh_->vertex_handle(i));
+            Vector3d pt = vertPos(i);
             Vector3d ept(pt[0],pt[1],pt[2]);
             double radius = (ept-cent).squaredNorm();
             if(radius > maxradius)

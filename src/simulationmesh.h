@@ -1,10 +1,10 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef SIMULATIONMESH_H
+#define SIMULATIONMESH_H
 
-#include "omtypes.h"
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 #include "midedge.h"
+#include "mesh.h"
 #include <QMutex>
 
 class Controller;
@@ -32,18 +32,15 @@ struct ProblemParameters : public ElasticParameters
     virtual void dumpParameters(std::ostream &os);
 };
 
-class Mesh
+class SimulationMesh : public Mesh
 {
 public:
-    Mesh();
+    SimulationMesh();
 
     enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
 
-    bool simulate(Controller &cont);
     bool crush(Controller &cont, double coneHeight, double endHeight);
 
-    int numdofs() const;
-    int numedges() const;
     const ProblemParameters &getParameters() const;
     void setParameters(ProblemParameters params);
 
@@ -57,47 +54,23 @@ public:
     bool importOBJ(const char *filename);
 
     void addRandomNoise(double magnitude);
-    void setNegativeGaussianCurvatureTargetMetric();
-    void setNoTargetMetric();
-    void extremizeWithNewton();
-    void symmetrize(int nfold);
     void printHessianEigenvalues();
     void setConeHeights(double height);
     void setFlatCone(double height);
 
 private:
-    void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
-    void dofsToGeometry(const Eigen::VectorXd &q);
-    void edgeEndpoints(OMMesh::EdgeHandle eh, OMMesh::Point &pt1, OMMesh::Point &pt2);
-    double triangleInequalityLineSearch(const Eigen::VectorXd &g, const Eigen::VectorXd &dg) const;
-    double triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const;
-    double infinityNorm(const Eigen::VectorXd &v) const;
-    void buildMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
-    void buildGeometricMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
-    void buildInvMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
-    double barycentricDualArea(const Eigen::VectorXd &g, int vidx) const;
-    double deformedBarycentricDualArea(const Eigen::VectorXd &q, int vidx) const;
-    double faceArea(const Eigen::VectorXd &q, int fidx) const;
+    void buildMetricInvMassMatrix(Eigen::SparseMatrix<double> &M) const;
+    void metricBarycentricDualAreas(Eigen::VectorXd &areas) const;
+    void deformedBarycentricDualAreas(Eigen::VectorXd &areas) const;
+    double deformedFaceArea(int fidx) const;
 
-    double sampleHeight(const Eigen::Vector2d pos, const Eigen::VectorXd &q);
-    void enforceConstraints(Eigen::VectorXd &q,
-                            const Eigen::VectorXd &startq,
+    void enforceConstraints(const Eigen::VectorXd &startq,
                             double planeHeight);
 
-    double restFaceArea(const Eigen::VectorXd &g, int fidx) const;
-    void targetMetricFromGeometry(Eigen::VectorXd &targetg) const;
-    void targetMetricToGeometry(const Eigen::VectorXd &targetg);
-    double vertexAreaRatio(const Eigen::VectorXd &undefq, const Eigen::VectorXd &g, int vidx);
-
-    double intrinsicCotanWeight(int edgeid, const Eigen::VectorXd &g) const;
-    double cotanWeight(int edgeid, const Eigen::VectorXd &q) const;
-    void buildIntrinsicDirichletLaplacian(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &L) const;
-    void buildExtrinsicDirichletLaplacian(const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &L) const;
-    void gaussianCurvature(const Eigen::VectorXd &q, Eigen::VectorXd &K) const;
-    void meanCurvature(const Eigen::VectorXd &q, Eigen::VectorXd &Hdensity) const;
-    void vertexAreas(const Eigen::VectorXd &q, Eigen::VectorXd &vareas) const;
-    Eigen::Vector3d averageNormal(const Eigen::VectorXd &q, int vidx) const;
-    Eigen::Vector3d faceNormal(const Eigen::VectorXd &q, int fidx) const;
+    double metricFaceArea(int fidx) const;
+    void vertexNormals(Eigen::VectorXd &vertNormals);
+    void gaussianCurvature(Eigen::VectorXd &K) const;
+    Eigen::Vector3d faceNormal(int fidx) const;
 
     void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
                        double &energyB,
@@ -118,10 +91,8 @@ private:
 
     double randomRange(double min, double max) const;
     double truncatedConeVolume(double startHeight, double curHeight);
-    void pressureForce(const Eigen::VectorXd &q, double pressure, Eigen::VectorXd &F);
+    void pressureForce(double pressure, Eigen::VectorXd &F);
     Eigen::Vector3d surfaceAreaNormal(const Eigen::VectorXd &q, int vidx);
-
-    OMMesh *mesh_;
 
     int frameno_;
     ProblemParameters params_;
@@ -132,4 +103,4 @@ private:
     QMutex meshLock_;
 };
 
-#endif // MESH_H
+#endif // SIMULATIONMESH_H

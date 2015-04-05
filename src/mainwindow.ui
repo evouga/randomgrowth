@@ -158,19 +158,6 @@
           <property name="title">
            <string>Algorithms</string>
           </property>
-          <widget class="QPushButton" name="relaxEmbeddingButton">
-           <property name="geometry">
-            <rect>
-             <x>30</x>
-             <y>30</y>
-             <width>161</width>
-             <height>27</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Relax Embedding</string>
-           </property>
-          </widget>
           <widget class="QPushButton" name="crushButton">
            <property name="geometry">
             <rect>
@@ -532,16 +519,9 @@
     <property name="title">
      <string>Actions</string>
     </property>
-    <addaction name="actionAdd_Noise"/>
-    <addaction name="actionMinimize_with_Newton"/>
-    <addaction name="actionSymmetrize"/>
-    <addaction name="actionEigenvalues"/>
     <addaction name="separator"/>
-    <addaction name="actionSet_No_Target_Metric"/>
-    <addaction name="actionSet_Negative_K_Target_Metric"/>
     <addaction name="actionMake_Cone"/>
     <addaction name="actionMake_Flat_Cone"/>
-    <addaction name="actionSet_Current_Lengths_as_Intrinsic"/>
    </widget>
    <addaction name="menuVViewer"/>
    <addaction name="menuView"/>
