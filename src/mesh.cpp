@@ -63,6 +63,10 @@ bool Mesh::loadMesh(const char *filename)
         ifs >> c;
         if(!ifs)
             break;
+        if(c == '#')
+        {
+            ifs.ignore(std::numeric_limits<int>::max(), '\n');
+        }
         if(c == 'v')
         {
             for(int i=0; i<3; i++)
