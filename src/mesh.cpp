@@ -10,7 +10,7 @@ using namespace std;
 
 bool Mesh::isBoundaryEdge(int edge) const
 {
-    return isBoundaryVert(edgeVerts(edge)[0]) && isBoundaryVert(edgeVerts(edge)[1]);
+    return edgeFaces(edge)[1] == -1;
 }
 
 Vector4i Mesh::buildHinge(int edge) const
@@ -44,6 +44,7 @@ Vector4i Mesh::buildHinge(int edge) const
             }
         }
     }
+
     return result;
 }
 
@@ -157,5 +158,7 @@ bool Mesh::loadMesh(const VectorXd &deformedPositions, const Matrix3Xi &faces)
     restMetrics_.resize(4*numFaces());
     for(int i=0; i<numFaces(); i++)
         restMetrics_.segment<4>(4*i) = Midedge::g(*this, i);
+
+
     return true;
 }

@@ -1,34 +1,3 @@
-Opening tmp.poly.
-Constructing Delaunay triangulation by divide-and-conquer method.
-Delaunay milliseconds:  0
-Recovering segments in Delaunay triangulation.
-Segment milliseconds:  0
-Removing unwanted triangles.
-Hole milliseconds:  0
-Adding Steiner points to enforce quality.
-Quality milliseconds:  38
-
-NOT writing a .node file.
-NOT writing an .ele file.
-NOT writing a .poly file.
-Writing tmp.1.off.
-
-Output milliseconds:  73
-Total running milliseconds:  113
-
-Statistics:
-
-  Input vertices: 550
-  Input segments: 550
-  Input holes: 1
-
-  Mesh vertices: 24421
-  Mesh triangles: 48292
-  Mesh edges: 72713
-  Mesh exterior boundary edges: 550
-  Mesh interior boundary edges: 0
-  Mesh subsegments (constrained edges): 550
-
 v 1 0 0
 v 0.999921 0.012566 0
 v 0.999684 0.0251301 0
