@@ -16,6 +16,7 @@ struct ProblemParameters : public ElasticParameters
 
     double eulerTimestep;
     double dampingCoeff;
+    double pullMag;
     int numEulerIters;
 
     // rendering
@@ -40,7 +41,7 @@ public:
     enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
 
     bool simulate(Controller &cont);
-    bool crush(Controller &cont, double coneHeight, double endHeight);
+    bool pull(Controller &cont);
 
     int numdofs() const;
     int numedges() const;

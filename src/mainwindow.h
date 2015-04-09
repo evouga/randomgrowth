@@ -85,11 +85,13 @@ private slots:
 
     void on_actionMake_Cone_triggered();
 
-    void on_crushButton_clicked();
-
     void on_actionMake_Flat_Cone_triggered();
 
     void on_actionSet_Current_Lengths_as_Intrinsic_triggered();
+
+    void on_pullButton_clicked();
+
+    void on_pullMagEdit_textEdited(const QString &arg1);
 
 private:
     void updateGL();

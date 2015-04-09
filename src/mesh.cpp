@@ -11,13 +11,15 @@ using namespace std;
 Mesh::Mesh() : meshLock_(QMutex::Recursive)
 {
     params_.scale = 0.085;
-    params_.h = .0001; // 0.0027, 0.0021, 0.0009, 0.0007, 0.0004
+    params_.h = .001; // 0.0027, 0.0021, 0.0009, 0.0007, 0.0004
     params_.YoungsModulus = 2e9;
     params_.PoissonRatio = 0.33;
     params_.rho = 500.0;
     params_.dampingCoeff = 1e-3;
     params_.eulerTimestep = 1e-6;
     params_.numEulerIters = 150000;
+
+    params_.pullMag = 100.0;
 
     params_.growthAmount = 50;
     params_.maxEdgeStrain = 1e8;

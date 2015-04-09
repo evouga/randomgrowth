@@ -118,6 +118,8 @@ void MainWindow::setParameters(ProblemParameters params)
     ui->maxStrainEdit->setText(QString::number(params.maxEdgeStrain));
     ui->scaleEdit->setText(QString::number(params.scale));
     ui->outputEdit->setText(QString::fromStdString(params.outputDir));
+    ui->pullMagEdit->setText(QString::number(params.pullMag));
+
 }
 
 ProblemParameters MainWindow::getParameters()
@@ -137,6 +139,7 @@ ProblemParameters MainWindow::getParameters()
     result.maxEdgeStrain = ui->maxStrainEdit->text().toDouble();
     result.scale = ui->scaleEdit->text().toDouble();
     result.outputDir = ui->outputEdit->text().toStdString();
+    result.pullMag = ui->pullMagEdit->text().toDouble();
     return result;
 }
 
@@ -298,11 +301,6 @@ void MainWindow::on_actionMake_Cone_triggered()
     QMetaObject::invokeMethod(cont_, "makeCone");
 }
 
-void MainWindow::on_crushButton_clicked()
-{
-    QMetaObject::invokeMethod(cont_, "crush");
-}
-
 void MainWindow::on_actionMake_Flat_Cone_triggered()
 {
     QMetaObject::invokeMethod(cont_, "makeFlatCone");
@@ -311,4 +309,14 @@ void MainWindow::on_actionMake_Flat_Cone_triggered()
 void MainWindow::on_actionSet_Current_Lengths_as_Intrinsic_triggered()
 {
     QMetaObject::invokeMethod(cont_, "setIntrinsicLengthsToCurrentLengths");
+}
+
+void MainWindow::on_pullButton_clicked()
+{
+    QMetaObject::invokeMethod(cont_, "pull");
+}
+
+void MainWindow::on_pullMagEdit_textEdited(const QString &arg1)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }

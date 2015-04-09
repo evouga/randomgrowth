@@ -27,7 +27,7 @@ public slots:
     void symmetrize();
     void makeCone();
     void makeFlatCone();
-    void crush();
+    void pull();
 
 private:    
     MainWindow &mw_;

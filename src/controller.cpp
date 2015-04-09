@@ -15,6 +15,7 @@ Controller::Controller(MainWindow &mw) : mw_(mw), m_()
 {
     ProblemParameters params = m_.getParameters();
     mw_.setParameters(params);
+    importOBJ("/home/bassel/vouga/randomgrowth/meshes/rectangle.obj");
 }
 
 void Controller::quit()
@@ -56,9 +57,9 @@ void Controller::updateParameters(ProblemParameters params)
     updateGL();
 }
 
-void Controller::crush()
+void Controller::pull()
 {
-    m_.crush(*this, 3.885, 0.5);
+    m_.pull(*this);
 }
 
 void Controller::centerCamera()

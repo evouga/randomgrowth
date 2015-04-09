@@ -66,7 +66,7 @@ double Mesh::truncatedConeVolume(double startHeight, double curHeight)
     return totV-topV;
 }
 
-bool Mesh::crush(Controller &cont, double coneHeight, double endHeight)
+bool Mesh::pull(Controller &cont)
 {
     {
         string name = params_.outputDir + "/parameters";
@@ -78,53 +78,43 @@ bool Mesh::crush(Controller &cont, double coneHeight, double endHeight)
     VectorXd g(numedges());
     dofsFromGeometry(q, g);
 
+    for(int i=0; i < q.size(); i++)
+    {
+        if(i%3 == 2)
+            q[i] += this->randomRange(-1e-8, 1e-8);
+    }
+
     double h = params_.eulerTimestep;
     VectorXd v(numdofs());
     v.setZero();
     int numsteps = params_.numEulerIters;
-
-    VectorXd startq = q;
-
-    const int crushTime = 100000;
-
-    //double initialV = truncatedConeVolume(coneHeight, coneHeight);
-    double airpressure = 30000;//101325.0;
+    double pullMag = params_.pullMag;
 
     for(int i=0; i<numsteps; i++)
     {        
         std::cout << "iter " << i << std::endl;
 
-        double t = i;
-        if(t > crushTime)
-            t = crushTime;
-        double planeZ = (t*endHeight + (crushTime-t)*coneHeight)/double(crushTime);
-
         q += h*v;
         VectorXd gradq;
         std::cout << "computing energy" << std::endl;
         Midedge::elasticEnergy(*mesh_,q,g,params_,&gradq);
-        std::cout << "force magnitude: " << gradq.norm() << std::endl;
         SparseMatrix<double> Minv;
         buildInvMassMatrix(g, Minv);
         VectorXd F = -gradq;
-
+        F[6] += pullMag;
+        F[15] -= pullMag;
+        std::cout << "force magnitude: " << F.norm() << std::endl;
         //double curV = truncatedConeVolume(coneHeight, planeZ);
         //double pressure = airpressure*(initialV/curV - 1.0);
         //const double leakconst = 1e-6;
         //initialV = std::max(curV, initialV - leakconst*h*pressure);
-        VectorXd pressureF;
-        pressureForce(q,airpressure, pressureF);
 
         //std::cout << "Regular force " << F.norm() << " pressure force " << pressureF.norm() << " pressure " << pressure << " initialV " << initialV << " curV " << curV << std::endl;
-
-        F += pressureF;
 
         v += h*Minv*F - h*Minv*params_.dampingCoeff*v;
         dofsToGeometry(q);
         if(i%100 == 0)
             dumpFrame();
-        // enforce constraints
-        enforceConstraints(q, startq, planeZ);
         std::cout << "done" << std::endl;
     }
 
