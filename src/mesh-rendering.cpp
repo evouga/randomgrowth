@@ -44,18 +44,21 @@ void Mesh::render()
         pos.clear();
         normal.clear();
 
-        VectorXd H;
         VectorXd q,g;
-        dofsFromGeometry(q,g);
-        Midedge::meanCurvature(*mesh_, q, H);
+        dofsFromGeometry(q,g);        
         //gaussianCurvature(q, H);
         //cout << H << std::endl;
+
+        bool useenergies = energies_.size() == mesh_->n_faces();
 
         for(OMMesh::FaceIter fi = mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
         {
             for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fi.handle()); fvi; ++fvi)
             {
-                Vector3d color = colormap(H[fvi.handle().idx()], 10.0);
+                double val = 0;
+                if(useenergies)
+                    val = min(0.0001, energies_[fi.handle().idx()]);
+                Vector3d color = colormap(val, 0.0001);
 
 
                 OMMesh::VertexHandle v = fvi.handle();

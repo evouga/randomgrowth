@@ -1,0 +1,4 @@
+moc_*.cpp
+randomgrowth
+ui_mainwindow.h
+Makefile

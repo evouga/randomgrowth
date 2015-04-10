@@ -594,32 +594,33 @@ void Midedge::visualizeNormals(const OMMesh &mesh, const VectorXd &q, double sca
     glEnd();
 }
 
-double Midedge::elasticEnergy(const OMMesh &mesh, const VectorXd &q, const VectorXd &gbar, const ElasticParameters &params, VectorXd *derivs)
-{
-    double result = 0;
+void Midedge::elasticEnergy(const OMMesh &mesh, const VectorXd &q, const VectorXd &gbar, const ElasticParameters &params, VectorXd *derivs, VectorXd *energies)
+{    
     if(derivs)
     {
         if(derivs->size() != q.size())
             derivs->resize(q.size());
         derivs->setZero();
     }
+    if(energies)
+        energies->resize(mesh.n_faces());
     EdgeNormalDerivatives nderivs;
     gatherEdgeNormalDerivatives(mesh, q, nderivs);
 
 
     for(OMMesh::FaceIter fi = mesh.faces_begin(); fi != mesh.faces_end(); ++fi)
     {
-        result += params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio)*elasticEnergyOne(mesh, nderivs, fi.handle().idx(), q, gbar, params);
-        result += params.YoungsModulus/8.0/(1.0+params.PoissonRatio)*elasticEnergyTwo(mesh, nderivs, fi.handle().idx(), q, gbar, params);
+        double result = params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio)*elasticEnergyOne(mesh, nderivs, fi.handle().idx(), q, gbar, params);
+        result += params.YoungsModulus/8.0/(1.0+params.PoissonRatio)*elasticEnergyTwo(mesh, nderivs, fi.handle().idx(), q, gbar, params);        
 
         if(derivs)
         {
             DelasticEnergyOne(mesh, nderivs, fi.handle().idx(), q, gbar, params, params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio), *derivs);
             DelasticEnergyTwo(mesh, nderivs, fi.handle().idx(), q, gbar, params, params.YoungsModulus/8.0/(1.0+params.PoissonRatio), *derivs);
         }
+        if(energies)
+            (*energies)[fi.handle().idx()] = result;
     }
-
-    return result;
 }
 
 double Midedge::intrinsicArea(int faceid, const VectorXd &gbar, const ElasticParameters &params)

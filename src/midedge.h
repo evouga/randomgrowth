@@ -39,7 +39,7 @@ class Midedge
 public:
     Midedge();
 
-    static double elasticEnergy(const OMMesh &mesh, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar, const ElasticParameters &params, Eigen::VectorXd *derivs);
+    static void elasticEnergy(const OMMesh &mesh, const Eigen::VectorXd &q, const Eigen::VectorXd &gbar, const ElasticParameters &params, Eigen::VectorXd *derivs, Eigen::VectorXd *energies);
     static Eigen::Vector4d inducedG(const OMMesh &mesh, int faceid, const Eigen::VectorXd &q);
     static void visualizeNormals(const OMMesh &mesh, const Eigen::VectorXd &q, double scale);
     static void gaussianCurvature(const OMMesh &mesh, const Eigen::VectorXd &q, Eigen::VectorXd &Ks);

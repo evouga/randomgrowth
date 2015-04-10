@@ -124,6 +124,8 @@ private:
 
     OMMesh *mesh_;
 
+    Eigen::VectorXd energies_;
+
     int frameno_;
     ProblemParameters params_;
 

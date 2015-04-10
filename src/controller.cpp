@@ -14,8 +14,7 @@ using namespace Eigen;
 Controller::Controller(MainWindow &mw) : mw_(mw), m_()
 {
     ProblemParameters params = m_.getParameters();
-    mw_.setParameters(params);
-    importOBJ("/home/bassel/vouga/randomgrowth/meshes/rectangle.obj");
+    mw_.setParameters(params);    
 }
 
 void Controller::quit()

@@ -81,7 +81,7 @@ bool Mesh::pull(Controller &cont)
     for(int i=0; i < q.size(); i++)
     {
         if(i%3 == 2)
-            q[i] += this->randomRange(-1e-8, 1e-8);
+            q[i] += this->randomRange(-1e-14, 1e-14);
     }
 
     double h = params_.eulerTimestep;
@@ -97,7 +97,7 @@ bool Mesh::pull(Controller &cont)
         q += h*v;
         VectorXd gradq;
         std::cout << "computing energy" << std::endl;
-        Midedge::elasticEnergy(*mesh_,q,g,params_,&gradq);
+        Midedge::elasticEnergy(*mesh_,q,g,params_,&gradq,&energies_);
         SparseMatrix<double> Minv;
         buildInvMassMatrix(g, Minv);
         VectorXd F = -gradq;
@@ -111,7 +111,16 @@ bool Mesh::pull(Controller &cont)
 
         //std::cout << "Regular force " << F.norm() << " pressure force " << pressureF.norm() << " pressure " << pressure << " initialV " << initialV << " curV " << curV << std::endl;
 
-        v += h*Minv*F - h*Minv*params_.dampingCoeff*v;
+        VectorXd dampv = h*Minv*params_.dampingCoeff*v;
+        for(int i=0; i<v.size(); i++)
+        {
+            if(fabs(dampv[i]) > fabs(v[i]))
+                dampv[i] = v[i];
+        }
+
+        v -= dampv;
+
+        v += h*Minv*F;
         dofsToGeometry(q);
         if(i%100 == 0)
             dumpFrame();

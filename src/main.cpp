@@ -4,6 +4,7 @@
 #include <QDesktopWidget>
 #include <QThread>
 #include <string>
+#include <QMetaType>
 
 int main(int argc, char *argv[])
 {
