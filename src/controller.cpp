@@ -73,17 +73,6 @@ void Controller::updateGL()
     QMetaObject::invokeMethod(&mw_, "repaintMesh");
 }
 
-void Controller::addNoise()
-{
-    m_.addRandomNoise(1e-3);
-    updateGL();
-}
-
-void Controller::symmetrize()
-{
-    m_.symmetrize(3);
-}
-
 void Controller::makeCone()
 {
     m_.setConeHeights(3.885);

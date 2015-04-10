@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <string>
-#include "mesh.h"
+#include "simulationmesh.h"
 
 class Controller;
 
@@ -49,8 +49,6 @@ private slots:
 
     void on_thicknessEdit_textEdited(const QString &arg1);
 
-    void on_relaxEmbeddingButton_clicked();
-
     void on_densityEdit_textEdited(const QString &arg1);
 
     void on_dampingCoeffEdit_textEdited(const QString &arg1);
@@ -59,35 +57,15 @@ private slots:
 
     void on_eulerItersEdit_textEdited(const QString &arg1);
 
-    void on_growthAmountEdit_textEdited(const QString &arg1);
-
     void on_scaleEdit_textEdited(const QString &arg1);
 
     void on_outputEdit_textEdited(const QString &arg1);
 
-    void on_maxStrainEdit_textEdited(const QString &arg1);
-
-    void on_baseProbabilityEdit_textEdited(const QString &arg1);
-
     void on_actionImport_Metric_triggered();
-
-    void on_actionAdd_Noise_triggered();
-
-    void on_actionSet_No_Target_Metric_triggered();
-
-    void on_actionSet_Negative_K_Target_Metric_triggered();
-
-    void on_actionMinimize_with_Newton_triggered();
-
-    void on_actionSymmetrize_triggered();
-
-    void on_actionEigenvalues_triggered();
 
     void on_actionMake_Cone_triggered();
 
     void on_actionMake_Flat_Cone_triggered();
-
-    void on_actionSet_Current_Lengths_as_Intrinsic_triggered();
 
     void on_pullButton_clicked();
 

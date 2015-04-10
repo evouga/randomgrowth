@@ -3,11 +3,13 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QThread>
+#include <QMetaClassInfo>
 #include <string>
 #include <QMetaType>
 
 int main(int argc, char *argv[])
 {
+    Eigen::initParallel();
     QApplication app(argc, argv);
 
     qRegisterMetaType<std::string>("std::string");

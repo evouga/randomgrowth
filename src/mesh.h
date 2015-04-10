@@ -1,138 +1,48 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "omtypes.h"
 #include <Eigen/Core>
-#include <Eigen/Sparse>
-#include "midedge.h"
-#include <QMutex>
-
-class Controller;
-
-struct ProblemParameters : public ElasticParameters
-{
-    // simulation
-    double rho;
-
-    double eulerTimestep;
-    double dampingCoeff;
-    double pullMag;
-    int numEulerIters;
-
-    // rendering
-    bool showWireframe;
-    bool smoothShade;
-
-    // problem
-    double growthAmount;
-    double maxEdgeStrain;
-    double baseGrowthProbability;
-
-    std::string outputDir;
-
-    virtual void dumpParameters(std::ostream &os);
-};
+#include <vector>
 
 class Mesh
 {
 public:
-    Mesh();
+    Mesh() {}
 
-    enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
+    bool loadMesh(const char *filename);
+    bool writeMesh(const char *filename);
+    bool loadMesh(const Eigen::VectorXd &deformedPositions, const Eigen::Matrix3Xi &faces);
 
-    bool simulate(Controller &cont);
-    bool pull(Controller &cont);
+    Eigen::VectorXd::ConstFixedSegmentReturnType<3>::Type vertPos(int vert) const {return deformedPosition_.segment<3>(3*vert);}
+    Eigen::Matrix3Xi::ConstColXpr faceVerts(int face) const {assert(face < faces_.cols()); return faces_.col(face);}
+    Eigen::Matrix2Xi::ConstColXpr edgeFaces(int edge) const {return edgeFaces_.col(edge);}
+    Eigen::Matrix2Xi::ConstColXpr edgeVerts(int edge) const {return edgeVerts_.col(edge);}
+    Eigen::VectorXd::ConstFixedSegmentReturnType<4>::Type faceMetric(int face) const {return restMetrics_.segment<4>(4*face);}
+    Eigen::VectorXd::FixedSegmentReturnType<3>::Type vertPos(int vert) {return deformedPosition_.segment<3>(3*vert);}
+    Eigen::Matrix3Xi::ColXpr faceVerts(int face) {assert(face < faces_.cols()); return faces_.col(face);}
+    Eigen::Matrix2Xi::ColXpr edgeFaces(int edge) {return edgeFaces_.col(edge);}
+    Eigen::Matrix2Xi::ColXpr edgeVerts(int edge) {return edgeVerts_.col(edge);}
+    Eigen::VectorXd::FixedSegmentReturnType<4>::Type faceMetric(int face) {return restMetrics_.segment<4>(4*face);}
 
-    int numdofs() const;
-    int numedges() const;
-    const ProblemParameters &getParameters() const;
-    void setParameters(ProblemParameters params);
+    Eigen::Vector4i buildHinge(int edge) const;
 
-    // Rendering methods. These run concurrently and must all lock the meshLock before reading from the mesh.
-    void render();
-    Eigen::Vector3d centroid();
-    double radius();
-    // End rendering methods
+    bool isBoundaryVert(int vert) const {return isBoundaryVert_[vert];}
+    bool isBoundaryEdge(int edge) const;
 
-    bool exportOBJ(const char *filename);
-    bool importOBJ(const char *filename);
+    int numVertices() const {return deformedPosition_.size() / 3;}
+    int numFaces() const {return faces_.cols();}    
+    int numEdges() const {return edgeFaces_.cols();}
 
-    void addRandomNoise(double magnitude);
-    void setNegativeGaussianCurvatureTargetMetric();
-    void setNoTargetMetric();
-    void extremizeWithNewton();
-    void symmetrize(int nfold);
-    void printHessianEigenvalues();
-    void setConeHeights(double height);
-    void setFlatCone(double height);
+    void resetRestMetric();
 
-private:
-    void dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const;
-    void dofsToGeometry(const Eigen::VectorXd &q);
-    void edgeEndpoints(OMMesh::EdgeHandle eh, OMMesh::Point &pt1, OMMesh::Point &pt2);
-    double triangleInequalityLineSearch(const Eigen::VectorXd &g, const Eigen::VectorXd &dg) const;
-    double triangleInequalityLineSearch(double g0, double g1, double g2, double dg0, double dg1, double dg2) const;
-    double infinityNorm(const Eigen::VectorXd &v) const;
-    void buildMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
-    void buildGeometricMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
-    void buildInvMassMatrix(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &M) const;
-    double barycentricDualArea(const Eigen::VectorXd &g, int vidx) const;
-    double deformedBarycentricDualArea(const Eigen::VectorXd &q, int vidx) const;
-    double faceArea(const Eigen::VectorXd &q, int fidx) const;
-
-    double sampleHeight(const Eigen::Vector2d pos, const Eigen::VectorXd &q);
-    void enforceConstraints(Eigen::VectorXd &q,
-                            const Eigen::VectorXd &startq,
-                            double planeHeight);
-
-    double restFaceArea(const Eigen::VectorXd &g, int fidx) const;
-    void targetMetricFromGeometry(Eigen::VectorXd &targetg) const;
-    void targetMetricToGeometry(const Eigen::VectorXd &targetg);
-    double vertexAreaRatio(const Eigen::VectorXd &undefq, const Eigen::VectorXd &g, int vidx);
-
-    double intrinsicCotanWeight(int edgeid, const Eigen::VectorXd &g) const;
-    double cotanWeight(int edgeid, const Eigen::VectorXd &q) const;
-    void buildIntrinsicDirichletLaplacian(const Eigen::VectorXd &g, Eigen::SparseMatrix<double> &L) const;
-    void buildExtrinsicDirichletLaplacian(const Eigen::VectorXd &q, Eigen::SparseMatrix<double> &L) const;
-    void gaussianCurvature(const Eigen::VectorXd &q, Eigen::VectorXd &K) const;
-    void meanCurvature(const Eigen::VectorXd &q, Eigen::VectorXd &Hdensity) const;
-    void vertexAreas(const Eigen::VectorXd &q, Eigen::VectorXd &vareas) const;
-    Eigen::Vector3d averageNormal(const Eigen::VectorXd &q, int vidx) const;
-    Eigen::Vector3d faceNormal(const Eigen::VectorXd &q, int fidx) const;
-
-    void elasticEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g,
-                       double &energyB,
-                       double &energyS,
-                       Eigen::VectorXd &gradq,
-                       Eigen::SparseMatrix<double> &hessq, Eigen::SparseMatrix<double> &gradggradq,
-                       int derivativesRequested) const;
-
-    double vertexStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int vidx) const;
-    double faceStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int fidx) const;
-
-    void dumpFrame();
-    void deleteBadFlatConeFaces();
-
-    Eigen::Vector3d colormap(double val) const;
-    Eigen::Vector3d colormap(double val, double max) const;
-    Eigen::Vector3d HSLtoRGB(const Eigen::Vector3d &hsl) const;
-
-    double randomRange(double min, double max) const;
-    double truncatedConeVolume(double startHeight, double curHeight);
-    void pressureForce(const Eigen::VectorXd &q, double pressure, Eigen::VectorXd &F);
-    Eigen::Vector3d surfaceAreaNormal(const Eigen::VectorXd &q, int vidx);
-
-    OMMesh *mesh_;
-
-    Eigen::VectorXd energies_;
-
-    int frameno_;
-    ProblemParameters params_;
-
-    // The rendering thread reads the mesh and its edge data. Any function must lock this before writing to
-    // to the mesh. (The rendering thread does not write to the mesh so reads from the worker thread do not
-    // need to lock.)
-    QMutex meshLock_;
+protected:
+    Eigen::VectorXd deformedPosition_;
+    Eigen::Matrix3Xi faces_;
+    Eigen::Matrix2Xi edgeFaces_;
+    Eigen::Matrix2Xi edgeVerts_;
+    Eigen::VectorXd restMetrics_;
+    std::vector<bool> isBoundaryVert_;
 };
 
 #endif // MESH_H
+

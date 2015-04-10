@@ -29,7 +29,6 @@
         <height>100</height>
        </size>
       </property>
-      <zorder>widget</zorder>
      </widget>
     </item>
     <item>
@@ -85,19 +84,6 @@
           <property name="title">
            <string>Algorithms</string>
           </property>
-          <widget class="QPushButton" name="relaxEmbeddingButton">
-           <property name="geometry">
-            <rect>
-             <x>20</x>
-             <y>40</y>
-             <width>251</width>
-             <height>41</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Relax Embedding</string>
-           </property>
-          </widget>
           <widget class="QPushButton" name="pullButton">
            <property name="geometry">
             <rect>
@@ -342,18 +328,6 @@
               </rect>
              </property>
             </widget>
-            <zorder>youngsModulusLabel</zorder>
-            <zorder>poissonRatioLabel</zorder>
-            <zorder>poissonRatioEdit</zorder>
-            <zorder>thicknessLabel</zorder>
-            <zorder>thicknessEdit</zorder>
-            <zorder>densityLabel</zorder>
-            <zorder>densityEdit</zorder>
-            <zorder>scaleLabel</zorder>
-            <zorder>algorithmsBox</zorder>
-            <zorder>solverBox</zorder>
-            <zorder>youngsModulusEdit</zorder>
-            <zorder>scaleEdit</zorder>
            </widget>
            <widget class="QGroupBox" name="solverBox">
             <property name="geometry">
@@ -437,93 +411,6 @@
              </property>
             </widget>
            </widget>
-           <widget class="QGroupBox" name="problemBox">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>460</y>
-              <width>291</width>
-              <height>191</height>
-             </rect>
-            </property>
-            <property name="title">
-             <string>Problem</string>
-            </property>
-            <widget class="QLabel" name="growthAmountLabel">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>60</y>
-               <width>211</width>
-               <height>41</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Growth Amount</string>
-             </property>
-            </widget>
-            <widget class="QLabel" name="baseProbabilityLabel">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>150</y>
-               <width>221</width>
-               <height>31</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Base Probability</string>
-             </property>
-            </widget>
-            <widget class="QLabel" name="maxStrainLabel">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>110</y>
-               <width>151</width>
-               <height>31</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Max Strain</string>
-             </property>
-            </widget>
-            <widget class="QLineEdit" name="growthAmountEdit">
-             <property name="geometry">
-              <rect>
-               <x>210</x>
-               <y>70</y>
-               <width>71</width>
-               <height>31</height>
-              </rect>
-             </property>
-            </widget>
-            <widget class="QLineEdit" name="maxStrainEdit">
-             <property name="geometry">
-              <rect>
-               <x>140</x>
-               <y>110</y>
-               <width>91</width>
-               <height>31</height>
-              </rect>
-             </property>
-            </widget>
-            <widget class="QLineEdit" name="baseProbabilityEdit">
-             <property name="geometry">
-              <rect>
-               <x>210</x>
-               <y>150</y>
-               <width>81</width>
-               <height>31</height>
-              </rect>
-             </property>
-            </widget>
-           </widget>
-           <zorder>physicalBox</zorder>
-           <zorder>solverBox</zorder>
-           <zorder>algorithmsBox</zorder>
-           <zorder>renderingBox</zorder>
-           <zorder>problemBox</zorder>
           </widget>
           <widget class="QLabel" name="pullMagLabel">
            <property name="geometry">
@@ -548,14 +435,6 @@
             </rect>
            </property>
           </widget>
-          <zorder>relaxEmbeddingButton</zorder>
-          <zorder>pullButton</zorder>
-          <zorder>renderingBox</zorder>
-          <zorder>renderingBox</zorder>
-          <zorder>parameterBox</zorder>
-          <zorder>parameterBox</zorder>
-          <zorder>pullMagLabel</zorder>
-          <zorder>pullMagEdit</zorder>
          </widget>
         </item>
        </layout>
@@ -570,7 +449,7 @@
      <x>0</x>
      <y>0</y>
      <width>1600</width>
-     <height>46</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuVViewer">
@@ -593,16 +472,9 @@
     <property name="title">
      <string>Actions</string>
     </property>
-    <addaction name="actionAdd_Noise"/>
-    <addaction name="actionMinimize_with_Newton"/>
-    <addaction name="actionSymmetrize"/>
-    <addaction name="actionEigenvalues"/>
     <addaction name="separator"/>
-    <addaction name="actionSet_No_Target_Metric"/>
-    <addaction name="actionSet_Negative_K_Target_Metric"/>
     <addaction name="actionMake_Cone"/>
     <addaction name="actionMake_Flat_Cone"/>
-    <addaction name="actionSet_Current_Lengths_as_Intrinsic"/>
    </widget>
    <addaction name="menuVViewer"/>
    <addaction name="menuView"/>

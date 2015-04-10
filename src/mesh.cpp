@@ -1,330 +1,196 @@
-#include <OpenMesh/Core/IO/MeshIO.hh>
 #include "mesh.h"
-#include <iomanip>
-#include <Eigen/Geometry>
+#include <vector>
 #include <fstream>
+#include <map>
+#include <iostream>
+#include "midedge.h"
 
 using namespace Eigen;
-using namespace OpenMesh;
 using namespace std;
 
-Mesh::Mesh() : meshLock_(QMutex::Recursive)
+bool Mesh::isBoundaryEdge(int edge) const
 {
-    params_.scale = 0.1397;
-    params_.h = .0001;
-    params_.YoungsModulus = 5e9;
-    params_.PoissonRatio = 0.33;
-    params_.rho = 500.0;
-    params_.dampingCoeff = 1e-4;
-    params_.eulerTimestep = 1e-6;
-    params_.numEulerIters = numeric_limits<int>::max();
-
-    params_.pullMag = 5.0;
-
-    params_.growthAmount = 50;
-    params_.maxEdgeStrain = 1e8;
-    params_.baseGrowthProbability = 0.5;
-
-    params_.smoothShade = true;
-    params_.showWireframe = true;
-    params_.outputDir = "output";
-
-    mesh_ = new OMMesh();
-    frameno_ = 0;
+    return edgeFaces(edge)[1] == -1;
 }
 
-void ProblemParameters::dumpParameters(ostream &os)
+Vector4i Mesh::buildHinge(int edge) const
 {
-    ElasticParameters::dumpParameters(os);
-    os << "rho " << rho << endl;
-    os << "dampingCoeff " << dampingCoeff << endl;
-    os << "eulerTimestep " << eulerTimestep << endl;
-    os << "numEulerIters " << numEulerIters << endl;
-    os << "growthAmount " << growthAmount << endl;
-    os << "baseGrowthProbability " << baseGrowthProbability << endl;
-    os << "maxEdgeStrain " << maxEdgeStrain << endl;
-}
-
-int Mesh::numdofs() const
-{
-    return 3*mesh_->n_vertices();
-}
-
-int Mesh::numedges() const
-{
-    return mesh_->n_edges();
-}
-
-void Mesh::dofsFromGeometry(Eigen::VectorXd &q, Eigen::VectorXd &g) const
-{
-    if(q.size() != numdofs())
-        q.resize(numdofs());
-
-    for(int i=0; i<(int)mesh_->n_vertices(); i++)
+    Vector4i result;
+    result[0] = edgeVerts(edge)[0];
+    result[2] = edgeVerts(edge)[1];
+    for(int i=0; i<3; i++)
     {
-        OMMesh::Point pt = mesh_->point(mesh_->vertex_handle(i));
-        for(int j=0; j<3; j++)
-            q[3*i+j] = pt[j];
-    }
-
-    if(g.size() != 4*mesh_->n_faces())
-        g.resize(4*mesh_->n_faces());
-
-    for(int i=0; i<mesh_->n_faces(); i++)
-        g.segment<4>(4*i) = Midedge::inducedG(*mesh_, i, q);
-}
-
-void Mesh::dofsToGeometry(const VectorXd &q)
-{    
-    meshLock_.lock();
-    {
-        assert(q.size() == numdofs());
-
-        for(int i=0; i<(int)mesh_->n_vertices(); i++)
+        int candidate = faceVerts(edgeFaces(edge)[0])[i];
+        if(candidate != result[0] && candidate != result[2])
         {
-            OMMesh::Point &pt = mesh_->point(mesh_->vertex_handle(i));
-            for(int j=0; j<3; j++)
-                pt[j] = q[3*i+j];
-        }
-    }
-    meshLock_.unlock();
-}
-
-void Mesh::edgeEndpoints(OMMesh::EdgeHandle eh, OMMesh::Point &pt1, OMMesh::Point &pt2)
-{
-    OMMesh::HalfedgeHandle heh1 = mesh_->halfedge_handle(eh, 0);
-    pt1 = mesh_->point(mesh_->from_vertex_handle(heh1));
-    pt2 = mesh_->point(mesh_->to_vertex_handle(heh1));
-}
-
-bool Mesh::exportOBJ(const char *filename)
-{
-    OpenMesh::IO::Options opt;
-    mesh_->request_face_normals();
-    mesh_->request_vertex_normals();
-    mesh_->update_normals();
-    opt.set(OpenMesh::IO::Options::VertexNormal);
-    return OpenMesh::IO::write_mesh(*mesh_, filename, opt);
-}
-
-void Mesh::addRandomNoise(double magnitude)
-{
-    meshLock_.lock();
-    {
-        for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
-            mesh_->point(vi.handle())[2] += randomRange(-magnitude,magnitude);
-    }
-    meshLock_.unlock();
-}
-
-bool Mesh::importOBJ(const char *filename)
-{
-    bool success = true;
-    meshLock_.lock();
-    {
-        OpenMesh::IO::Options opt;
-        mesh_->request_face_normals();
-        mesh_->request_vertex_normals();
-        opt.set(OpenMesh::IO::Options::VertexNormal);
-        success = OpenMesh::IO::read_mesh(*mesh_, filename, opt);
-        mesh_->update_normals();        
-    }
-    frameno_ = 0;
-    meshLock_.unlock();
-    return success;
-}
-
-const ProblemParameters &Mesh::getParameters() const
-{
-    return params_;
-}
-
-void Mesh::setParameters(ProblemParameters params)
-{
-    params_ = params;
-}
-
-Vector3d Mesh::averageNormal(const VectorXd &q, int vidx) const
-{
-    OMMesh::VertexHandle vh = mesh_->vertex_handle(vidx);
-    Vector3d result;
-    int denom = 0;
-    result.setZero();
-    for(OMMesh::VertexFaceIter vfi = mesh_->vf_iter(vh); vfi; ++vfi)
-    {
-        result += faceNormal(q, vfi.handle().idx());
-        denom++;
-    }
-    return result/denom;
-}
-
-Vector3d Mesh::faceNormal(const VectorXd &q, int fidx) const
-{
-    int vids[3];
-    int idx=0;
-    OMMesh::FaceHandle fh = mesh_->face_handle(fidx);
-    for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fh); fvi; ++fvi)
-    {
-        vids[idx++] = fvi.handle().idx();
-    }
-
-    Vector3d v0 = q.segment<3>(3*vids[0]);
-    Vector3d v1 = q.segment<3>(3*vids[1]);
-    Vector3d v2 = q.segment<3>(3*vids[2]);
-    Vector3d n = (v2-v1).cross(v0-v1);
-    return n/n.norm();
-}
-
-double Mesh::infinityNorm(const VectorXd &v) const
-{
-    double maxval = 0;
-    for(int i=0; i<v.size(); i++)
-        maxval = std::max(fabs(v[i]), maxval);
-    return maxval;
-}
-
-double Mesh::randomRange(double min, double max) const
-{
-    double val = (max-min)*double(rand())/double(RAND_MAX);
-    return val+min;
-}
-
-void Mesh::dumpFrame()
-{
-    stringstream ss;
-    ss << params_.outputDir;
-    ss << "/frame_";
-    ss << setfill('0') << setw(8) << frameno_ << ".obj";
-    exportOBJ(ss.str().c_str());
-
-    stringstream ss2;
-    ss2 << params_.outputDir;
-    ss2 << "/frame_";
-    ss2 << setfill('0') << setw(8) << frameno_ << ".geo";
-
-    stringstream ss3;
-    ss3 << params_.outputDir;
-    ss3 << "/frame_";
-    ss3 << setfill('0') << setw(8) << frameno_ << ".g";
-
-    ofstream ofs(ss2.str().c_str());
-    VectorXd q,g;
-    dofsFromGeometry(q, g);
-    VectorXd Hdensity, Kdensity, vareas;
-    meanCurvature(q, Hdensity);
-    gaussianCurvature(q, Kdensity);
-    vertexAreas(q, vareas);
-
-    for(int i=0; i<(int)mesh_->n_vertices(); i++)
-    {
-        ofs << i << " " << Hdensity[i] << " " << Kdensity[i] << " " << vareas[i] << endl;
-    }
-
-    ofstream gofs(ss3.str().c_str());
-    gofs << g;
-
-    frameno_++;
-}
-
-void Mesh::setConeHeights(double height)
-{
-    VectorXd q, g;
-    dofsFromGeometry(q, g);
-    int numverts = mesh_->n_vertices();
-    for(int i=0; i<numverts; i++)
-    {
-        Vector3d pos = q.segment<3>(3*i);
-        double newz = height*(1.0 - sqrt(pos[0]*pos[0] + pos[1]*pos[1]));
-        q[3*i+2] = newz;
-    }
-    dofsToGeometry(q);
-}
-
-void Mesh::setFlatCone(double height)
-{
-    deleteBadFlatConeFaces();
-    VectorXd q, g;
-    dofsFromGeometry(q, g);
-    int numverts = mesh_->n_vertices();
-    for(int i=0; i<numverts; i++)
-    {
-        Vector3d pos = q.segment<3>(3*i);
-        double r = sqrt(1.0+height*height)*sqrt(pos[0]*pos[0]+pos[1]*pos[1]);
-        double theta = atan2(pos[1], pos[0]) / sqrt(1.0+height*height);
-        q[3*i+0] = r*cos(theta);
-        q[3*i+1] = r*sin(theta);
-        q[3*i+2] = 0;
-    }
-    dofsToGeometry(q);
-}
-
-void Mesh::deleteBadFlatConeFaces()
-{
-    set<int> badfaces;
-
-    for(OMMesh::FaceIter fi=mesh_->faces_begin(); fi != mesh_->faces_end(); ++fi)
-    {
-        for(OMMesh::FaceEdgeIter fei = mesh_->fe_iter(fi.handle()); fei; ++fei)
-        {
-            OMMesh::HalfedgeHandle heh = mesh_->halfedge_handle(fei.handle(),0);
-            OMMesh::VertexHandle topt = mesh_->to_vertex_handle(heh);
-            OMMesh::VertexHandle frompt = mesh_->from_vertex_handle(heh);
-            double p1y = mesh_->point(topt)[1];
-            double p2y = mesh_->point(frompt)[1];
-            double t = -p2y/(p1y-p2y);
-            if(t < 0 || t > 1)
-                continue;
-            double p1x = mesh_->point(topt)[0];
-            double p2x = mesh_->point(frompt)[0];
-            double x = t*p1x + (1-t)*p2x;
-            if(x < 0)
-                badfaces.insert(fi.handle().idx());
+            result[1] = candidate;
+            break;
         }
     }
 
-    OMMesh *newmesh = new OMMesh;
-    for(OMMesh::VertexIter vi = mesh_->vertices_begin(); vi != mesh_->vertices_end(); ++vi)
+    if(edgeFaces(edge)[1] == -1)
     {
-        OMMesh::Point pt = mesh_->point(vi.handle());
-        newmesh->add_vertex(pt);
+        result[3] = -1;
     }
-
-    for(int i=0; i<(int)mesh_->n_faces(); i++)
+    else
     {
-        if(badfaces.count(i) > 0)
-            continue;
-
-        OMMesh::FaceHandle fh = mesh_->face_handle(i);
-        vector<OMMesh::VertexHandle> newface;
-        for(OMMesh::FaceVertexIter fvi = mesh_->fv_iter(fh); fvi; ++fvi)
+        for(int i=0; i<3; i++)
         {
-            int idx = fvi.handle().idx();
-            OMMesh::VertexHandle vert = newmesh->vertex_handle(idx);
-            newface.push_back(vert);
+            int candidate = faceVerts(edgeFaces(edge)[1])[i];
+            if(candidate != result[0] && candidate != result[2])
+            {
+                result[3] = candidate;
+                break;
+            }
         }
-        newmesh->add_face(newface);
     }
 
-    meshLock_.lock();
-    {
-        delete mesh_;
-        mesh_ = newmesh;
-    }
-    meshLock_.unlock();
-}
-
-Vector3d Mesh::surfaceAreaNormal(const VectorXd &q, int vidx)
-{
-    OMMesh::VertexHandle vh = mesh_->vertex_handle(vidx);
-    Vector3d result;
-    result.setZero();
-
-    for(OMMesh::VertexFaceIter vfi = mesh_->vf_iter(vh); vfi; ++vfi)
-    {
-        double area = faceArea(q, vfi.handle().idx());
-        Vector3d N = this->faceNormal(q, vfi.handle().idx());
-        result += area*N;
-    }
-    result /= result.norm();
     return result;
+}
+
+bool Mesh::loadMesh(const char *filename)
+{
+    ifstream ifs(filename);
+    if(!ifs)
+        return false;
+
+    vector<double> pos;
+    vector<int> faceidx;
+
+    while(true)
+    {
+        char c;
+        ifs >> c;
+        if(!ifs)
+            break;
+        if(c == '#')
+        {
+            ifs.ignore(std::numeric_limits<int>::max(), '\n');
+        }
+        if(c == 'v')
+        {
+            for(int i=0; i<3; i++)
+            {
+                double p;
+                ifs >> p;
+                pos.push_back(p);
+            }
+        }
+        if(c == 'f')
+        {
+            for(int i=0; i<3; i++)
+            {
+                int vert;
+                ifs >> vert;
+                faceidx.push_back(vert);
+            }
+        }
+    }
+
+    int nverts = pos.size()/3;
+    int nfaces = faceidx.size()/3;
+
+    VectorXd verts(3*nverts);
+    for(int i=0; i<3*nverts; i++)
+        verts[i] = pos[i];
+
+    Matrix3Xi faces(3, nfaces);
+    for(int i=0; i<nfaces; i++)
+        for(int j=0; j<3; j++)
+        {
+            int id = faceidx[3*i+j]-1;
+            if(id < 0 || id >= nverts)
+                return false;
+            faces.coeffRef(j, i) = faceidx[3*i+j]-1;
+        }
+
+    return loadMesh(verts, faces);
+}
+
+bool Mesh::loadMesh(const VectorXd &deformedPositions, const Matrix3Xi &faces)
+{
+    deformedPosition_ = deformedPositions;
+    faces_ = faces;
+
+    std::vector<std::pair<int, int> > edgef;
+    std::map<std::pair<int, int>, int> edgemap;
+
+    for(int i=0; i<numFaces(); i++)
+    {
+        for(int j=0; j<3; j++)
+        {
+            int v1 = faceVerts(i)[j];
+            int v2 = faceVerts(i)[(j+1)%3];
+            pair<int, int> check(v1, v2);
+            std::map<pair<int, int>, int>::iterator it = edgemap.find(check);
+            if(it == edgemap.end())
+            {
+                pair<int, int> verts(v2,v1);
+                edgemap[verts] = (int)edgef.size();
+                pair<int, int> faces(i, -1);
+                edgef.push_back(faces);
+            }
+            else
+            {
+                int edgeid = it->second;
+                edgef[edgeid].second = i;
+            }
+        }
+    }
+    isBoundaryVert_.resize(numVertices());
+    for(int i=0; i<numVertices(); i++)
+        isBoundaryVert_[i] = false;
+
+    int nedges = edgef.size();
+    edgeFaces_.resize(2, nedges);
+    edgeVerts_.resize(2, nedges);
+
+    for(map<pair<int, int>, int>::iterator it = edgemap.begin(); it != edgemap.end(); ++it)
+    {
+        int id = it->second;
+        edgeVerts_.coeffRef(0, id) = it->first.first;
+        edgeVerts_.coeffRef(1, id) = it->first.second;
+        edgeFaces_.coeffRef(0, id) = edgef[id].first;
+        edgeFaces_.coeffRef(1, id) = edgef[id].second;
+        if(edgef[id].second == -1)
+        {
+            isBoundaryVert_[it->first.first] = true;
+            isBoundaryVert_[it->first.second] = true;
+        }
+    }
+
+
+    resetRestMetric();
+    return true;
+}
+
+void Mesh::resetRestMetric()
+{
+    restMetrics_.resize(4*numFaces());
+    for(int i=0; i<numFaces(); i++)
+        restMetrics_.segment<4>(4*i) = Midedge::g(*this, i);
+}
+
+bool Mesh::writeMesh(const char *filename)
+{
+    ofstream ofs(filename);
+    if(!ofs)
+        return false;
+
+    for(int i=0; i<deformedPosition_.size()/3; i++)
+    {
+        ofs << "v ";
+        for(int j=0; j<3; j++)
+            ofs << deformedPosition_[3*i+j] << " ";
+        ofs << endl;
+    }
+
+    for(int i=0; i<faces_.cols(); i++)
+    {
+        ofs << "f ";
+        for(int j=0; j<3; j++)
+            ofs << faces_.coeff(j, i)+1 << " ";
+        ofs << endl;
+    }
+    return ofs;
 }
