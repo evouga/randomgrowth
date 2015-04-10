@@ -38,7 +38,7 @@ bool SimulationMesh::crush(Controller &cont, double coneHeight, double endHeight
     const int crushTime = 100000;
 
     //double initialV = truncatedConeVolume(coneHeight, coneHeight);
-    double airpressure = 0000;//101325.0;
+    double airpressure = 10000;//101325.0;
 
     for(int i=0; i<numsteps; i++)
     {        
@@ -178,7 +178,6 @@ void SimulationMesh::pressureForce(double pressure, VectorXd &F)
 
     for(int v=0; v<numVertices(); v++)
     {
-        for(int i=0; i<3; i++)
-            F[3*v+i] = pressure*normals[v]*areas[v];
+        F.segment<3>(3*v) = pressure*areas[v]*normals.segment<3>(3*v);
     }
 }

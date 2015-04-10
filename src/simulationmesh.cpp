@@ -1,11 +1,9 @@
-#include <OpenMesh/Core/IO/MeshIO.hh>
 #include "simulationmesh.h"
 #include <iomanip>
 #include <Eigen/Geometry>
 #include <fstream>
 
 using namespace Eigen;
-using namespace OpenMesh;
 using namespace std;
 
 SimulationMesh::SimulationMesh() : Mesh(), meshLock_(QMutex::Recursive)
@@ -44,13 +42,7 @@ void ProblemParameters::dumpParameters(ostream &os)
 
 bool SimulationMesh::exportOBJ(const char *filename)
 {
-/*    OpenMesh::IO::Options opt;
-    mesh_->request_face_normals();
-    mesh_->request_vertex_normals();
-    mesh_->update_normals();
-    opt.set(OpenMesh::IO::Options::VertexNormal);
-    return OpenMesh::IO::write_mesh(*mesh_, filename, opt);*/
-    return false;
+    return writeMesh(filename);
 }
 
 bool SimulationMesh::importOBJ(const char *filename)
@@ -121,6 +113,7 @@ void SimulationMesh::setConeHeights(double height)
         double newz = height*(1.0 - sqrt(pos[0]*pos[0] + pos[1]*pos[1]));
         vertPos(i)[2] = newz;
     }
+    resetRestMetric();
 }
 
 void SimulationMesh::setFlatCone(double height)

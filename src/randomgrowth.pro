@@ -11,10 +11,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = randomgrowth
 TEMPLATE = app
 
-INCLUDEPATH += ../ext/openmesh/src ../ext/eigen
-QMAKE_LIBDIR += ../ext/openmesh/build/Build/lib/OpenMesh
+INCLUDEPATH += ../ext/eigen
 QMAKE_CXXFLAGS += -g
-LIBS += -lOpenMeshCore -lpng -lGL -lGLU
+LIBS += -lpng -lGL -lGLU
 
 
 SOURCES += main.cpp\

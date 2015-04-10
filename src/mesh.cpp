@@ -159,10 +159,38 @@ bool Mesh::loadMesh(const VectorXd &deformedPositions, const Matrix3Xi &faces)
         }
     }
 
+
+    resetRestMetric();
+    return true;
+}
+
+void Mesh::resetRestMetric()
+{
     restMetrics_.resize(4*numFaces());
     for(int i=0; i<numFaces(); i++)
         restMetrics_.segment<4>(4*i) = Midedge::g(*this, i);
+}
 
+bool Mesh::writeMesh(const char *filename)
+{
+    ofstream ofs(filename);
+    if(!ofs)
+        return false;
 
-    return true;
+    for(int i=0; i<deformedPosition_.size()/3; i++)
+    {
+        ofs << "v ";
+        for(int j=0; j<3; j++)
+            ofs << deformedPosition_[3*i+j] << " ";
+        ofs << endl;
+    }
+
+    for(int i=0; i<faces_.cols(); i++)
+    {
+        ofs << "f ";
+        for(int j=0; j<3; j++)
+            ofs << faces_.coeff(j, i)+1 << " ";
+        ofs << endl;
+    }
+    return ofs;
 }

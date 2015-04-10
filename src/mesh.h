@@ -10,6 +10,7 @@ public:
     Mesh() {}
 
     bool loadMesh(const char *filename);
+    bool writeMesh(const char *filename);
     bool loadMesh(const Eigen::VectorXd &deformedPositions, const Eigen::Matrix3Xi &faces);
 
     Eigen::VectorXd::ConstFixedSegmentReturnType<3>::Type vertPos(int vert) const {return deformedPosition_.segment<3>(3*vert);}
@@ -29,8 +30,10 @@ public:
     bool isBoundaryEdge(int edge) const;
 
     int numVertices() const {return deformedPosition_.size() / 3;}
-    int numFaces() const {return faces_.cols();}
+    int numFaces() const {return faces_.cols();}    
     int numEdges() const {return edgeFaces_.cols();}
+
+    void resetRestMetric();
 
 protected:
     Eigen::VectorXd deformedPosition_;

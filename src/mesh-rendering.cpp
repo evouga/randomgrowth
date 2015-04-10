@@ -74,17 +74,12 @@ void SimulationMesh::render()
         pos.clear();
         normal.clear();
 
-        VectorXd H;
-        Midedge::meanCurvature(*this, H);
-        //gaussianCurvature(q, H);
-        //cout << H << std::endl;
-
         for(int face=0; face<faces_.cols(); face++)
         {
             for(int vert=0; vert<3; vert++)
             {
                 int vertid = faceVerts(face)[vert];
-                Vector3d color = colormap(H[face], 10.0);
+                Vector3d color = colormap(0, 10.0);
                 Vector3d pt = vertPos(vertid);
                 Vector3d n = normals.segment<3>(3*vertid);
                 for(int j=0; j<3; j++)
