@@ -168,7 +168,7 @@ void Mesh::resetRestMetric()
 {
     restMetrics_.resize(4*numFaces());
     for(int i=0; i<numFaces(); i++)
-        restMetrics_.segment<4>(4*i) = Midedge::g(*this, i);
+        restMetrics_.segment<4>(4*i) = Midedge::g(*this, this->deformedPosition_, i);
 }
 
 bool Mesh::writeMesh(const char *filename)

@@ -73,13 +73,13 @@ void Midedge::DdiamondEdgeNormal(const Vector3d &q0, const Vector3d &q1, const V
 {
     double a1 = area(q0, q2, q3);
     assert(a1 > 0);
-    assert(!isnan(a1));
+    assert(!std::isnan(a1));
     Vector3d da1[3];
     Darea(q0, q2, q3, da1);
 
     double a2 = area(q0, q1, q2);
     assert(a2 > 0);
-    assert(!isnan(a2));
+    assert(!std::isnan(a2));
     Vector3d da2[3];
     Darea(q0, q1, q2, da2);
 
@@ -179,7 +179,7 @@ Vector3d Midedge::faceNormal(const Vector3d &q0, const Vector3d &q1, const Vecto
 {
     Vector3d result = (q1-q0).cross(q2-q0);
     for(int i=0; i<3; i++)
-        assert(!isnan(result[i]));
+        assert(!std::isnan(result[i]));
     return result/result.norm();
 }
 
@@ -199,12 +199,12 @@ void Midedge::DfaceNormal(const Vector3d &q0, const Vector3d &q1, const Vector3d
     partials.push_back( dn2/denom - n*n.transpose()*dn2/denom/denom/denom );
 }
 
-Vector4d Midedge::g(const Mesh &mesh, int faceid)
+Vector4d Midedge::g(const Mesh &mesh, const VectorXd &q, int faceid)
 {
     Vector3d qs[3];
     for(int i=0; i<3; i++)
     {
-        qs[i] = mesh.vertPos(mesh.faceVerts(faceid)[i]);
+        qs[i] = q.segment<3>(3*mesh.faceVerts(faceid)[i]);
     }
 
     Vector3d g3 = g(qs[0], qs[1], qs[2]);
@@ -215,7 +215,7 @@ Vector4d Midedge::g(const Mesh &mesh, int faceid)
     return result;
 }
 
-void Midedge::Dg(const Mesh &mesh, int faceid, const Vector4d &prefactor, VectorXd &partials)
+void Midedge::Dg(const Mesh &mesh, const VectorXd &q, int faceid, const Vector4d &prefactor, VectorXd &partials)
 {
 
     Vector3d qs[3];
@@ -223,7 +223,7 @@ void Midedge::Dg(const Mesh &mesh, int faceid, const Vector4d &prefactor, Vector
     for(int i=0; i<3; i++)
     {
         idx[i] = mesh.faceVerts(faceid)[i];
-        qs[i] = mesh.vertPos(idx[i]);
+        qs[i] = q.segment<3>(3*idx[i]);
     }
     vector<Matrix3d> partials3;
     Dg(qs[0], qs[1], qs[2], partials3);
@@ -240,13 +240,13 @@ void Midedge::Dg(const Mesh &mesh, int faceid, const Vector4d &prefactor, Vector
     }
 }
 
-Vector4d Midedge::b(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid)
+Vector4d Midedge::b(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivatives &nderivs, int faceid)
 {
     Vector3d ns[3];
     Vector3d qs[3];
     for(int i=0; i<3; i++)
     {
-        qs[i] = mesh.vertPos(mesh.faceVerts(faceid)[i]);
+        qs[i] = q.segment<3>(3*mesh.faceVerts(faceid)[i]);
         ns[i] = nderivs.edgeNormal(faceid, i);
     }
     Vector3d b3 = b(qs[0], qs[1], qs[2], ns[0], ns[1], ns[2]);
@@ -255,7 +255,7 @@ Vector4d Midedge::b(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int 
     return result;
 }
 
-void Midedge::Db(const Mesh &mesh, const EdgeNormalDerivatives &dnormals, int faceid, const Vector4d &prefactor, VectorXd &partials)
+void Midedge::Db(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivatives &dnormals, int faceid, const Vector4d &prefactor, VectorXd &partials)
 {
     Vector3d ns[3];
     int idx[3];
@@ -263,7 +263,7 @@ void Midedge::Db(const Mesh &mesh, const EdgeNormalDerivatives &dnormals, int fa
     for(int i=0; i<3; i++)
     {
         idx[i] = mesh.faceVerts(faceid)[i];
-        qs[i] = mesh.vertPos(idx[i]);
+        qs[i] = q.segment<3>(3*idx[i]);
         ns[i] = dnormals.edgeNormal(faceid, i);
     }
 
@@ -368,39 +368,39 @@ void Midedge::DmatInv(const Vector4d &m, Matrix4d &partials)
 
 }
 
-double Midedge::H(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid)
+double Midedge::H(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivatives &nderivs, int faceid)
 {
-    return 0.5*trace(matMult(matInv(g(mesh, faceid)), b(mesh, nderivs, faceid)));
+    return 0.5*trace(matMult(matInv(g(mesh, q, faceid)), b(mesh, q, nderivs, faceid)));
 }
 
-void Midedge::DH(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, double prefactor, VectorXd &partials)
+void Midedge::DH(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivatives &nderivs, int faceid, double prefactor, VectorXd &partials)
 {
-    Vector4d gmat = g(mesh, faceid);
-    Vector4d bmat = b(mesh, nderivs, faceid);
+    Vector4d gmat = g(mesh, q, faceid);
+    Vector4d bmat = b(mesh, q, nderivs, faceid);
     Matrix4d invpartials;
     DmatInv(gmat, invpartials);
     Matrix4d m1partials, m2partials;
     DmatMult(matInv(gmat), bmat, m1partials, m2partials);
     Vector4d prefactor1 = 0.5*prefactor*((Dtrace.transpose()*m1partials)*invpartials);
-    Dg(mesh, faceid, prefactor1, partials);
+    Dg(mesh, q, faceid, prefactor1, partials);
     Vector4d prefactor2 = 0.5*prefactor*(Dtrace.transpose()*m2partials);
-    Db(mesh, nderivs, faceid, prefactor2, partials);
+    Db(mesh, q, nderivs, faceid, prefactor2, partials);
 }
 
-double Midedge::K(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid)
+double Midedge::K(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivatives &nderivs, int faceid)
 {
-    Vector4d bmat = b(mesh, nderivs, faceid);
-    Vector4d gmat = g(mesh, faceid);
+    Vector4d bmat = b(mesh, q, nderivs, faceid);
+    Vector4d gmat = g(mesh, q, faceid);
     Vector4d ginv = matInv(gmat);
     Vector4d ginvb = matMult(ginv, bmat);
     return det(ginvb);
 }
 
-void Midedge::DK(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, double prefactor, VectorXd &partials)
+void Midedge::DK(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivatives &nderivs, int faceid, double prefactor, VectorXd &partials)
 {
     Vector4d detpartials;
-    Vector4d gmat = g(mesh, faceid);
-    Vector4d bmat = b(mesh, nderivs, faceid);
+    Vector4d gmat = g(mesh, q, faceid);
+    Vector4d bmat = b(mesh, q, nderivs, faceid);
     Vector4d ginv = matInv(gmat);
     Ddet(matMult(ginv, bmat), detpartials);
     Matrix4d invpartials;
@@ -408,35 +408,35 @@ void Midedge::DK(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int fac
     Matrix4d m1partials, m2partials;
     DmatMult(ginv, bmat, m1partials, m2partials);
     Vector4d prefactor1 = prefactor*((detpartials.transpose()*m1partials)*invpartials);
-    Dg(mesh, faceid, prefactor1, partials);
+    Dg(mesh, q, faceid, prefactor1, partials);
     Vector4d prefactor2 = prefactor*detpartials.transpose()*m2partials;
-    Db(mesh, nderivs, faceid, prefactor2, partials);
+    Db(mesh, q, nderivs, faceid, prefactor2, partials);
 }
 
-Vector4d Midedge::c(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid)
+Vector4d Midedge::c(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivatives &nderivs, int faceid)
 {
-    return 2.0*H(mesh, nderivs, faceid)*b(mesh, nderivs, faceid) - K(mesh, nderivs, faceid)*g(mesh, faceid);
+    return 2.0*H(mesh, q, nderivs, faceid)*b(mesh, q, nderivs, faceid) - K(mesh, q, nderivs, faceid)*g(mesh, q, faceid);
 }
 
-void Midedge::Dc(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, int faceid, const Vector4d &prefactor, VectorXd &partials)
+void Midedge::Dc(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivatives &nderivs, int faceid, const Vector4d &prefactor, VectorXd &partials)
 {
-    Vector4d gmat = g(mesh, faceid);
-    Vector4d bmat = b(mesh, nderivs, faceid);
-    Db(mesh, nderivs, faceid, 2.0*H(mesh, nderivs, faceid)*prefactor, partials);
-    Dg(mesh, faceid, - K(mesh, nderivs, faceid)*prefactor, partials);
-    DH(mesh, nderivs, faceid, 2.0*prefactor.dot(bmat), partials);
-    DK(mesh, nderivs, faceid, -prefactor.dot(gmat), partials);
+    Vector4d gmat = g(mesh, q, faceid);
+    Vector4d bmat = b(mesh, q, nderivs, faceid);
+    Db(mesh, q, nderivs, faceid, 2.0*H(mesh, q, nderivs, faceid)*prefactor, partials);
+    Dg(mesh, q ,faceid, - K(mesh, q, nderivs, faceid)*prefactor, partials);
+    DH(mesh, q, nderivs, faceid, 2.0*prefactor.dot(bmat), partials);
+    DK(mesh, q, nderivs, faceid, -prefactor.dot(gmat), partials);
 }
 
 
-double Midedge::elasticEnergyOne(const Mesh &mesh, const PrecomputedFaceQuantities &data, int faceid, const ElasticParameters &params)
+double Midedge::elasticEnergyOne(const Mesh &mesh, const VectorXd &q, const PrecomputedFaceQuantities &data, int faceid, const ElasticParameters &params)
 {
     double A = data.intrinsicArea;
     double trgminusI = data.trgminusI;
     double trb = data.trb;
     double trc = data.trc;
 
-    assert(!isnan(A));
+    assert(!std::isnan(A));
 
     double result = params.h*A*trgminusI*trgminusI;
 
@@ -445,11 +445,11 @@ double Midedge::elasticEnergyOne(const Mesh &mesh, const PrecomputedFaceQuantiti
                 + A*2.0*trb*trb
                 );
 
-    assert(!isnan(result));
+    assert(!std::isnan(result));
     return result;
 }
 
-void Midedge::DelasticEnergyOne(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, const PrecomputedFaceQuantities &data, int faceid, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result)
+void Midedge::DelasticEnergyOne(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivatives &nderivs, const PrecomputedFaceQuantities &data, int faceid, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result)
 {
     Vector4d I(1.0, 0, 0, 1.0);
     const Vector4d &gbarinv = data.gbarinv;
@@ -473,18 +473,18 @@ void Midedge::DelasticEnergyOne(const Mesh &mesh, const EdgeNormalDerivatives &n
                                     +2.0*coeff3*A*2.0*trc
                                     )*gbarprefactor;
 
-    Dg(mesh, faceid, prefactor*totalgprefactor, result);
+    Dg(mesh, q, faceid, prefactor*totalgprefactor, result);
 
     Vector4d totalbprefactor = (coeff3*A*4.0*trb
                                      )*gbarprefactor;
 
-    Db(mesh, nderivs, faceid, prefactor*totalbprefactor, result);
+    Db(mesh, q, nderivs, faceid, prefactor*totalbprefactor, result);
 
     Vector4d totalcprefactor = coeff3*A*4.0*trgminusI*gbarprefactor;
-    Dc(mesh, nderivs, faceid, prefactor*totalcprefactor, result);
+    Dc(mesh, q, nderivs, faceid, prefactor*totalcprefactor, result);
 }
 
-double Midedge::elasticEnergyTwo(const Mesh &mesh, const PrecomputedFaceQuantities &data, int faceid, const ElasticParameters &params)
+double Midedge::elasticEnergyTwo(const Mesh &mesh, const VectorXd &q, const PrecomputedFaceQuantities &data, int faceid, const ElasticParameters &params)
 {
     const Vector4d I(1.0, 0, 0, 1.0);
     const Vector4d &gbarinv = data.gbarinv;
@@ -501,11 +501,11 @@ double Midedge::elasticEnergyTwo(const Mesh &mesh, const PrecomputedFaceQuantiti
                 + A*trace(matMult( matMult(gbarinv, bmat), matMult(gbarinv, bmat) ))
                 );
 
-    assert(!isnan(result));
+    assert(!std::isnan(result));
     return result;
 }
 
-void Midedge::DelasticEnergyTwo(const Mesh &mesh, const EdgeNormalDerivatives &nderivs, const PrecomputedFaceQuantities &data, int faceid, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result)
+void Midedge::DelasticEnergyTwo(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivatives &nderivs, const PrecomputedFaceQuantities &data, int faceid, const ElasticParameters &params, double prefactor, Eigen::VectorXd &result)
 {
     const Vector4d I(1.0, 0, 0, 1.0);
     const Vector4d &gbarinv = data.gbarinv;
@@ -543,20 +543,21 @@ void Midedge::DelasticEnergyTwo(const Mesh &mesh, const EdgeNormalDerivatives &n
             + coeff3*A*4.0*prefactor3b
             ;
 
-    Dg(mesh, faceid, prefactor*totalgprefactor, result);
+    Dg(mesh, q, faceid, prefactor*totalgprefactor, result);
 
     Vector4d totalbprefactor = coeff3*A*4.0*prefactor3c
             ;
 
-    Db(mesh, nderivs, faceid, prefactor*totalbprefactor, result);
+    Db(mesh, q, nderivs, faceid, prefactor*totalbprefactor, result);
 
     Vector4d totalcprefactor = coeff3*A*4.0*prefactor3a;
 
-    Dc(mesh, nderivs, faceid, prefactor*totalcprefactor, result);
+    Dc(mesh, q, nderivs, faceid, prefactor*totalcprefactor, result);
 }
 
-void Midedge::elasticEnergy(const Mesh &mesh, const ElasticParameters &params, VectorXd *derivs, VectorXd *energies)
+double Midedge::elasticEnergy(const Mesh &mesh, const VectorXd &q, const ElasticParameters &params, VectorXd *derivs, VectorXd *energies)
 {
+    double total = 0;
     if(derivs)
     {
         if(derivs->size() != 3*mesh.numVertices())
@@ -566,7 +567,7 @@ void Midedge::elasticEnergy(const Mesh &mesh, const ElasticParameters &params, V
     if(energies)
         energies->resize(mesh.numFaces());
     EdgeNormalDerivatives nderivs;
-    precomputeEdgeNormalDerivatives(mesh, nderivs);
+    precomputeEdgeNormalDerivatives(mesh, q, nderivs);
 
     const Vector4d I(1.0, 0.0, 0.0, 1.0);
 
@@ -577,25 +578,31 @@ void Midedge::elasticEnergy(const Mesh &mesh, const ElasticParameters &params, V
         PrecomputedFaceQuantities data;
 
         data.gbarinv = matInv(mesh.faceMetric(i));
-        data.b = b(mesh, nderivs, i);
-        data.c = c(mesh, nderivs, i);
-        data.g = g(mesh, i);
+        data.b = b(mesh, q, nderivs, i);
+        data.c = c(mesh, q, nderivs, i);
+        data.g = g(mesh, q, i);
         data.intrinsicArea = intrinsicArea(mesh, i, params);
         data.trgminusI = trace(matMult(data.gbarinv, data.g) - I);
         data.trb = trace(matMult(data.gbarinv, data.b));
         data.trc = trace(matMult(data.gbarinv, data.c));
 
-        double result = params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio)*elasticEnergyOne(mesh, data, i, params);
-        result += params.YoungsModulus/8.0/(1.0+params.PoissonRatio)*elasticEnergyTwo(mesh, data, i, params);
+        double result = params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio)*elasticEnergyOne(mesh, q, data, i, params);
+        result += params.YoungsModulus/8.0/(1.0+params.PoissonRatio)*elasticEnergyTwo(mesh, q, data, i, params);
 
         if(derivs)
         {
-            DelasticEnergyOne(mesh, nderivs, data, i, params, params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio), *derivs);
-            DelasticEnergyTwo(mesh, nderivs, data, i, params, params.YoungsModulus/8.0/(1.0+params.PoissonRatio), *derivs);
+            DelasticEnergyOne(mesh, q, nderivs, data, i, params, params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio), *derivs);
+            DelasticEnergyTwo(mesh, q, nderivs, data, i, params, params.YoungsModulus/8.0/(1.0+params.PoissonRatio), *derivs);
         }
+
+#pragma omp atomic
+        total += result;
+
         if(energies)
             (*energies)[i] = result;
     }
+
+    return total;
 }
 
 double Midedge::intrinsicArea(const Mesh &mesh, int faceid, const ElasticParameters &params)
@@ -605,7 +612,7 @@ double Midedge::intrinsicArea(const Mesh &mesh, int faceid, const ElasticParamet
     return 0.5*params.scale*params.scale*sqrt(gdet);
 }
 
-void Midedge::precomputeEdgeNormalDerivatives(const Mesh &mesh, EdgeNormalDerivatives &dnormals)
+void Midedge::precomputeEdgeNormalDerivatives(const Mesh &mesh, const VectorXd &q, EdgeNormalDerivatives &dnormals)
 {
     int nentries = 3*mesh.numFaces();
     dnormals.edgeNormalsPartials.resize(nentries);
@@ -629,7 +636,7 @@ void Midedge::precomputeEdgeNormalDerivatives(const Mesh &mesh, EdgeNormalDeriva
             assert(offset != -1);
             Vector3d qs[3];
             for(int j=0; j<3; j++)
-                qs[j] = mesh.vertPos(hinge[j]);
+                qs[j] = q.segment<3>(3*hinge[j]);
             DfaceNormal(qs[0], qs[1], qs[2], dnormals.edgeNormalsPartials[3*face+offset]);
             dnormals.edgeNormalsPartialIndices[3*face+offset].push_back(hinge[0]);
             dnormals.edgeNormalsPartialIndices[3*face+offset].push_back(hinge[1]);
@@ -650,7 +657,7 @@ void Midedge::precomputeEdgeNormalDerivatives(const Mesh &mesh, EdgeNormalDeriva
                 assert(offset != -1);
                 Vector3d qs[4];
                 for(int j=0; j<4; j++)
-                    qs[j] = mesh.vertPos(hinge[j]);
+                    qs[j] = q.segment<3>(3*hinge[j]);
                 DdiamondEdgeNormal(qs[0], qs[1], qs[2], qs[3], dnormals.edgeNormalsPartials[3*face+offset]);
                 for(int j=0; j<4; j++)
                     dnormals.edgeNormalsPartialIndices[3*face+offset].push_back(hinge[j]);
@@ -660,26 +667,26 @@ void Midedge::precomputeEdgeNormalDerivatives(const Mesh &mesh, EdgeNormalDeriva
     }    
 }
 
-void Midedge::gaussianCurvature(const Mesh &mesh, VectorXd &Ks)
+void Midedge::gaussianCurvature(const Mesh &mesh, const VectorXd &q, VectorXd &Ks)
 {
     int nfaces = mesh.numFaces();
     Ks.resize(nfaces);
     EdgeNormalDerivatives nderivs;
-    precomputeEdgeNormalDerivatives(mesh, nderivs);
+    precomputeEdgeNormalDerivatives(mesh, q, nderivs);
     for(int i=0; i<nfaces; i++)
     {
-        Ks[i] = K(mesh, nderivs, i);
+        Ks[i] = K(mesh, q, nderivs, i);
     }
 }
 
-void Midedge::meanCurvature(const Mesh &mesh, VectorXd &Hs)
+void Midedge::meanCurvature(const Mesh &mesh, const VectorXd &q, VectorXd &Hs)
 {
     int nfaces = mesh.numFaces();
     Hs.resize(nfaces);
     EdgeNormalDerivatives nderivs;
-    precomputeEdgeNormalDerivatives(mesh, nderivs);
+    precomputeEdgeNormalDerivatives(mesh, q, nderivs);
     for(int i=0; i<nfaces; i++)
     {
-        Hs[i] = H(mesh, nderivs, i);
+        Hs[i] = H(mesh, q, nderivs, i);
     }
 }

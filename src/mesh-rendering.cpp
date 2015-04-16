@@ -78,8 +78,8 @@ void SimulationMesh::render()
         {
             for(int vert=0; vert<3; vert++)
             {
-                double val = min(0.0001, energies_[face]);
-                Vector3d color = colormap(val, 0.0001);
+                double val = min(0.00001, energies_[face]);
+                Vector3d color = colormap(val, 0.00001);
 
                 int vertid = faceVerts(face)[vert];
                 Vector3d pt = vertPos(vertid);

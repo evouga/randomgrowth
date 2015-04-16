@@ -44,7 +44,7 @@ bool SimulationMesh::pull(Controller &cont)
         deformedPosition_ += h*v;
         VectorXd gradq;
         std::cout << "computing energy" << std::endl;
-        Midedge::elasticEnergy(*this,params_,&gradq,&energies_);
+        Midedge::elasticEnergy(*this, deformedPosition_, params_,&gradq,&energies_);
 
         SparseMatrix<double> Minv;
         buildMetricInvMassMatrix(Minv);
@@ -60,10 +60,10 @@ bool SimulationMesh::pull(Controller &cont)
         //std::cout << "Regular force " << F.norm() << " pressure force " << pressureF.norm() << " pressure " << pressure << " initialV " << initialV << " curV " << curV << std::endl;
 
         VectorXd dampv = h*Minv*params_.dampingCoeff*v;
-        for(int i=0; i<v.size(); i++)
+        for(int j=0; j<v.size(); j++)
         {
-            if(fabs(dampv[i]) > fabs(v[i]))
-                dampv[i] = v[i];
+            if(fabs(dampv[j]) > fabs(v[j]))
+                dampv[j] = v[j];
         }
 
         v -= dampv;

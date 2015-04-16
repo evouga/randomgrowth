@@ -12,7 +12,8 @@ TARGET = randomgrowth
 TEMPLATE = app
 
 INCLUDEPATH += ../ext/eigen
-QMAKE_CXXFLAGS += -g -fopenmp
+QMAKE_CXX = g++-4.8
+QMAKE_CXXFLAGS += -g -fopenmp -std=c++11
 LIBS += -lpng -lGL -lGLU -fopenmp
 
 
