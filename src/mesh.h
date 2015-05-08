@@ -35,8 +35,9 @@ public:
 
     void resetRestMetric();
 
-protected:
+
     Eigen::VectorXd deformedPosition_;
+ protected:
     Eigen::Matrix3Xi faces_;
     Eigen::Matrix2Xi edgeFaces_;
     Eigen::Matrix2Xi edgeVerts_;

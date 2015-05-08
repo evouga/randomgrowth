@@ -572,7 +572,7 @@ double Midedge::elasticEnergy(const Mesh &mesh, const VectorXd &q, const Elastic
     const Vector4d I(1.0, 0.0, 0.0, 1.0);
 
     int nfaces = mesh.numFaces();
-    #pragma omp parallel for
+//    #pragma omp parallel for
     for(int i=0; i<nfaces; i++)
     {        
         PrecomputedFaceQuantities data;
@@ -595,7 +595,7 @@ double Midedge::elasticEnergy(const Mesh &mesh, const VectorXd &q, const Elastic
             DelasticEnergyTwo(mesh, q, nderivs, data, i, params, params.YoungsModulus/8.0/(1.0+params.PoissonRatio), *derivs);
         }
 
-#pragma omp atomic
+//#pragma omp atomic
         total += result;
 
         if(energies)
@@ -620,7 +620,7 @@ void Midedge::precomputeEdgeNormalDerivatives(const Mesh &mesh, const VectorXd &
     dnormals.normals.resize(nentries);
 
     int nedges = mesh.numEdges();
-    #pragma omp parallel for
+//    #pragma omp parallel for
     for(int i=0; i<nedges; i++)
     {
         Vector4i hinge = mesh.buildHinge(i);

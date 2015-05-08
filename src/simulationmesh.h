@@ -55,6 +55,8 @@ public:
     void setConeHeights(double height);
     void setFlatCone(double height);
 
+    Eigen::VectorXd energies_;
+
 private:
     void buildMetricInvMassMatrix(Eigen::SparseMatrix<double> &M) const;
     void metricBarycentricDualAreas(Eigen::VectorXd &areas) const;
@@ -93,7 +95,6 @@ private:
 
     int frameno_;
     ProblemParameters params_;
-    Eigen::VectorXd energies_;
 
     // The rendering thread reads the mesh and its edge data. Any function must lock this before writing to
     // to the mesh. (The rendering thread does not write to the mesh so reads from the worker thread do not
