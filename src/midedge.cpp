@@ -17,7 +17,11 @@ void EdgeNormalDerivatives::DedgeNormal(int face, int vertno, const Vector3d &pr
     int numpartials = (int)edgeNormalsPartials[3*face+vertno].size();
     for(int i=0; i<numpartials; i++)
     {
-        partials.segment<3>(3*edgeNormalsPartialIndices[3*face+vertno][i]) += prefactor.transpose()*edgeNormalsPartials[3*face+vertno][i];
+        for(int j=0; j<3; j++)
+        {
+            #pragma omp atomic
+            partials[3*edgeNormalsPartialIndices[3*face+vertno][i] + j] += (prefactor.transpose()*edgeNormalsPartials[3*face+vertno][i])[j];
+        }
     }
 }
 
@@ -232,9 +236,13 @@ void Midedge::Dg(const Mesh &mesh, const VectorXd &q, int faceid, const Vector4d
     {
         for(int j=0; j<3; j++)
         {
+            #pragma omp atomic
             partials[3*idx[i]+j] += partials3[i](0,j)*prefactor[0];
+            #pragma omp atomic
             partials[3*idx[i]+j] += partials3[i](1,j)*prefactor[1];
+            #pragma omp atomic
             partials[3*idx[i]+j] += partials3[i](1,j)*prefactor[2];
+            #pragma omp atomic
             partials[3*idx[i]+j] += partials3[i](2,j)*prefactor[3];
         }
     }
@@ -275,7 +283,10 @@ void Midedge::Db(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivative
     {
         Vector3d prod = condensedPrefactor.transpose()*partials3[i];
         for(int j=0; j<3; j++)
+        {
+            #pragma omp atomic
             partials[3*idx[i]+j] += prod[j];
+        }
     }
     for(int i=0; i<3; i++)
     {
@@ -572,7 +583,7 @@ double Midedge::elasticEnergy(const Mesh &mesh, const VectorXd &q, const Elastic
     const Vector4d I(1.0, 0.0, 0.0, 1.0);
 
     int nfaces = mesh.numFaces();
-//    #pragma omp parallel for
+    #pragma omp parallel for
     for(int i=0; i<nfaces; i++)
     {        
         PrecomputedFaceQuantities data;
@@ -595,7 +606,7 @@ double Midedge::elasticEnergy(const Mesh &mesh, const VectorXd &q, const Elastic
             DelasticEnergyTwo(mesh, q, nderivs, data, i, params, params.YoungsModulus/8.0/(1.0+params.PoissonRatio), *derivs);
         }
 
-//#pragma omp atomic
+        #pragma omp atomic
         total += result;
 
         if(energies)
@@ -620,7 +631,7 @@ void Midedge::precomputeEdgeNormalDerivatives(const Mesh &mesh, const VectorXd &
     dnormals.normals.resize(nentries);
 
     int nedges = mesh.numEdges();
-//    #pragma omp parallel for
+    #pragma omp parallel for
     for(int i=0; i<nedges; i++)
     {
         Vector4i hinge = mesh.buildHinge(i);
