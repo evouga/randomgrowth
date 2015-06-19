@@ -37,6 +37,8 @@ public:
     enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
 
     bool pull(Controller &cont);
+    void opt();
+    void sim();
 
     const ProblemParameters &getParameters() const;
     void setParameters(ProblemParameters params);

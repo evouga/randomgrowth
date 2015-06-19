@@ -586,12 +586,13 @@ double Midedge::elasticEnergy(const Mesh &mesh, const VectorXd &q, const Elastic
         data.trb = trace(matMult(data.gbarinv, data.b));
         data.trc = trace(matMult(data.gbarinv, data.c));
 
-        double result = params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio)*elasticEnergyOne(mesh, q, data, i, params);
+        double result = 0;
+//        double result = params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio)*elasticEnergyOne(mesh, q, data, i, params);
         result += params.YoungsModulus/8.0/(1.0+params.PoissonRatio)*elasticEnergyTwo(mesh, q, data, i, params);
 
         if(derivs)
         {
-            DelasticEnergyOne(mesh, q, nderivs, data, i, params, params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio), *derivs);
+//            DelasticEnergyOne(mesh, q, nderivs, data, i, params, params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio), *derivs);
             DelasticEnergyTwo(mesh, q, nderivs, data, i, params, params.YoungsModulus/8.0/(1.0+params.PoissonRatio), *derivs);
         }
 

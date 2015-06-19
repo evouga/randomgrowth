@@ -10,6 +10,7 @@ using namespace std;
 using namespace Eigen;
 
 const double PI = 3.1415926535898;
+ofstream outfile;
 
 static lbfgsfloatval_t evaluate(
     void *instance,
@@ -58,6 +59,8 @@ static int progress(
     printf("Iteration %d:\n", k);
     printf("  xnorm = %f, gnorm = %f, step = %f\n", xnorm, gnorm, step);
     printf("\n");
+
+    cout << "energy: " << fx << endl;
     return 0;
 }
 
@@ -72,6 +75,92 @@ double SimulationMesh::truncatedConeVolume(double startHeight, double curHeight)
     return totV-topV;
 }
 
+void SimulationMesh::opt()
+{
+    int i, ret = 0;
+    lbfgsfloatval_t fx;
+    lbfgsfloatval_t *x = lbfgs_malloc(3*this->numVertices());
+    lbfgs_parameter_t param;
+    if (x == NULL) {
+        printf("ERROR: Failed to allocate a memory block for variables.\n");
+//        return 1;
+    }
+    /* Initialize the variables. */
+    for (i = 0;i < 3*this->numVertices();i ++) {
+        x[i] = deformedPosition_[i];
+    }
+    /* Initialize the parameters for the L-BFGS optimization. */
+    lbfgs_parameter_init(&param);
+    param.epsilon = 1e-3;
+    param.linesearch = LBFGS_LINESEARCH_BACKTRACKING;
+//    param.max_linesearch = 1000;
+
+    /*
+        Start the L-BFGS optimization; this will invoke the callback functions
+        evaluate() and progress() when necessary.
+     */
+    ret = lbfgs(3*this->numVertices(), x, &fx, evaluate, progress, this, &param);
+
+    cout << "L-BFGS optimization terminated with status code = " << ret << endl;
+    /* Report the result. */
+
+    for (i = 0;i < 3*this->numVertices();i ++) {
+        deformedPosition_[i] = x[i];
+    }
+
+    lbfgs_free(x);
+
+    if(ret != 0) {
+        sim();
+    }
+}
+
+void SimulationMesh::sim()
+{
+    double h = params_.eulerTimestep;
+    VectorXd v(3*numVertices());
+    v.setZero();
+//    int numsteps = params_.numEulerIters;
+    int numsteps = 500;
+    double pullMag = params_.pullMag;
+
+    for(int i=0; i<numsteps; i++)
+    {
+        std::cout << "iter " << i << std::endl;
+
+        deformedPosition_ += h*v;
+        VectorXd gradq;
+        std::cout << "computing energy" << std::endl;
+        double fx = Midedge::elasticEnergy(*this, deformedPosition_, params_,&gradq,&energies_);
+
+        SparseMatrix<double> Minv;
+        buildMetricInvMassMatrix(Minv);
+        VectorXd F = -gradq;
+        F[6] += pullMag;
+        F[15] -= pullMag;
+        std::cout << "force magnitude: " << F.norm() << std::endl;
+
+        fx -= pullMag * deformedPosition_[6];
+        fx += pullMag * deformedPosition_[15];
+
+        cout << "energy: " << fx << endl;
+
+        VectorXd dampv = h*Minv*params_.dampingCoeff*v;
+        for(int j=0; j<v.size(); j++)
+        {
+            if(fabs(dampv[j]) > fabs(v[j]))
+                dampv[j] = v[j];
+        }
+
+        v -= dampv;
+
+        v += h*Minv*F;
+
+       std::cout << "done" << std::endl;
+    }
+    opt();
+}
+
 bool SimulationMesh::pull(Controller &cont)
 {
     {
@@ -80,90 +169,49 @@ bool SimulationMesh::pull(Controller &cont)
         params_.dumpParameters(paramfile);
     }
 
-    srand(1234);
-    for(int i=0; i<numVertices(); i++) {
+   srand(1234);
+   for(int i=0; i<numVertices(); i++) {
         deformedPosition_[3*i+2] += randomRange(-1e-10, 1e-10);
-        deformedPosition_[3*i+2] += 0.1 * sin(PI * deformedPosition_[3*i]);
+        deformedPosition_[3*i+2] += 0.05 * sin(PI * deformedPosition_[3*i]);
+//        deformedPosition_[3*i+2] += 0.05 * (deformedPosition_[3*i] - 1) * (deformedPosition_[3*i] - 1);
     }
     resetRestMetric();
 
-    int i, ret = 0;
-    lbfgsfloatval_t fx;
-    lbfgsfloatval_t *x = lbfgs_malloc(3*this->numVertices());
-    lbfgs_parameter_t param;
-    if (x == NULL) {
-        printf("ERROR: Failed to allocate a memory block for variables.\n");
-        return 1;
-    }
-    /* Initialize the variables. */
-    for (i = 0;i < 3*this->numVertices();i ++) {
-        x[i] = deformedPosition_[i];
-    }
-    /* Initialize the parameters for the L-BFGS optimization. */
-    lbfgs_parameter_init(&param);
-//    param.epsilon = 1e-6;
-    param.linesearch = LBFGS_LINESEARCH_BACKTRACKING;
-    /*
-        Start the L-BFGS optimization; this will invoke the callback functions
-        evaluate() and progress() when necessary.
-     */
-    ret = lbfgs(3*this->numVertices(), x, &fx, evaluate, progress, this, &param);
+    outfile.open("energies.txt");
 
-    /* Report the result. */
-    cout << "L-BFGS optimization terminated with status code = " << ret << endl;
+    opt();
 
-    lbfgs_free(x);
+    outfile.close();
+
     return true;
+//    double h = 1e-4;
+//    VectorXd gradq, gradq2;
+//    double energy = Midedge::elasticEnergy(*this, deformedPosition_, params_, &gradq, NULL);
+//    cout << energy << endl;
+//    double val1 = energy - h * gradq.norm() * gradq.norm();
+//    VectorXd newPos = deformedPosition_ - h * gradq;
+//    double energy2 = Midedge::elasticEnergy(*this, newPos, params_, &gradq2, NULL);
+//    double val2 = energy2;
+//    cout << val1 << "\t" << val2 << "\t" << (val1 - val2) << endl;
+//    cout << (energy2 - energy) << endl;
 
-//    double h = params_.eulerTimestep;
-//    VectorXd v(3*numVertices());
-//    v.setZero();
-//    int numsteps = params_.numEulerIters;
-//    double pullMag = params_.pullMag;
-
-//    for(int i=0; i<numVertices(); i++)
-//        deformedPosition_[3*i+2] += randomRange(-1e-10, 1e-10);
-
-//    for(int i=0; i<numsteps; i++)
-//    {
-//        std::cout << "iter " << i << std::endl;
-
-//        deformedPosition_ += h*v;
-//        VectorXd gradq;
-//        std::cout << "computing energy" << std::endl;
-//        Midedge::elasticEnergy(*this, deformedPosition_, params_,&gradq,&energies_);
-
-//        SparseMatrix<double> Minv;
-//        buildMetricInvMassMatrix(Minv);
-//        VectorXd F = -gradq;
-//        F[6] += pullMag;
-//        F[15] -= pullMag;
-//        std::cout << "force magnitude: " << F.norm() << std::endl;
-//        //double curV = truncatedConeVolume(coneHeight, planeZ);
-//        //double pressure = airpressure*(initialV/curV - 1.0);
-//        //const double leakconst = 1e-6;
-//        //initialV = std::max(curV, initialV - leakconst*h*pressure);
-
-//        //std::cout << "Regular force " << F.norm() << " pressure force " << pressureF.norm() << " pressure " << pressure << " initialV " << initialV << " curV " << curV << std::endl;
-
-//        VectorXd dampv = h*Minv*params_.dampingCoeff*v;
-//        for(int j=0; j<v.size(); j++)
-//        {
-//            if(fabs(dampv[j]) > fabs(v[j]))
-//                dampv[j] = v[j];
-//        }
-
-//        v -= dampv;
-
-//        v += h*Minv*F;
-//        if(i%100 == 0)
-//            dumpFrame();
-
-//        std::cout << "done" << std::endl;
-    //}
-
-  //  cont.updateGL();
-    //return true;
+//    VectorXd gradq;
+//    double energy = Midedge::elasticEnergy(*this, deformedPosition_, params_, &gradq, NULL);
+//    VectorXd F = -gradq;
+//    F[6] += params_.pullMag;
+//    F[15] -= params_.pullMag;
+//    energy -= params_.pullMag * deformedPosition_[6];
+//    energy += params_.pullMag * deformedPosition_[15];
+//    double step = 1.0;
+//    for(int k = 0; k < 50; k++) {
+//        VectorXd tempGradq;
+//        VectorXd steppedq = deformedPosition_ + step * F;
+//        double newEnergy = Midedge::elasticEnergy(*this, steppedq, params_, &tempGradq, NULL);
+//        newEnergy -= params_.pullMag * steppedq[6];
+//        newEnergy += params_.pullMag * steppedq[15];
+//        cout << "step: " << step << "\tenergy diff: " << newEnergy - energy << endl;
+//        step /= 2;
+//    }
 }
 
 void SimulationMesh::metricBarycentricDualAreas(VectorXd &areas) const

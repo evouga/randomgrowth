@@ -9,6 +9,7 @@
 
 int main(int argc, char *argv[])
 {
+
     Eigen::initParallel();
     QApplication app(argc, argv);
 
