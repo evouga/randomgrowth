@@ -11,10 +11,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = randomgrowth
 TEMPLATE = app
 
-INCLUDEPATH += ../ext/eigen ../../liblbfgs-1.10/include/
+INCLUDEPATH += ../ext/eigen ../ext/lbfgs/include/
 QMAKE_CXX = g++-4.8
 QMAKE_CXXFLAGS += -g -fopenmp -std=c++11
-LIBS += -lpng -lGL -lGLU -fopenmp -llbfgs
+LIBS += -lpng -lGL -lGLU -fopenmp -L../ext/lbfgs/lib -llbfgs
 
 
 SOURCES += main.cpp\

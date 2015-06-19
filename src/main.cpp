@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
     workthread.start();
     MainWindow window;
     Controller cont(window);
-    cont.moveToThread(&workthread);
-
     window.setController(cont);
+
+    cont.moveToThread(&workthread);
 
     int desktopArea = QApplication::desktop()->width() *
                      QApplication::desktop()->height();
