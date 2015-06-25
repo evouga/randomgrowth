@@ -509,7 +509,7 @@ double Midedge::elasticEnergyTwo(const Mesh &mesh, const VectorXd &q, const Prec
                 A*trace(matMult( matMult(gbarinv, gmat) - I, matMult(gbarinv, gmat) - I));
     result += params.h*params.h*params.h/24.0/params.scale/params.scale * (
                 A*4.0*trace(matMult( matMult(gbarinv, gmat)-I, matMult(gbarinv, cmat) ))
-                + A*trace(matMult( matMult(gbarinv, bmat), matMult(gbarinv, bmat) ))
+                + 2.0*A*trace(matMult( matMult(gbarinv, bmat), matMult(gbarinv, bmat) ))
                 );
 
     assert(!std::isnan(result));
