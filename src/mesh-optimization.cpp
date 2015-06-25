@@ -61,6 +61,7 @@ static int progress(
     printf("\n");
 
     cout << "energy: " << fx << endl;
+    outfile << fx << "\n";
     return 0;
 }
 
@@ -91,7 +92,7 @@ void SimulationMesh::opt()
     }
     /* Initialize the parameters for the L-BFGS optimization. */
     lbfgs_parameter_init(&param);
-    param.epsilon = 1e-3;
+//    param.epsilon = 1e-3;
     param.linesearch = LBFGS_LINESEARCH_BACKTRACKING;
 //    param.max_linesearch = 1000;
 
@@ -144,6 +145,7 @@ void SimulationMesh::sim()
         fx += pullMag * deformedPosition_[15];
 
         cout << "energy: " << fx << endl;
+        outfile << fx << "\n";
 
         VectorXd dampv = h*Minv*params_.dampingCoeff*v;
         for(int j=0; j<v.size(); j++)
@@ -180,6 +182,14 @@ bool SimulationMesh::pull(Controller &cont)
     outfile.open("energies.txt");
 
     opt();
+
+    VectorXd gradq(3*numVertices());
+    Midedge::elasticEnergy(*this, deformedPosition_, params_,&gradq,&energies_);
+    double pullMag = params_.pullMag;
+    gradq[6] -= pullMag;
+    gradq[15] += pullMag;
+
+    cout << "final gnorm: " << gradq.norm() << endl;
 
     outfile.close();
 
