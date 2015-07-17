@@ -5,12 +5,13 @@
 #include <fstream>
 #include <iostream>
 #include <lbfgs.h>
+#include <math.h>
 
 using namespace std;
 using namespace Eigen;
 
 const double PI = 3.1415926535898;
-ofstream outfile;
+//ofstream outfile;
 
 static lbfgsfloatval_t evaluate(
     void *instance,
@@ -56,12 +57,15 @@ static int progress(
         SimulationMesh* simPtr = (SimulationMesh*)instance;
         simPtr->deformedPosition_[i] = x[i];
     }
-    printf("Iteration %d:\n", k);
-    printf("  xnorm = %f, gnorm = %f, step = %f\n", xnorm, gnorm, step);
-    printf("\n");
 
-    cout << "energy: " << fx << endl;
-    outfile << fx << "\n";
+    if(k % 1000 == 0) {
+        printf("Iteration %d:\n", k);
+        printf("  xnorm = %f, gnorm = %f, step = %f\n", xnorm, gnorm, step);
+
+        cout << "energy: " << fx << endl;
+        printf("\n");
+//        outfile << fx << "\n";
+    }
     return 0;
 }
 
@@ -84,7 +88,6 @@ void SimulationMesh::opt()
     lbfgs_parameter_t param;
     if (x == NULL) {
         printf("ERROR: Failed to allocate a memory block for variables.\n");
-//        return 1;
     }
     /* Initialize the variables. */
     for (i = 0;i < 3*this->numVertices();i ++) {
@@ -92,9 +95,7 @@ void SimulationMesh::opt()
     }
     /* Initialize the parameters for the L-BFGS optimization. */
     lbfgs_parameter_init(&param);
-//    param.epsilon = 1e-3;
     param.linesearch = LBFGS_LINESEARCH_BACKTRACKING;
-//    param.max_linesearch = 1000;
 
     /*
         Start the L-BFGS optimization; this will invoke the callback functions
@@ -110,10 +111,6 @@ void SimulationMesh::opt()
     }
 
     lbfgs_free(x);
-
-    if(ret != 0) {
-        sim();
-    }
 }
 
 void SimulationMesh::sim()
@@ -145,7 +142,7 @@ void SimulationMesh::sim()
         fx += pullMag * deformedPosition_[15];
 
         cout << "energy: " << fx << endl;
-        outfile << fx << "\n";
+//        outfile << fx << "\n";
 
         VectorXd dampv = h*Minv*params_.dampingCoeff*v;
         for(int j=0; j<v.size(); j++)
@@ -179,7 +176,9 @@ bool SimulationMesh::pull(Controller &cont)
     }
     resetRestMetric();
 
-    outfile.open("energies.txt");
+    double initDist = sqrt(pow(deformedPosition_[6] - deformedPosition_[15], 2) +
+            pow(deformedPosition_[7] - deformedPosition_[16], 2) +
+            pow(deformedPosition_[8] - deformedPosition_[17], 2));
 
     opt();
 
@@ -191,37 +190,17 @@ bool SimulationMesh::pull(Controller &cont)
 
     cout << "final gnorm: " << gradq.norm() << endl;
 
-    outfile.close();
+    double finalDist = sqrt(pow(deformedPosition_[6] - deformedPosition_[15], 2) +
+                    pow(deformedPosition_[7] - deformedPosition_[16], 2) +
+                    pow(deformedPosition_[8] - deformedPosition_[17], 2));
+
+    double xDist = abs(deformedPosition_[6] - deformedPosition_[15]);
+
+    cout << "initial distance: " << initDist << endl;
+    cout << "final distance: " << finalDist << endl;
+    cout << "final x distance: " << xDist << endl;
 
     return true;
-//    double h = 1e-4;
-//    VectorXd gradq, gradq2;
-//    double energy = Midedge::elasticEnergy(*this, deformedPosition_, params_, &gradq, NULL);
-//    cout << energy << endl;
-//    double val1 = energy - h * gradq.norm() * gradq.norm();
-//    VectorXd newPos = deformedPosition_ - h * gradq;
-//    double energy2 = Midedge::elasticEnergy(*this, newPos, params_, &gradq2, NULL);
-//    double val2 = energy2;
-//    cout << val1 << "\t" << val2 << "\t" << (val1 - val2) << endl;
-//    cout << (energy2 - energy) << endl;
-
-//    VectorXd gradq;
-//    double energy = Midedge::elasticEnergy(*this, deformedPosition_, params_, &gradq, NULL);
-//    VectorXd F = -gradq;
-//    F[6] += params_.pullMag;
-//    F[15] -= params_.pullMag;
-//    energy -= params_.pullMag * deformedPosition_[6];
-//    energy += params_.pullMag * deformedPosition_[15];
-//    double step = 1.0;
-//    for(int k = 0; k < 50; k++) {
-//        VectorXd tempGradq;
-//        VectorXd steppedq = deformedPosition_ + step * F;
-//        double newEnergy = Midedge::elasticEnergy(*this, steppedq, params_, &tempGradq, NULL);
-//        newEnergy -= params_.pullMag * steppedq[6];
-//        newEnergy += params_.pullMag * steppedq[15];
-//        cout << "step: " << step << "\tenergy diff: " << newEnergy - energy << endl;
-//        step /= 2;
-//    }
 }
 
 void SimulationMesh::metricBarycentricDualAreas(VectorXd &areas) const
