@@ -1,7 +1,7 @@
 #include "midedge.h"
 #include "mesh.h"
 #include <Eigen/Dense>
-#include <GL/gl.h>
+//#include <GL/gl.h>
 #include <iostream>
 
 using namespace Eigen;

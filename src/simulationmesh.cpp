@@ -9,7 +9,7 @@ using namespace std;
 SimulationMesh::SimulationMesh() : Mesh(), meshLock_(QMutex::Recursive)
 {
     params_.scale = 0.085;
-    params_.h = .0006; // 0.0027, 0.0021, 0.0009, 0.0007, 0.0004
+    params_.h = .0002; // 0.0027, 0.0021, 0.0009, 0.0007, 0.0004
     params_.YoungsModulus = 2e10;
     params_.PoissonRatio = 0.33;
     params_.rho = 500.0;
@@ -17,7 +17,7 @@ SimulationMesh::SimulationMesh() : Mesh(), meshLock_(QMutex::Recursive)
     params_.eulerTimestep = 1e-6;
     params_.numEulerIters = numeric_limits<int>::max();
 
-    params_.pullMag = 10;
+    params_.pullMag = 0.5;
 
     params_.smoothShade = true;
     params_.showWireframe = true;

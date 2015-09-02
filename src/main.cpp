@@ -25,13 +25,15 @@ int main(int argc, char *argv[])
 
     cont.moveToThread(&workthread);
 
-    int desktopArea = QApplication::desktop()->width() *
-                     QApplication::desktop()->height();
-    int widgetArea = window.width() * window.height();
-    if (((float)widgetArea / (float)desktopArea) < 0.75f)
-        window.show();
-    else
-        window.showMaximized();
+    cont.pull();
+
+//    int desktopArea = QApplication::desktop()->width() *
+//                     QApplication::desktop()->height();
+//    int widgetArea = window.width() * window.height();
+//    if (((float)widgetArea / (float)desktopArea) < 0.75f)
+//        window.show();
+//    else
+//        window.showMaximized();
 
     int ret = app.exec();
     workthread.quit();

@@ -12,6 +12,7 @@ using namespace Eigen;
 
 const double PI = 3.1415926535898;
 //ofstream outfile;
+ofstream distances;
 
 static lbfgsfloatval_t evaluate(
     void *instance,
@@ -168,8 +169,14 @@ bool SimulationMesh::pull(Controller &cont)
         params_.dumpParameters(paramfile);
     }
 
-   srand(1234);
-   for(int i=0; i<numVertices(); i++) {
+    cout << "we're running!" << endl;
+
+//    distances.open("distances.txt");
+
+//    do {
+
+    srand(1234);
+    for(int i=0; i<numVertices(); i++) {
         deformedPosition_[3*i+2] += randomRange(-1e-10, 1e-10);
         deformedPosition_[3*i+2] += 0.05 * sin(PI * deformedPosition_[3*i]);
 //        deformedPosition_[3*i+2] += 0.05 * (deformedPosition_[3*i] - 1) * (deformedPosition_[3*i] - 1);
@@ -199,6 +206,14 @@ bool SimulationMesh::pull(Controller &cont)
     cout << "initial distance: " << initDist << endl;
     cout << "final distance: " << finalDist << endl;
     cout << "final x distance: " << xDist << endl;
+//    distances << finalDist << "\n";
+
+//    cont.importOBJ("../meshes/rectangle.obj");
+//    params_.pullMag += 0.5;
+
+//    } while(params_.pullMag <= 10);
+
+//    distances.close();
 
     return true;
 }

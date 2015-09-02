@@ -15,7 +15,8 @@ Controller::Controller(MainWindow &mw) : mw_(mw), m_()
 {
     ProblemParameters params = m_.getParameters();
     mw_.setParameters(params);    
-    importOBJ("../meshes/rectangle.obj");
+//    importOBJ("../meshes/rectangle.obj");
+    importOBJ("../../triangle/meshes/crazy/crazy.obj");
 }
 
 void Controller::quit()
