@@ -11,8 +11,8 @@ using namespace std;
 using namespace Eigen;
 
 const double PI = 3.1415926535898;
-//ofstream outfile;
 ofstream distances;
+ofstream gnorms;
 
 static lbfgsfloatval_t evaluate(
     void *instance,
@@ -65,7 +65,6 @@ static int progress(
 
         cout << "energy: " << fx << endl;
         printf("\n");
-//        outfile << fx << "\n";
     }
     return 0;
 }
@@ -114,52 +113,53 @@ void SimulationMesh::opt()
     lbfgs_free(x);
 }
 
-void SimulationMesh::sim()
-{
-    double h = params_.eulerTimestep;
-    VectorXd v(3*numVertices());
-    v.setZero();
+// currently unused code
+//void SimulationMesh::sim()
+//{
+//    double h = params_.eulerTimestep;
+//    VectorXd v(3*numVertices());
+//    v.setZero();
 //    int numsteps = params_.numEulerIters;
-    int numsteps = 500;
-    double pullMag = params_.pullMag;
+//    int numsteps = 500;
+//    double pullMag = params_.pullMag;
 
-    for(int i=0; i<numsteps; i++)
-    {
-        std::cout << "iter " << i << std::endl;
+//    for(int i=0; i<numsteps; i++)
+//    {
+//        std::cout << "iter " << i << std::endl;
 
-        deformedPosition_ += h*v;
-        VectorXd gradq;
-        std::cout << "computing energy" << std::endl;
-        double fx = Midedge::elasticEnergy(*this, deformedPosition_, params_,&gradq,&energies_);
+//        deformedPosition_ += h*v;
+//        VectorXd gradq;
+//        std::cout << "computing energy" << std::endl;
+//        double fx = Midedge::elasticEnergy(*this, deformedPosition_, params_,&gradq,&energies_);
 
-        SparseMatrix<double> Minv;
-        buildMetricInvMassMatrix(Minv);
-        VectorXd F = -gradq;
-        F[6] += pullMag;
-        F[15] -= pullMag;
-        std::cout << "force magnitude: " << F.norm() << std::endl;
+//        SparseMatrix<double> Minv;
+//        buildMetricInvMassMatrix(Minv);
+//        VectorXd F = -gradq;
+//        F[6] += pullMag;
+//        F[15] -= pullMag;
+//        std::cout << "force magnitude: " << F.norm() << std::endl;
 
-        fx -= pullMag * deformedPosition_[6];
-        fx += pullMag * deformedPosition_[15];
+//        fx -= pullMag * deformedPosition_[6];
+//        fx += pullMag * deformedPosition_[15];
 
-        cout << "energy: " << fx << endl;
+//        cout << "energy: " << fx << endl;
 //        outfile << fx << "\n";
 
-        VectorXd dampv = h*Minv*params_.dampingCoeff*v;
-        for(int j=0; j<v.size(); j++)
-        {
-            if(fabs(dampv[j]) > fabs(v[j]))
-                dampv[j] = v[j];
-        }
+//        VectorXd dampv = h*Minv*params_.dampingCoeff*v;
+//        for(int j=0; j<v.size(); j++)
+//        {
+//            if(fabs(dampv[j]) > fabs(v[j]))
+//                dampv[j] = v[j];
+//        }
 
-        v -= dampv;
+//        v -= dampv;
 
-        v += h*Minv*F;
+//        v += h*Minv*F;
 
-       std::cout << "done" << std::endl;
-    }
-    opt();
-}
+//       std::cout << "done" << std::endl;
+//    }
+//    opt();
+//}
 
 bool SimulationMesh::pull(Controller &cont)
 {
@@ -171,9 +171,8 @@ bool SimulationMesh::pull(Controller &cont)
 
     cout << "we're running!" << endl;
 
-//    distances.open("distances.txt");
-
-//    do {
+    distances.open("../output/"+cont.meshName+"/distances.txt");
+    gnorms.open("../output/"+cont.meshName+"/gnorms.txt");
 
     srand(1234);
     for(int i=0; i<numVertices(); i++) {
@@ -183,9 +182,7 @@ bool SimulationMesh::pull(Controller &cont)
     }
     resetRestMetric();
 
-    double initDist = sqrt(pow(deformedPosition_[6] - deformedPosition_[15], 2) +
-            pow(deformedPosition_[7] - deformedPosition_[16], 2) +
-            pow(deformedPosition_[8] - deformedPosition_[17], 2));
+    do {
 
     opt();
 
@@ -201,19 +198,17 @@ bool SimulationMesh::pull(Controller &cont)
                     pow(deformedPosition_[7] - deformedPosition_[16], 2) +
                     pow(deformedPosition_[8] - deformedPosition_[17], 2));
 
-    double xDist = abs(deformedPosition_[6] - deformedPosition_[15]);
-
-    cout << "initial distance: " << initDist << endl;
     cout << "final distance: " << finalDist << endl;
-    cout << "final x distance: " << xDist << endl;
-//    distances << finalDist << "\n";
+    distances << finalDist << endl;
+    gnorms << gradq.norm() << endl;
 
 //    cont.importOBJ("../meshes/rectangle.obj");
-//    params_.pullMag += 0.5;
+    params_.pullMag += 0.5;
 
-//    } while(params_.pullMag <= 10);
+    } while(params_.pullMag <= 10);
 
-//    distances.close();
+    distances.close();
+    gnorms.close();
 
     return true;
 }

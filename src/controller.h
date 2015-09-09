@@ -4,6 +4,7 @@
 #include "simulationmesh.h"
 #include <Eigen/Core>
 #include <QObject>
+#include <string>
 
 class MainWindow;
 
@@ -15,6 +16,8 @@ public:
     Controller(MainWindow &mw);
 
     void renderMesh();
+
+    std::string meshName = "diag";
 
 public slots:
     void exportOBJ(std::string filename);
