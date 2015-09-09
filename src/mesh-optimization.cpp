@@ -201,6 +201,7 @@ bool SimulationMesh::pull(Controller &cont)
     cout << "final distance: " << finalDist << endl;
     distances << finalDist << endl;
     gnorms << gradq.norm() << endl;
+    cont.exportOBJ("../output/"+cont.meshName+"/"+cont.meshName+"_pulled.obj");
 
 //    cont.importOBJ("../meshes/rectangle.obj");
     params_.pullMag += 0.5;
