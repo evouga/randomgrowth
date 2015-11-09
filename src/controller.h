@@ -17,7 +17,7 @@ public:
 
     void renderMesh();
 
-    std::string meshName = "diag";
+    std::string meshName = "crazy";
 
 public slots:
     void exportOBJ(std::string filename);

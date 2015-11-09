@@ -60,6 +60,8 @@ static int progress(
     }
 
     if(k % 1000 == 0) {
+        SimulationMesh* simPtr = (SimulationMesh*)instance;
+        printf("PULL MAG = %f\n", simPtr->getParameters().pullMag);
         printf("Iteration %d:\n", k);
         printf("  xnorm = %f, gnorm = %f, step = %f\n", xnorm, gnorm, step);
 
@@ -201,10 +203,13 @@ bool SimulationMesh::pull(Controller &cont)
     cout << "final distance: " << finalDist << endl;
     distances << finalDist << endl;
     gnorms << gradq.norm() << endl;
-    cont.exportOBJ("../output/"+cont.meshName+"/"+cont.meshName+"_pulled.obj");
+    cont.exportOBJ("../output/"+cont.meshName+"/objs/"+cont.meshName+"_pulled_"+std::to_string(params_.pullMag)+".obj");
 
 //    cont.importOBJ("../meshes/rectangle.obj");
-    params_.pullMag += 0.5;
+    if(params_.pullMag < 2)
+        params_.pullMag += 0.25;
+    else
+        params_.pullMag += 0.5;
 
     } while(params_.pullMag <= 10);
 

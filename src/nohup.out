@@ -1,0 +1,6216 @@
+we're running!
+PULL MAG = 0.500000
+Iteration 1000:
+  xnorm = 54.203433, gnorm = 0.528460, step = 1.000000
+energy: -1.00115
+
+PULL MAG = 0.500000
+Iteration 2000:
+  xnorm = 54.210437, gnorm = 0.413613, step = 1.000000
+energy: -1.0024
+
+PULL MAG = 0.500000
+Iteration 3000:
+  xnorm = 54.215175, gnorm = 0.182191, step = 1.000000
+energy: -1.00304
+
+PULL MAG = 0.500000
+Iteration 4000:
+  xnorm = 54.220808, gnorm = 0.151079, step = 1.000000
+energy: -1.00367
+
+PULL MAG = 0.500000
+Iteration 5000:
+  xnorm = 54.228808, gnorm = 0.160621, step = 1.000000
+energy: -1.00442
+
+PULL MAG = 0.500000
+Iteration 6000:
+  xnorm = 54.231831, gnorm = 0.153607, step = 1.000000
+energy: -1.00465
+
+PULL MAG = 0.500000
+Iteration 7000:
+  xnorm = 54.234550, gnorm = 0.060444, step = 1.000000
+energy: -1.00491
+
+PULL MAG = 0.500000
+Iteration 8000:
+  xnorm = 54.236022, gnorm = 0.139629, step = 1.000000
+energy: -1.00503
+
+PULL MAG = 0.500000
+Iteration 9000:
+  xnorm = 54.236765, gnorm = 0.075740, step = 1.000000
+energy: -1.00511
+
+PULL MAG = 0.500000
+Iteration 10000:
+  xnorm = 54.237746, gnorm = 0.092081, step = 1.000000
+energy: -1.0052
+
+PULL MAG = 0.500000
+Iteration 11000:
+  xnorm = 54.239002, gnorm = 0.177185, step = 0.500000
+energy: -1.00534
+
+PULL MAG = 0.500000
+Iteration 12000:
+  xnorm = 54.239803, gnorm = 0.142416, step = 1.000000
+energy: -1.00541
+
+PULL MAG = 0.500000
+Iteration 13000:
+  xnorm = 54.240641, gnorm = 0.065483, step = 1.000000
+energy: -1.00553
+
+PULL MAG = 0.500000
+Iteration 14000:
+  xnorm = 54.240826, gnorm = 0.077219, step = 1.000000
+energy: -1.00557
+
+PULL MAG = 0.500000
+Iteration 15000:
+  xnorm = 54.241225, gnorm = 0.126264, step = 1.000000
+energy: -1.00562
+
+PULL MAG = 0.500000
+Iteration 16000:
+  xnorm = 54.241490, gnorm = 0.032445, step = 1.000000
+energy: -1.00568
+
+PULL MAG = 0.500000
+Iteration 17000:
+  xnorm = 54.241643, gnorm = 0.059809, step = 1.000000
+energy: -1.00572
+
+PULL MAG = 0.500000
+Iteration 18000:
+  xnorm = 54.241764, gnorm = 0.044623, step = 1.000000
+energy: -1.00575
+
+PULL MAG = 0.500000
+Iteration 19000:
+  xnorm = 54.241912, gnorm = 0.036731, step = 1.000000
+energy: -1.00579
+
+PULL MAG = 0.500000
+Iteration 20000:
+  xnorm = 54.241952, gnorm = 0.035318, step = 1.000000
+energy: -1.0058
+
+PULL MAG = 0.500000
+Iteration 21000:
+  xnorm = 54.242082, gnorm = 0.052017, step = 1.000000
+energy: -1.00586
+
+PULL MAG = 0.500000
+Iteration 22000:
+  xnorm = 54.242107, gnorm = 0.041416, step = 1.000000
+energy: -1.00587
+
+PULL MAG = 0.500000
+Iteration 23000:
+  xnorm = 54.242118, gnorm = 0.042864, step = 1.000000
+energy: -1.00589
+
+PULL MAG = 0.500000
+Iteration 24000:
+  xnorm = 54.242141, gnorm = 0.032876, step = 1.000000
+energy: -1.00593
+
+PULL MAG = 0.500000
+Iteration 25000:
+  xnorm = 54.242148, gnorm = 0.026545, step = 1.000000
+energy: -1.00594
+
+PULL MAG = 0.500000
+Iteration 26000:
+  xnorm = 54.242149, gnorm = 0.020465, step = 1.000000
+energy: -1.00595
+
+PULL MAG = 0.500000
+Iteration 27000:
+  xnorm = 54.242139, gnorm = 0.127881, step = 1.000000
+energy: -1.00597
+
+PULL MAG = 0.500000
+Iteration 28000:
+  xnorm = 54.242119, gnorm = 0.047091, step = 1.000000
+energy: -1.006
+
+PULL MAG = 0.500000
+Iteration 29000:
+  xnorm = 54.242125, gnorm = 0.046860, step = 1.000000
+energy: -1.00601
+
+PULL MAG = 0.500000
+Iteration 30000:
+  xnorm = 54.242126, gnorm = 0.049114, step = 1.000000
+energy: -1.00602
+
+PULL MAG = 0.500000
+Iteration 31000:
+  xnorm = 54.242129, gnorm = 0.014455, step = 1.000000
+energy: -1.00603
+
+PULL MAG = 0.500000
+Iteration 32000:
+  xnorm = 54.242126, gnorm = 0.033872, step = 1.000000
+energy: -1.00604
+
+PULL MAG = 0.500000
+Iteration 33000:
+  xnorm = 54.242122, gnorm = 0.027949, step = 1.000000
+energy: -1.00604
+
+PULL MAG = 0.500000
+Iteration 34000:
+  xnorm = 54.242126, gnorm = 0.010271, step = 1.000000
+energy: -1.00605
+
+PULL MAG = 0.500000
+Iteration 35000:
+  xnorm = 54.242122, gnorm = 0.031215, step = 1.000000
+energy: -1.00606
+
+PULL MAG = 0.500000
+Iteration 36000:
+  xnorm = 54.242120, gnorm = 0.067081, step = 1.000000
+energy: -1.00607
+
+PULL MAG = 0.500000
+Iteration 37000:
+  xnorm = 54.242121, gnorm = 0.020990, step = 1.000000
+energy: -1.00608
+
+PULL MAG = 0.500000
+Iteration 38000:
+  xnorm = 54.242121, gnorm = 0.044037, step = 1.000000
+energy: -1.00609
+
+PULL MAG = 0.500000
+Iteration 39000:
+  xnorm = 54.242122, gnorm = 0.011033, step = 1.000000
+energy: -1.00609
+
+PULL MAG = 0.500000
+Iteration 40000:
+  xnorm = 54.242120, gnorm = 0.019778, step = 1.000000
+energy: -1.00609
+
+PULL MAG = 0.500000
+Iteration 41000:
+  xnorm = 54.242118, gnorm = 0.017740, step = 1.000000
+energy: -1.00611
+
+PULL MAG = 0.500000
+Iteration 42000:
+  xnorm = 54.242122, gnorm = 0.018881, step = 1.000000
+energy: -1.00611
+
+PULL MAG = 0.500000
+Iteration 43000:
+  xnorm = 54.242128, gnorm = 0.023109, step = 1.000000
+energy: -1.00612
+
+PULL MAG = 0.500000
+Iteration 44000:
+  xnorm = 54.242127, gnorm = 0.025092, step = 1.000000
+energy: -1.00612
+
+PULL MAG = 0.500000
+Iteration 45000:
+  xnorm = 54.242133, gnorm = 0.015861, step = 1.000000
+energy: -1.00612
+
+PULL MAG = 0.500000
+Iteration 46000:
+  xnorm = 54.242134, gnorm = 0.009323, step = 1.000000
+energy: -1.00613
+
+PULL MAG = 0.500000
+Iteration 47000:
+  xnorm = 54.242139, gnorm = 0.031497, step = 1.000000
+energy: -1.00613
+
+PULL MAG = 0.500000
+Iteration 48000:
+  xnorm = 54.242146, gnorm = 0.022862, step = 1.000000
+energy: -1.00613
+
+PULL MAG = 0.500000
+Iteration 49000:
+  xnorm = 54.242150, gnorm = 0.008221, step = 1.000000
+energy: -1.00614
+
+PULL MAG = 0.500000
+Iteration 50000:
+  xnorm = 54.242155, gnorm = 0.019012, step = 1.000000
+energy: -1.00614
+
+PULL MAG = 0.500000
+Iteration 51000:
+  xnorm = 54.242162, gnorm = 0.039519, step = 1.000000
+energy: -1.00614
+
+PULL MAG = 0.500000
+Iteration 52000:
+  xnorm = 54.242162, gnorm = 0.017171, step = 1.000000
+energy: -1.00615
+
+PULL MAG = 0.500000
+Iteration 53000:
+  xnorm = 54.242169, gnorm = 0.011601, step = 1.000000
+energy: -1.00615
+
+PULL MAG = 0.500000
+Iteration 54000:
+  xnorm = 54.242176, gnorm = 0.007642, step = 1.000000
+energy: -1.00615
+
+PULL MAG = 0.500000
+Iteration 55000:
+  xnorm = 54.242180, gnorm = 0.008422, step = 1.000000
+energy: -1.00615
+
+PULL MAG = 0.500000
+Iteration 56000:
+  xnorm = 54.242190, gnorm = 0.008052, step = 1.000000
+energy: -1.00616
+
+PULL MAG = 0.500000
+Iteration 57000:
+  xnorm = 54.242194, gnorm = 0.007785, step = 1.000000
+energy: -1.00616
+
+PULL MAG = 0.500000
+Iteration 58000:
+  xnorm = 54.242197, gnorm = 0.005453, step = 1.000000
+energy: -1.00616
+
+PULL MAG = 0.500000
+Iteration 59000:
+  xnorm = 54.242201, gnorm = 0.023290, step = 1.000000
+energy: -1.00616
+
+PULL MAG = 0.500000
+Iteration 60000:
+  xnorm = 54.242204, gnorm = 0.007822, step = 1.000000
+energy: -1.00616
+
+PULL MAG = 0.500000
+Iteration 61000:
+  xnorm = 54.242208, gnorm = 0.015441, step = 1.000000
+energy: -1.00616
+
+PULL MAG = 0.500000
+Iteration 62000:
+  xnorm = 54.242210, gnorm = 0.021927, step = 0.500000
+energy: -1.00616
+
+PULL MAG = 0.500000
+Iteration 63000:
+  xnorm = 54.242214, gnorm = 0.016507, step = 1.000000
+energy: -1.00617
+
+PULL MAG = 0.500000
+Iteration 64000:
+  xnorm = 54.242216, gnorm = 0.010104, step = 1.000000
+energy: -1.00617
+
+PULL MAG = 0.500000
+Iteration 65000:
+  xnorm = 54.242204, gnorm = 0.020482, step = 1.000000
+energy: -1.00617
+
+PULL MAG = 0.500000
+Iteration 66000:
+  xnorm = 54.242202, gnorm = 0.006521, step = 1.000000
+energy: -1.00618
+
+PULL MAG = 0.500000
+Iteration 67000:
+  xnorm = 54.242200, gnorm = 0.005206, step = 1.000000
+energy: -1.00618
+
+PULL MAG = 0.500000
+Iteration 68000:
+  xnorm = 54.242194, gnorm = 0.009319, step = 1.000000
+energy: -1.00618
+
+PULL MAG = 0.500000
+Iteration 69000:
+  xnorm = 54.242193, gnorm = 0.006492, step = 1.000000
+energy: -1.00618
+
+PULL MAG = 0.500000
+Iteration 70000:
+  xnorm = 54.242185, gnorm = 0.011727, step = 1.000000
+energy: -1.00618
+
+PULL MAG = 0.500000
+Iteration 71000:
+  xnorm = 54.242173, gnorm = 0.016326, step = 1.000000
+energy: -1.00618
+
+PULL MAG = 0.500000
+Iteration 72000:
+  xnorm = 54.242176, gnorm = 0.010188, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 73000:
+  xnorm = 54.242178, gnorm = 0.005519, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 74000:
+  xnorm = 54.242183, gnorm = 0.006418, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 75000:
+  xnorm = 54.242187, gnorm = 0.013658, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 76000:
+  xnorm = 54.242187, gnorm = 0.006927, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 77000:
+  xnorm = 54.242190, gnorm = 0.011320, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 78000:
+  xnorm = 54.242195, gnorm = 0.005070, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 79000:
+  xnorm = 54.242201, gnorm = 0.006395, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 80000:
+  xnorm = 54.242202, gnorm = 0.004466, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 81000:
+  xnorm = 54.242205, gnorm = 0.008061, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 82000:
+  xnorm = 54.242207, gnorm = 0.005791, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 83000:
+  xnorm = 54.242218, gnorm = 0.019124, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 84000:
+  xnorm = 54.242220, gnorm = 0.004286, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 85000:
+  xnorm = 54.242221, gnorm = 0.009745, step = 1.000000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 86000:
+  xnorm = 54.242225, gnorm = 0.014417, step = 0.500000
+energy: -1.00619
+
+PULL MAG = 0.500000
+Iteration 87000:
+  xnorm = 54.242230, gnorm = 0.008396, step = 0.500000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 88000:
+  xnorm = 54.242231, gnorm = 0.007221, step = 1.000000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 89000:
+  xnorm = 54.242237, gnorm = 0.015254, step = 1.000000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 90000:
+  xnorm = 54.242237, gnorm = 0.010263, step = 1.000000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 91000:
+  xnorm = 54.242232, gnorm = 0.006207, step = 1.000000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 92000:
+  xnorm = 54.242232, gnorm = 0.012172, step = 1.000000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 93000:
+  xnorm = 54.242233, gnorm = 0.006624, step = 1.000000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 94000:
+  xnorm = 54.242233, gnorm = 0.004417, step = 1.000000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 95000:
+  xnorm = 54.242232, gnorm = 0.011872, step = 1.000000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 96000:
+  xnorm = 54.242230, gnorm = 0.007469, step = 1.000000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 97000:
+  xnorm = 54.242232, gnorm = 0.007321, step = 1.000000
+energy: -1.0062
+
+PULL MAG = 0.500000
+Iteration 98000:
+  xnorm = 54.242233, gnorm = 0.005466, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 99000:
+  xnorm = 54.242232, gnorm = 0.003402, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 100000:
+  xnorm = 54.242232, gnorm = 0.005376, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 101000:
+  xnorm = 54.242232, gnorm = 0.002407, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 102000:
+  xnorm = 54.242232, gnorm = 0.017216, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 103000:
+  xnorm = 54.242230, gnorm = 0.005536, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 104000:
+  xnorm = 54.242226, gnorm = 0.003057, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 105000:
+  xnorm = 54.242226, gnorm = 0.003194, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 106000:
+  xnorm = 54.242224, gnorm = 0.005834, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 107000:
+  xnorm = 54.242219, gnorm = 0.004732, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 108000:
+  xnorm = 54.242215, gnorm = 0.007339, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 109000:
+  xnorm = 54.242213, gnorm = 0.002337, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 110000:
+  xnorm = 54.242206, gnorm = 0.021038, step = 0.500000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 111000:
+  xnorm = 54.242204, gnorm = 0.004756, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 112000:
+  xnorm = 54.242201, gnorm = 0.003659, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 113000:
+  xnorm = 54.242146, gnorm = 0.007210, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 114000:
+  xnorm = 54.242148, gnorm = 0.002837, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 115000:
+  xnorm = 54.242148, gnorm = 0.001165, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 116000:
+  xnorm = 54.242147, gnorm = 0.001627, step = 1.000000
+energy: -1.00621
+
+PULL MAG = 0.500000
+Iteration 117000:
+  xnorm = 54.242145, gnorm = 0.001367, step = 1.000000
+energy: -1.00621
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000537947
+final distance: 2.01268
+PULL MAG = 0.750000
+Iteration 1000:
+  xnorm = 54.242530, gnorm = 0.026510, step = 1.000000
+energy: -1.5094
+
+PULL MAG = 0.750000
+Iteration 2000:
+  xnorm = 54.242549, gnorm = 0.015813, step = 1.000000
+energy: -1.50941
+
+PULL MAG = 0.750000
+Iteration 3000:
+  xnorm = 54.242544, gnorm = 0.013500, step = 1.000000
+energy: -1.50941
+
+PULL MAG = 0.750000
+Iteration 4000:
+  xnorm = 54.242534, gnorm = 0.037801, step = 1.000000
+energy: -1.50942
+
+PULL MAG = 0.750000
+Iteration 5000:
+  xnorm = 54.242531, gnorm = 0.011945, step = 1.000000
+energy: -1.50942
+
+PULL MAG = 0.750000
+Iteration 6000:
+  xnorm = 54.242522, gnorm = 0.007423, step = 1.000000
+energy: -1.50942
+
+PULL MAG = 0.750000
+Iteration 7000:
+  xnorm = 54.242431, gnorm = 0.026946, step = 1.000000
+energy: -1.50943
+
+PULL MAG = 0.750000
+Iteration 8000:
+  xnorm = 54.242406, gnorm = 0.009305, step = 1.000000
+energy: -1.50944
+
+PULL MAG = 0.750000
+Iteration 9000:
+  xnorm = 54.242375, gnorm = 0.014679, step = 1.000000
+energy: -1.50944
+
+PULL MAG = 0.750000
+Iteration 10000:
+  xnorm = 54.242346, gnorm = 0.013217, step = 1.000000
+energy: -1.50944
+
+PULL MAG = 0.750000
+Iteration 11000:
+  xnorm = 54.242309, gnorm = 0.008217, step = 1.000000
+energy: -1.50944
+
+PULL MAG = 0.750000
+Iteration 12000:
+  xnorm = 54.242283, gnorm = 0.015011, step = 1.000000
+energy: -1.50944
+
+PULL MAG = 0.750000
+Iteration 13000:
+  xnorm = 54.242251, gnorm = 0.026626, step = 1.000000
+energy: -1.50945
+
+PULL MAG = 0.750000
+Iteration 14000:
+  xnorm = 54.242219, gnorm = 0.020165, step = 1.000000
+energy: -1.50945
+
+PULL MAG = 0.750000
+Iteration 15000:
+  xnorm = 54.242201, gnorm = 0.004523, step = 1.000000
+energy: -1.50945
+
+PULL MAG = 0.750000
+Iteration 16000:
+  xnorm = 54.242169, gnorm = 0.019291, step = 1.000000
+energy: -1.50945
+
+PULL MAG = 0.750000
+Iteration 17000:
+  xnorm = 54.242110, gnorm = 0.007976, step = 1.000000
+energy: -1.50945
+
+PULL MAG = 0.750000
+Iteration 18000:
+  xnorm = 54.242089, gnorm = 0.008539, step = 1.000000
+energy: -1.50945
+
+PULL MAG = 0.750000
+Iteration 19000:
+  xnorm = 54.242062, gnorm = 0.008078, step = 1.000000
+energy: -1.50945
+
+PULL MAG = 0.750000
+Iteration 20000:
+  xnorm = 54.242040, gnorm = 0.004277, step = 1.000000
+energy: -1.50945
+
+PULL MAG = 0.750000
+Iteration 21000:
+  xnorm = 54.242016, gnorm = 0.007921, step = 1.000000
+energy: -1.50945
+
+PULL MAG = 0.750000
+Iteration 22000:
+  xnorm = 54.241970, gnorm = 0.006062, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 23000:
+  xnorm = 54.241950, gnorm = 0.015470, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 24000:
+  xnorm = 54.241935, gnorm = 0.010289, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 25000:
+  xnorm = 54.241909, gnorm = 0.011431, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 26000:
+  xnorm = 54.241725, gnorm = 0.010525, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 27000:
+  xnorm = 54.241712, gnorm = 0.001652, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 28000:
+  xnorm = 54.241698, gnorm = 0.023153, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 29000:
+  xnorm = 54.241581, gnorm = 0.013834, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 30000:
+  xnorm = 54.241555, gnorm = 0.002542, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 31000:
+  xnorm = 54.241551, gnorm = 0.002706, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 32000:
+  xnorm = 54.241544, gnorm = 0.002438, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 33000:
+  xnorm = 54.241538, gnorm = 0.009693, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 34000:
+  xnorm = 54.241472, gnorm = 0.008042, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 35000:
+  xnorm = 54.241431, gnorm = 0.003581, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 36000:
+  xnorm = 54.241423, gnorm = 0.002820, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 37000:
+  xnorm = 54.241356, gnorm = 0.002889, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 38000:
+  xnorm = 54.241347, gnorm = 0.001659, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 39000:
+  xnorm = 54.241344, gnorm = 0.000687, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 40000:
+  xnorm = 54.241337, gnorm = 0.001294, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 41000:
+  xnorm = 54.241333, gnorm = 0.000927, step = 1.000000
+energy: -1.50946
+
+PULL MAG = 0.750000
+Iteration 42000:
+  xnorm = 54.241320, gnorm = 0.002050, step = 1.000000
+energy: -1.50946
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.00051947
+final distance: 2.01342
+PULL MAG = 1.000000
+Iteration 1000:
+  xnorm = 54.241858, gnorm = 0.033120, step = 1.000000
+energy: -2.01286
+
+PULL MAG = 1.000000
+Iteration 2000:
+  xnorm = 54.241848, gnorm = 0.039152, step = 1.000000
+energy: -2.01288
+
+PULL MAG = 1.000000
+Iteration 3000:
+  xnorm = 54.241877, gnorm = 0.059085, step = 0.500000
+energy: -2.0129
+
+PULL MAG = 1.000000
+Iteration 4000:
+  xnorm = 54.241819, gnorm = 0.030642, step = 1.000000
+energy: -2.01292
+
+PULL MAG = 1.000000
+Iteration 5000:
+  xnorm = 54.241739, gnorm = 0.028290, step = 1.000000
+energy: -2.01293
+
+PULL MAG = 1.000000
+Iteration 6000:
+  xnorm = 54.241531, gnorm = 0.041136, step = 1.000000
+energy: -2.01295
+
+PULL MAG = 1.000000
+Iteration 7000:
+  xnorm = 54.241315, gnorm = 0.057903, step = 1.000000
+energy: -2.01296
+
+PULL MAG = 1.000000
+Iteration 8000:
+  xnorm = 54.241135, gnorm = 0.011444, step = 1.000000
+energy: -2.01297
+
+PULL MAG = 1.000000
+Iteration 9000:
+  xnorm = 54.241016, gnorm = 0.032154, step = 0.500000
+energy: -2.01298
+
+PULL MAG = 1.000000
+Iteration 10000:
+  xnorm = 54.240937, gnorm = 0.018652, step = 1.000000
+energy: -2.01299
+
+PULL MAG = 1.000000
+Iteration 11000:
+  xnorm = 54.240744, gnorm = 0.030324, step = 1.000000
+energy: -2.013
+
+PULL MAG = 1.000000
+Iteration 12000:
+  xnorm = 54.240665, gnorm = 0.025880, step = 1.000000
+energy: -2.013
+
+PULL MAG = 1.000000
+Iteration 13000:
+  xnorm = 54.240478, gnorm = 0.043644, step = 1.000000
+energy: -2.01301
+
+PULL MAG = 1.000000
+Iteration 14000:
+  xnorm = 54.240343, gnorm = 0.033832, step = 1.000000
+energy: -2.01302
+
+PULL MAG = 1.000000
+Iteration 15000:
+  xnorm = 54.239935, gnorm = 0.038564, step = 1.000000
+energy: -2.01304
+
+PULL MAG = 1.000000
+Iteration 16000:
+  xnorm = 54.239823, gnorm = 0.047906, step = 1.000000
+energy: -2.01304
+
+PULL MAG = 1.000000
+Iteration 17000:
+  xnorm = 54.239613, gnorm = 0.023528, step = 1.000000
+energy: -2.01305
+
+PULL MAG = 1.000000
+Iteration 18000:
+  xnorm = 54.239421, gnorm = 0.012462, step = 1.000000
+energy: -2.01306
+
+PULL MAG = 1.000000
+Iteration 19000:
+  xnorm = 54.239363, gnorm = 0.010036, step = 1.000000
+energy: -2.01306
+
+PULL MAG = 1.000000
+Iteration 20000:
+  xnorm = 54.238911, gnorm = 0.053223, step = 1.000000
+energy: -2.01307
+
+PULL MAG = 1.000000
+Iteration 21000:
+  xnorm = 54.238094, gnorm = 0.055991, step = 1.000000
+energy: -2.0131
+
+PULL MAG = 1.000000
+Iteration 22000:
+  xnorm = 54.237985, gnorm = 0.012661, step = 1.000000
+energy: -2.01311
+
+PULL MAG = 1.000000
+Iteration 23000:
+  xnorm = 54.237820, gnorm = 0.015619, step = 1.000000
+energy: -2.01311
+
+PULL MAG = 1.000000
+Iteration 24000:
+  xnorm = 54.237750, gnorm = 0.027941, step = 1.000000
+energy: -2.01311
+
+PULL MAG = 1.000000
+Iteration 25000:
+  xnorm = 54.237331, gnorm = 0.065452, step = 1.000000
+energy: -2.01312
+
+PULL MAG = 1.000000
+Iteration 26000:
+  xnorm = 54.233906, gnorm = 0.115922, step = 1.000000
+energy: -2.01318
+
+PULL MAG = 1.000000
+Iteration 27000:
+  xnorm = 54.233564, gnorm = 0.009837, step = 1.000000
+energy: -2.01319
+
+PULL MAG = 1.000000
+Iteration 28000:
+  xnorm = 54.233464, gnorm = 0.007278, step = 1.000000
+energy: -2.01319
+
+PULL MAG = 1.000000
+Iteration 29000:
+  xnorm = 54.233307, gnorm = 0.010680, step = 1.000000
+energy: -2.01319
+
+PULL MAG = 1.000000
+Iteration 30000:
+  xnorm = 54.232941, gnorm = 0.017146, step = 1.000000
+energy: -2.0132
+
+PULL MAG = 1.000000
+Iteration 31000:
+  xnorm = 54.232777, gnorm = 0.020721, step = 1.000000
+energy: -2.0132
+
+PULL MAG = 1.000000
+Iteration 32000:
+  xnorm = 54.232643, gnorm = 0.008758, step = 1.000000
+energy: -2.0132
+
+PULL MAG = 1.000000
+Iteration 33000:
+  xnorm = 54.232526, gnorm = 0.011012, step = 1.000000
+energy: -2.01321
+
+PULL MAG = 1.000000
+Iteration 34000:
+  xnorm = 54.232381, gnorm = 0.011461, step = 1.000000
+energy: -2.01321
+
+PULL MAG = 1.000000
+Iteration 35000:
+  xnorm = 54.232126, gnorm = 0.014307, step = 1.000000
+energy: -2.01321
+
+PULL MAG = 1.000000
+Iteration 36000:
+  xnorm = 54.232049, gnorm = 0.011878, step = 1.000000
+energy: -2.01321
+
+PULL MAG = 1.000000
+Iteration 37000:
+  xnorm = 54.231921, gnorm = 0.007885, step = 1.000000
+energy: -2.01321
+
+PULL MAG = 1.000000
+Iteration 38000:
+  xnorm = 54.231802, gnorm = 0.007911, step = 1.000000
+energy: -2.01321
+
+PULL MAG = 1.000000
+Iteration 39000:
+  xnorm = 54.231717, gnorm = 0.004458, step = 1.000000
+energy: -2.01322
+
+PULL MAG = 1.000000
+Iteration 40000:
+  xnorm = 54.231567, gnorm = 0.030199, step = 1.000000
+energy: -2.01322
+
+PULL MAG = 1.000000
+Iteration 41000:
+  xnorm = 54.231422, gnorm = 0.006529, step = 1.000000
+energy: -2.01322
+
+PULL MAG = 1.000000
+Iteration 42000:
+  xnorm = 54.231345, gnorm = 0.005749, step = 1.000000
+energy: -2.01322
+
+PULL MAG = 1.000000
+Iteration 43000:
+  xnorm = 54.231214, gnorm = 0.009368, step = 1.000000
+energy: -2.01322
+
+PULL MAG = 1.000000
+Iteration 44000:
+  xnorm = 54.231082, gnorm = 0.012328, step = 1.000000
+energy: -2.01322
+
+PULL MAG = 1.000000
+Iteration 45000:
+  xnorm = 54.231003, gnorm = 0.007067, step = 1.000000
+energy: -2.01322
+
+PULL MAG = 1.000000
+Iteration 46000:
+  xnorm = 54.230860, gnorm = 0.011165, step = 1.000000
+energy: -2.01322
+
+PULL MAG = 1.000000
+Iteration 47000:
+  xnorm = 54.230818, gnorm = 0.008797, step = 1.000000
+energy: -2.01322
+
+PULL MAG = 1.000000
+Iteration 48000:
+  xnorm = 54.230674, gnorm = 0.007362, step = 1.000000
+energy: -2.01323
+
+PULL MAG = 1.000000
+Iteration 49000:
+  xnorm = 54.230576, gnorm = 0.005020, step = 1.000000
+energy: -2.01323
+
+PULL MAG = 1.000000
+Iteration 50000:
+  xnorm = 54.230346, gnorm = 0.019186, step = 1.000000
+energy: -2.01323
+
+PULL MAG = 1.000000
+Iteration 51000:
+  xnorm = 54.230074, gnorm = 0.002769, step = 1.000000
+energy: -2.01323
+
+PULL MAG = 1.000000
+Iteration 52000:
+  xnorm = 54.229970, gnorm = 0.011470, step = 1.000000
+energy: -2.01323
+
+PULL MAG = 1.000000
+Iteration 53000:
+  xnorm = 54.229762, gnorm = 0.009447, step = 0.500000
+energy: -2.01323
+
+PULL MAG = 1.000000
+Iteration 54000:
+  xnorm = 54.229672, gnorm = 0.005018, step = 1.000000
+energy: -2.01323
+
+PULL MAG = 1.000000
+Iteration 55000:
+  xnorm = 54.229609, gnorm = 0.004272, step = 1.000000
+energy: -2.01323
+
+PULL MAG = 1.000000
+Iteration 56000:
+  xnorm = 54.229474, gnorm = 0.003901, step = 1.000000
+energy: -2.01323
+
+PULL MAG = 1.000000
+Iteration 57000:
+  xnorm = 54.229430, gnorm = 0.004862, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 58000:
+  xnorm = 54.229344, gnorm = 0.004514, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 59000:
+  xnorm = 54.229218, gnorm = 0.005656, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 60000:
+  xnorm = 54.229164, gnorm = 0.008526, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 61000:
+  xnorm = 54.229039, gnorm = 0.003442, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 62000:
+  xnorm = 54.228972, gnorm = 0.003677, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 63000:
+  xnorm = 54.228831, gnorm = 0.015190, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 64000:
+  xnorm = 54.228715, gnorm = 0.007152, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 65000:
+  xnorm = 54.228647, gnorm = 0.005993, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 66000:
+  xnorm = 54.228570, gnorm = 0.020917, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 67000:
+  xnorm = 54.228524, gnorm = 0.004000, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 68000:
+  xnorm = 54.228395, gnorm = 0.003018, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 69000:
+  xnorm = 54.228368, gnorm = 0.008686, step = 1.000000
+energy: -2.01324
+
+PULL MAG = 1.000000
+Iteration 70000:
+  xnorm = 54.225521, gnorm = 0.024139, step = 1.000000
+energy: -2.01325
+
+PULL MAG = 1.000000
+Iteration 71000:
+  xnorm = 54.225181, gnorm = 0.007900, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 72000:
+  xnorm = 54.225155, gnorm = 0.001542, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 73000:
+  xnorm = 54.225064, gnorm = 0.003823, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 74000:
+  xnorm = 54.225046, gnorm = 0.001446, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 75000:
+  xnorm = 54.224927, gnorm = 0.006978, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 76000:
+  xnorm = 54.224864, gnorm = 0.001767, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 77000:
+  xnorm = 54.224833, gnorm = 0.002013, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 78000:
+  xnorm = 54.224792, gnorm = 0.002734, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 79000:
+  xnorm = 54.224735, gnorm = 0.001575, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 80000:
+  xnorm = 54.224693, gnorm = 0.003205, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 81000:
+  xnorm = 54.224636, gnorm = 0.002242, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 82000:
+  xnorm = 54.224610, gnorm = 0.004218, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 83000:
+  xnorm = 54.224567, gnorm = 0.001795, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 84000:
+  xnorm = 54.224549, gnorm = 0.001899, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 85000:
+  xnorm = 54.224475, gnorm = 0.001087, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 86000:
+  xnorm = 54.224453, gnorm = 0.001628, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 87000:
+  xnorm = 54.224406, gnorm = 0.003463, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 88000:
+  xnorm = 54.224249, gnorm = 0.004981, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 89000:
+  xnorm = 54.224176, gnorm = 0.002011, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 90000:
+  xnorm = 54.224161, gnorm = 0.001753, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 91000:
+  xnorm = 54.224123, gnorm = 0.001153, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 92000:
+  xnorm = 54.224100, gnorm = 0.001669, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 93000:
+  xnorm = 54.224064, gnorm = 0.002195, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 94000:
+  xnorm = 54.224001, gnorm = 0.007668, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 95000:
+  xnorm = 54.223734, gnorm = 0.003544, step = 1.000000
+energy: -2.01326
+
+PULL MAG = 1.000000
+Iteration 96000:
+  xnorm = 54.223713, gnorm = 0.001171, step = 1.000000
+energy: -2.01326
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000520036
+final distance: 2.01942
+PULL MAG = 1.250000
+Iteration 1000:
+  xnorm = 54.225135, gnorm = 0.181899, step = 1.000000
+energy: -2.5183
+
+PULL MAG = 1.250000
+Iteration 2000:
+  xnorm = 54.225844, gnorm = 0.277521, step = 1.000000
+energy: -2.51851
+
+PULL MAG = 1.250000
+Iteration 3000:
+  xnorm = 54.224956, gnorm = 0.087850, step = 1.000000
+energy: -2.5188
+
+PULL MAG = 1.250000
+Iteration 4000:
+  xnorm = 54.224685, gnorm = 0.067743, step = 1.000000
+energy: -2.51895
+
+PULL MAG = 1.250000
+Iteration 5000:
+  xnorm = 54.222617, gnorm = 0.078257, step = 1.000000
+energy: -2.51916
+
+PULL MAG = 1.250000
+Iteration 6000:
+  xnorm = 54.221106, gnorm = 0.106001, step = 1.000000
+energy: -2.51925
+
+PULL MAG = 1.250000
+Iteration 7000:
+  xnorm = 54.219604, gnorm = 0.048481, step = 1.000000
+energy: -2.51935
+
+PULL MAG = 1.250000
+Iteration 8000:
+  xnorm = 54.216566, gnorm = 0.305620, step = 1.000000
+energy: -2.51956
+
+PULL MAG = 1.250000
+Iteration 9000:
+  xnorm = 54.214214, gnorm = 0.069086, step = 1.000000
+energy: -2.51972
+
+PULL MAG = 1.250000
+Iteration 10000:
+  xnorm = 54.212854, gnorm = 0.111878, step = 1.000000
+energy: -2.51979
+
+PULL MAG = 1.250000
+Iteration 11000:
+  xnorm = 54.210451, gnorm = 0.483381, step = 1.000000
+energy: -2.51994
+
+PULL MAG = 1.250000
+Iteration 12000:
+  xnorm = 54.208777, gnorm = 0.099535, step = 1.000000
+energy: -2.52003
+
+PULL MAG = 1.250000
+Iteration 13000:
+  xnorm = 54.207164, gnorm = 0.083609, step = 1.000000
+energy: -2.52012
+
+PULL MAG = 1.250000
+Iteration 14000:
+  xnorm = 54.192945, gnorm = 0.354668, step = 1.000000
+energy: -2.52077
+
+PULL MAG = 1.250000
+Iteration 15000:
+  xnorm = 54.189230, gnorm = 0.046290, step = 1.000000
+energy: -2.52101
+
+PULL MAG = 1.250000
+Iteration 16000:
+  xnorm = 54.186089, gnorm = 0.098171, step = 1.000000
+energy: -2.52109
+
+PULL MAG = 1.250000
+Iteration 17000:
+  xnorm = 54.184292, gnorm = 0.086854, step = 1.000000
+energy: -2.52119
+
+PULL MAG = 1.250000
+Iteration 18000:
+  xnorm = 54.179577, gnorm = 0.134656, step = 1.000000
+energy: -2.52134
+
+PULL MAG = 1.250000
+Iteration 19000:
+  xnorm = 54.176241, gnorm = 0.066460, step = 1.000000
+energy: -2.52151
+
+PULL MAG = 1.250000
+Iteration 20000:
+  xnorm = 54.173716, gnorm = 0.092545, step = 1.000000
+energy: -2.52161
+
+PULL MAG = 1.250000
+Iteration 21000:
+  xnorm = 54.171888, gnorm = 0.065761, step = 1.000000
+energy: -2.52168
+
+PULL MAG = 1.250000
+Iteration 22000:
+  xnorm = 54.169307, gnorm = 0.112011, step = 1.000000
+energy: -2.52175
+
+PULL MAG = 1.250000
+Iteration 23000:
+  xnorm = 54.163166, gnorm = 0.117985, step = 1.000000
+energy: -2.52196
+
+PULL MAG = 1.250000
+Iteration 24000:
+  xnorm = 54.160614, gnorm = 0.054269, step = 1.000000
+energy: -2.52205
+
+PULL MAG = 1.250000
+Iteration 25000:
+  xnorm = 54.157347, gnorm = 0.211223, step = 1.000000
+energy: -2.52214
+
+PULL MAG = 1.250000
+Iteration 26000:
+  xnorm = 54.155364, gnorm = 0.039373, step = 1.000000
+energy: -2.5222
+
+PULL MAG = 1.250000
+Iteration 27000:
+  xnorm = 54.151038, gnorm = 0.103487, step = 1.000000
+energy: -2.52231
+
+PULL MAG = 1.250000
+Iteration 28000:
+  xnorm = 54.148768, gnorm = 0.081769, step = 1.000000
+energy: -2.52238
+
+PULL MAG = 1.250000
+Iteration 29000:
+  xnorm = 54.146997, gnorm = 0.132651, step = 1.000000
+energy: -2.52242
+
+PULL MAG = 1.250000
+Iteration 30000:
+  xnorm = 54.145578, gnorm = 0.111751, step = 1.000000
+energy: -2.52246
+
+PULL MAG = 1.250000
+Iteration 31000:
+  xnorm = 54.144539, gnorm = 0.038418, step = 1.000000
+energy: -2.52248
+
+PULL MAG = 1.250000
+Iteration 32000:
+  xnorm = 54.135042, gnorm = 0.148673, step = 1.000000
+energy: -2.52268
+
+PULL MAG = 1.250000
+Iteration 33000:
+  xnorm = 54.131297, gnorm = 0.062187, step = 1.000000
+energy: -2.52277
+
+PULL MAG = 1.250000
+Iteration 34000:
+  xnorm = 54.129271, gnorm = 0.042339, step = 1.000000
+energy: -2.52281
+
+PULL MAG = 1.250000
+Iteration 35000:
+  xnorm = 54.125370, gnorm = 0.100647, step = 1.000000
+energy: -2.52287
+
+PULL MAG = 1.250000
+Iteration 36000:
+  xnorm = 54.123823, gnorm = 0.135421, step = 0.500000
+energy: -2.52291
+
+PULL MAG = 1.250000
+Iteration 37000:
+  xnorm = 54.120962, gnorm = 0.102162, step = 1.000000
+energy: -2.52295
+
+PULL MAG = 1.250000
+Iteration 38000:
+  xnorm = 54.117119, gnorm = 0.064657, step = 1.000000
+energy: -2.52302
+
+PULL MAG = 1.250000
+Iteration 39000:
+  xnorm = 54.115127, gnorm = 0.034492, step = 1.000000
+energy: -2.52306
+
+PULL MAG = 1.250000
+Iteration 40000:
+  xnorm = 54.114061, gnorm = 0.027248, step = 1.000000
+energy: -2.52307
+
+PULL MAG = 1.250000
+Iteration 41000:
+  xnorm = 54.112463, gnorm = 0.093316, step = 1.000000
+energy: -2.5231
+
+PULL MAG = 1.250000
+Iteration 42000:
+  xnorm = 54.111175, gnorm = 0.015117, step = 1.000000
+energy: -2.52312
+
+PULL MAG = 1.250000
+Iteration 43000:
+  xnorm = 54.109950, gnorm = 0.058837, step = 1.000000
+energy: -2.52313
+
+PULL MAG = 1.250000
+Iteration 44000:
+  xnorm = 54.100023, gnorm = 0.039404, step = 1.000000
+energy: -2.52326
+
+PULL MAG = 1.250000
+Iteration 45000:
+  xnorm = 54.099625, gnorm = 0.050096, step = 1.000000
+energy: -2.52327
+
+PULL MAG = 1.250000
+Iteration 46000:
+  xnorm = 54.097591, gnorm = 0.023610, step = 1.000000
+energy: -2.52329
+
+PULL MAG = 1.250000
+Iteration 47000:
+  xnorm = 54.096413, gnorm = 0.033037, step = 1.000000
+energy: -2.52331
+
+PULL MAG = 1.250000
+Iteration 48000:
+  xnorm = 54.095660, gnorm = 0.016893, step = 1.000000
+energy: -2.52332
+
+PULL MAG = 1.250000
+Iteration 49000:
+  xnorm = 54.093912, gnorm = 0.027932, step = 1.000000
+energy: -2.52334
+
+PULL MAG = 1.250000
+Iteration 50000:
+  xnorm = 54.092676, gnorm = 0.029357, step = 1.000000
+energy: -2.52335
+
+PULL MAG = 1.250000
+Iteration 51000:
+  xnorm = 54.090632, gnorm = 0.054080, step = 1.000000
+energy: -2.52337
+
+PULL MAG = 1.250000
+Iteration 52000:
+  xnorm = 54.089227, gnorm = 0.022050, step = 1.000000
+energy: -2.52339
+
+PULL MAG = 1.250000
+Iteration 53000:
+  xnorm = 54.087049, gnorm = 0.063844, step = 1.000000
+energy: -2.5234
+
+PULL MAG = 1.250000
+Iteration 54000:
+  xnorm = 54.084374, gnorm = 0.064166, step = 1.000000
+energy: -2.52343
+
+PULL MAG = 1.250000
+Iteration 55000:
+  xnorm = 54.083578, gnorm = 0.032656, step = 1.000000
+energy: -2.52344
+
+PULL MAG = 1.250000
+Iteration 56000:
+  xnorm = 54.082152, gnorm = 0.059455, step = 1.000000
+energy: -2.52345
+
+PULL MAG = 1.250000
+Iteration 57000:
+  xnorm = 54.079883, gnorm = 0.064806, step = 1.000000
+energy: -2.52347
+
+PULL MAG = 1.250000
+Iteration 58000:
+  xnorm = 54.078197, gnorm = 0.021234, step = 1.000000
+energy: -2.52348
+
+PULL MAG = 1.250000
+Iteration 59000:
+  xnorm = 54.077592, gnorm = 0.042191, step = 1.000000
+energy: -2.52349
+
+PULL MAG = 1.250000
+Iteration 60000:
+  xnorm = 54.076882, gnorm = 0.020310, step = 1.000000
+energy: -2.52349
+
+PULL MAG = 1.250000
+Iteration 61000:
+  xnorm = 54.075663, gnorm = 0.037052, step = 1.000000
+energy: -2.5235
+
+PULL MAG = 1.250000
+Iteration 62000:
+  xnorm = 54.073590, gnorm = 0.016110, step = 1.000000
+energy: -2.52352
+
+PULL MAG = 1.250000
+Iteration 63000:
+  xnorm = 54.073304, gnorm = 0.011221, step = 1.000000
+energy: -2.52352
+
+PULL MAG = 1.250000
+Iteration 64000:
+  xnorm = 54.072795, gnorm = 0.018879, step = 1.000000
+energy: -2.52353
+
+PULL MAG = 1.250000
+Iteration 65000:
+  xnorm = 54.070972, gnorm = 0.033176, step = 1.000000
+energy: -2.52354
+
+PULL MAG = 1.250000
+Iteration 66000:
+  xnorm = 54.069861, gnorm = 0.020304, step = 1.000000
+energy: -2.52355
+
+PULL MAG = 1.250000
+Iteration 67000:
+  xnorm = 54.069277, gnorm = 0.016142, step = 1.000000
+energy: -2.52355
+
+PULL MAG = 1.250000
+Iteration 68000:
+  xnorm = 54.068693, gnorm = 0.021906, step = 1.000000
+energy: -2.52356
+
+PULL MAG = 1.250000
+Iteration 69000:
+  xnorm = 54.068175, gnorm = 0.010210, step = 1.000000
+energy: -2.52356
+
+PULL MAG = 1.250000
+Iteration 70000:
+  xnorm = 54.067653, gnorm = 0.015469, step = 1.000000
+energy: -2.52357
+
+PULL MAG = 1.250000
+Iteration 71000:
+  xnorm = 54.067354, gnorm = 0.042876, step = 1.000000
+energy: -2.52357
+
+PULL MAG = 1.250000
+Iteration 72000:
+  xnorm = 54.063487, gnorm = 0.024289, step = 1.000000
+energy: -2.5236
+
+PULL MAG = 1.250000
+Iteration 73000:
+  xnorm = 54.062916, gnorm = 0.025961, step = 1.000000
+energy: -2.52361
+
+PULL MAG = 1.250000
+Iteration 74000:
+  xnorm = 54.062318, gnorm = 0.064476, step = 0.500000
+energy: -2.52361
+
+PULL MAG = 1.250000
+Iteration 75000:
+  xnorm = 54.061889, gnorm = 0.011914, step = 1.000000
+energy: -2.52362
+
+PULL MAG = 1.250000
+Iteration 76000:
+  xnorm = 54.061531, gnorm = 0.026727, step = 1.000000
+energy: -2.52362
+
+PULL MAG = 1.250000
+Iteration 77000:
+  xnorm = 54.061162, gnorm = 0.050393, step = 1.000000
+energy: -2.52363
+
+PULL MAG = 1.250000
+Iteration 78000:
+  xnorm = 54.060789, gnorm = 0.047180, step = 1.000000
+energy: -2.52363
+
+PULL MAG = 1.250000
+Iteration 79000:
+  xnorm = 54.060358, gnorm = 0.018142, step = 1.000000
+energy: -2.52364
+
+PULL MAG = 1.250000
+Iteration 80000:
+  xnorm = 54.060154, gnorm = 0.012118, step = 1.000000
+energy: -2.52364
+
+PULL MAG = 1.250000
+Iteration 81000:
+  xnorm = 54.059441, gnorm = 0.024501, step = 1.000000
+energy: -2.52364
+
+PULL MAG = 1.250000
+Iteration 82000:
+  xnorm = 54.059082, gnorm = 0.007818, step = 1.000000
+energy: -2.52364
+
+PULL MAG = 1.250000
+Iteration 83000:
+  xnorm = 54.054635, gnorm = 0.044462, step = 1.000000
+energy: -2.52366
+
+PULL MAG = 1.250000
+Iteration 84000:
+  xnorm = 54.050624, gnorm = 0.016268, step = 1.000000
+energy: -2.52368
+
+PULL MAG = 1.250000
+Iteration 85000:
+  xnorm = 54.050320, gnorm = 0.011159, step = 1.000000
+energy: -2.52368
+
+PULL MAG = 1.250000
+Iteration 86000:
+  xnorm = 54.050007, gnorm = 0.024572, step = 1.000000
+energy: -2.52368
+
+PULL MAG = 1.250000
+Iteration 87000:
+  xnorm = 54.049549, gnorm = 0.013703, step = 1.000000
+energy: -2.52368
+
+PULL MAG = 1.250000
+Iteration 88000:
+  xnorm = 54.049234, gnorm = 0.009788, step = 1.000000
+energy: -2.52368
+
+PULL MAG = 1.250000
+Iteration 89000:
+  xnorm = 54.049052, gnorm = 0.006368, step = 1.000000
+energy: -2.52369
+
+PULL MAG = 1.250000
+Iteration 90000:
+  xnorm = 54.048849, gnorm = 0.012714, step = 1.000000
+energy: -2.52369
+
+PULL MAG = 1.250000
+Iteration 91000:
+  xnorm = 54.048542, gnorm = 0.004216, step = 1.000000
+energy: -2.52369
+
+PULL MAG = 1.250000
+Iteration 92000:
+  xnorm = 54.048288, gnorm = 0.005156, step = 1.000000
+energy: -2.52369
+
+PULL MAG = 1.250000
+Iteration 93000:
+  xnorm = 54.047314, gnorm = 0.013035, step = 1.000000
+energy: -2.52369
+
+PULL MAG = 1.250000
+Iteration 94000:
+  xnorm = 54.046824, gnorm = 0.007547, step = 1.000000
+energy: -2.52369
+
+PULL MAG = 1.250000
+Iteration 95000:
+  xnorm = 54.046373, gnorm = 0.019904, step = 1.000000
+energy: -2.52369
+
+PULL MAG = 1.250000
+Iteration 96000:
+  xnorm = 54.045699, gnorm = 0.003961, step = 1.000000
+energy: -2.52369
+
+PULL MAG = 1.250000
+Iteration 97000:
+  xnorm = 54.045538, gnorm = 0.006786, step = 1.000000
+energy: -2.52369
+
+PULL MAG = 1.250000
+Iteration 98000:
+  xnorm = 54.045343, gnorm = 0.004232, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 99000:
+  xnorm = 54.044842, gnorm = 0.007821, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 100000:
+  xnorm = 54.044570, gnorm = 0.013890, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 101000:
+  xnorm = 54.044157, gnorm = 0.004294, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 102000:
+  xnorm = 54.043976, gnorm = 0.005874, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 103000:
+  xnorm = 54.043476, gnorm = 0.003026, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 104000:
+  xnorm = 54.043343, gnorm = 0.007539, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 105000:
+  xnorm = 54.042607, gnorm = 0.024929, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 106000:
+  xnorm = 54.042409, gnorm = 0.007228, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 107000:
+  xnorm = 54.042197, gnorm = 0.001739, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 108000:
+  xnorm = 54.041982, gnorm = 0.003786, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 109000:
+  xnorm = 54.041780, gnorm = 0.004296, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 110000:
+  xnorm = 54.041485, gnorm = 0.004946, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 111000:
+  xnorm = 54.041208, gnorm = 0.003844, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 112000:
+  xnorm = 54.041095, gnorm = 0.002582, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 113000:
+  xnorm = 54.041017, gnorm = 0.002433, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 114000:
+  xnorm = 54.040774, gnorm = 0.003810, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 115000:
+  xnorm = 54.040668, gnorm = 0.006380, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 116000:
+  xnorm = 54.040429, gnorm = 0.004326, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 117000:
+  xnorm = 54.040338, gnorm = 0.004005, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 118000:
+  xnorm = 54.040138, gnorm = 0.006109, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 119000:
+  xnorm = 54.039947, gnorm = 0.004680, step = 0.500000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 120000:
+  xnorm = 54.039864, gnorm = 0.006735, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 121000:
+  xnorm = 54.039412, gnorm = 0.007139, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 122000:
+  xnorm = 54.039279, gnorm = 0.006207, step = 1.000000
+energy: -2.5237
+
+PULL MAG = 1.250000
+Iteration 123000:
+  xnorm = 54.039068, gnorm = 0.002344, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 124000:
+  xnorm = 54.038911, gnorm = 0.012515, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 125000:
+  xnorm = 54.038697, gnorm = 0.014183, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 126000:
+  xnorm = 54.038498, gnorm = 0.002877, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 127000:
+  xnorm = 54.038412, gnorm = 0.001852, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 128000:
+  xnorm = 54.038334, gnorm = 0.001652, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 129000:
+  xnorm = 54.038261, gnorm = 0.002385, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 130000:
+  xnorm = 54.038033, gnorm = 0.003600, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 131000:
+  xnorm = 54.037946, gnorm = 0.003485, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 132000:
+  xnorm = 54.037799, gnorm = 0.001376, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 133000:
+  xnorm = 54.037723, gnorm = 0.001890, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 134000:
+  xnorm = 54.037593, gnorm = 0.001497, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 135000:
+  xnorm = 54.037521, gnorm = 0.001700, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 136000:
+  xnorm = 54.037434, gnorm = 0.002265, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 137000:
+  xnorm = 54.037306, gnorm = 0.001476, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 138000:
+  xnorm = 54.037188, gnorm = 0.001135, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 139000:
+  xnorm = 54.037084, gnorm = 0.002344, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 140000:
+  xnorm = 54.037041, gnorm = 0.001981, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 141000:
+  xnorm = 54.036990, gnorm = 0.003063, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 142000:
+  xnorm = 54.036899, gnorm = 0.001291, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 143000:
+  xnorm = 54.036803, gnorm = 0.000877, step = 1.000000
+energy: -2.52371
+
+PULL MAG = 1.250000
+Iteration 144000:
+  xnorm = 54.036760, gnorm = 0.001717, step = 1.000000
+energy: -2.52371
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000504638
+final distance: 2.06735
+PULL MAG = 1.500000
+Iteration 1000:
+  xnorm = 54.043875, gnorm = 0.168130, step = 1.000000
+energy: -3.04138
+
+PULL MAG = 1.500000
+Iteration 2000:
+  xnorm = 54.044120, gnorm = 0.244732, step = 1.000000
+energy: -3.04194
+
+PULL MAG = 1.500000
+Iteration 3000:
+  xnorm = 54.044149, gnorm = 0.504195, step = 1.000000
+energy: -3.04232
+
+PULL MAG = 1.500000
+Iteration 4000:
+  xnorm = 54.042962, gnorm = 0.350551, step = 1.000000
+energy: -3.04251
+
+PULL MAG = 1.500000
+Iteration 5000:
+  xnorm = 54.040402, gnorm = 0.328636, step = 1.000000
+energy: -3.0427
+
+PULL MAG = 1.500000
+Iteration 6000:
+  xnorm = 54.036561, gnorm = 0.092110, step = 1.000000
+energy: -3.04296
+
+PULL MAG = 1.500000
+Iteration 7000:
+  xnorm = 54.020049, gnorm = 0.174680, step = 1.000000
+energy: -3.04362
+
+PULL MAG = 1.500000
+Iteration 8000:
+  xnorm = 54.016763, gnorm = 0.091188, step = 1.000000
+energy: -3.04377
+
+PULL MAG = 1.500000
+Iteration 9000:
+  xnorm = 54.007401, gnorm = 0.105256, step = 1.000000
+energy: -3.04402
+
+PULL MAG = 1.500000
+Iteration 10000:
+  xnorm = 54.003890, gnorm = 0.071537, step = 1.000000
+energy: -3.04413
+
+PULL MAG = 1.500000
+Iteration 11000:
+  xnorm = 53.998242, gnorm = 0.132784, step = 1.000000
+energy: -3.04425
+
+PULL MAG = 1.500000
+Iteration 12000:
+  xnorm = 53.978230, gnorm = 0.469054, step = 1.000000
+energy: -3.04479
+
+PULL MAG = 1.500000
+Iteration 13000:
+  xnorm = 53.974836, gnorm = 0.056277, step = 1.000000
+energy: -3.04491
+
+PULL MAG = 1.500000
+Iteration 14000:
+  xnorm = 53.972401, gnorm = 0.064046, step = 1.000000
+energy: -3.04497
+
+PULL MAG = 1.500000
+Iteration 15000:
+  xnorm = 53.964871, gnorm = 0.131024, step = 1.000000
+energy: -3.04508
+
+PULL MAG = 1.500000
+Iteration 16000:
+  xnorm = 53.962893, gnorm = 0.089930, step = 1.000000
+energy: -3.04516
+
+PULL MAG = 1.500000
+Iteration 17000:
+  xnorm = 53.961763, gnorm = 0.068140, step = 1.000000
+energy: -3.04521
+
+PULL MAG = 1.500000
+Iteration 18000:
+  xnorm = 53.952516, gnorm = 0.102304, step = 1.000000
+energy: -3.04541
+
+PULL MAG = 1.500000
+Iteration 19000:
+  xnorm = 53.948223, gnorm = 0.100821, step = 1.000000
+energy: -3.0455
+
+PULL MAG = 1.500000
+Iteration 20000:
+  xnorm = 53.940953, gnorm = 0.064040, step = 1.000000
+energy: -3.04562
+
+PULL MAG = 1.500000
+Iteration 21000:
+  xnorm = 53.938798, gnorm = 0.071891, step = 1.000000
+energy: -3.04567
+
+PULL MAG = 1.500000
+Iteration 22000:
+  xnorm = 53.936307, gnorm = 0.130810, step = 1.000000
+energy: -3.04572
+
+PULL MAG = 1.500000
+Iteration 23000:
+  xnorm = 53.932461, gnorm = 0.065512, step = 1.000000
+energy: -3.04579
+
+PULL MAG = 1.500000
+Iteration 24000:
+  xnorm = 53.931156, gnorm = 0.099282, step = 1.000000
+energy: -3.04581
+
+PULL MAG = 1.500000
+Iteration 25000:
+  xnorm = 53.929574, gnorm = 0.064013, step = 1.000000
+energy: -3.04584
+
+PULL MAG = 1.500000
+Iteration 26000:
+  xnorm = 53.924738, gnorm = 0.080996, step = 1.000000
+energy: -3.04592
+
+PULL MAG = 1.500000
+Iteration 27000:
+  xnorm = 53.922045, gnorm = 0.051180, step = 1.000000
+energy: -3.04596
+
+PULL MAG = 1.500000
+Iteration 28000:
+  xnorm = 53.920063, gnorm = 0.030289, step = 1.000000
+energy: -3.04599
+
+PULL MAG = 1.500000
+Iteration 29000:
+  xnorm = 53.916844, gnorm = 0.050067, step = 1.000000
+energy: -3.04604
+
+PULL MAG = 1.500000
+Iteration 30000:
+  xnorm = 53.915370, gnorm = 0.023727, step = 1.000000
+energy: -3.04606
+
+PULL MAG = 1.500000
+Iteration 31000:
+  xnorm = 53.909918, gnorm = 0.082701, step = 1.000000
+energy: -3.04612
+
+PULL MAG = 1.500000
+Iteration 32000:
+  xnorm = 53.907734, gnorm = 0.044964, step = 1.000000
+energy: -3.04616
+
+PULL MAG = 1.500000
+Iteration 33000:
+  xnorm = 53.906883, gnorm = 0.032405, step = 1.000000
+energy: -3.04618
+
+PULL MAG = 1.500000
+Iteration 34000:
+  xnorm = 53.900580, gnorm = 0.046219, step = 1.000000
+energy: -3.04624
+
+PULL MAG = 1.500000
+Iteration 35000:
+  xnorm = 53.899519, gnorm = 0.080793, step = 1.000000
+energy: -3.04626
+
+PULL MAG = 1.500000
+Iteration 36000:
+  xnorm = 53.898515, gnorm = 0.041914, step = 1.000000
+energy: -3.04628
+
+PULL MAG = 1.500000
+Iteration 37000:
+  xnorm = 53.896193, gnorm = 0.036737, step = 1.000000
+energy: -3.0463
+
+PULL MAG = 1.500000
+Iteration 38000:
+  xnorm = 53.894747, gnorm = 0.085392, step = 1.000000
+energy: -3.04632
+
+PULL MAG = 1.500000
+Iteration 39000:
+  xnorm = 53.893433, gnorm = 0.021672, step = 1.000000
+energy: -3.04633
+
+PULL MAG = 1.500000
+Iteration 40000:
+  xnorm = 53.892151, gnorm = 0.090638, step = 1.000000
+energy: -3.04634
+
+PULL MAG = 1.500000
+Iteration 41000:
+  xnorm = 53.888508, gnorm = 0.030331, step = 1.000000
+energy: -3.04638
+
+PULL MAG = 1.500000
+Iteration 42000:
+  xnorm = 53.887539, gnorm = 0.011726, step = 1.000000
+energy: -3.04639
+
+PULL MAG = 1.500000
+Iteration 43000:
+  xnorm = 53.884921, gnorm = 0.119786, step = 1.000000
+energy: -3.04641
+
+PULL MAG = 1.500000
+Iteration 44000:
+  xnorm = 53.881015, gnorm = 0.033799, step = 1.000000
+energy: -3.04645
+
+PULL MAG = 1.500000
+Iteration 45000:
+  xnorm = 53.880706, gnorm = 0.020040, step = 1.000000
+energy: -3.04645
+
+PULL MAG = 1.500000
+Iteration 46000:
+  xnorm = 53.879168, gnorm = 0.053829, step = 1.000000
+energy: -3.04646
+
+PULL MAG = 1.500000
+Iteration 47000:
+  xnorm = 53.865489, gnorm = 0.023660, step = 1.000000
+energy: -3.04656
+
+PULL MAG = 1.500000
+Iteration 48000:
+  xnorm = 53.865160, gnorm = 0.023626, step = 1.000000
+energy: -3.04656
+
+PULL MAG = 1.500000
+Iteration 49000:
+  xnorm = 53.864330, gnorm = 0.018731, step = 1.000000
+energy: -3.04656
+
+PULL MAG = 1.500000
+Iteration 50000:
+  xnorm = 53.863275, gnorm = 0.015827, step = 1.000000
+energy: -3.04657
+
+PULL MAG = 1.500000
+Iteration 51000:
+  xnorm = 53.862573, gnorm = 0.024553, step = 1.000000
+energy: -3.04657
+
+PULL MAG = 1.500000
+Iteration 52000:
+  xnorm = 53.861728, gnorm = 0.019633, step = 1.000000
+energy: -3.04658
+
+PULL MAG = 1.500000
+Iteration 53000:
+  xnorm = 53.861313, gnorm = 0.025420, step = 1.000000
+energy: -3.04658
+
+PULL MAG = 1.500000
+Iteration 54000:
+  xnorm = 53.859891, gnorm = 0.016241, step = 1.000000
+energy: -3.04659
+
+PULL MAG = 1.500000
+Iteration 55000:
+  xnorm = 53.859382, gnorm = 0.015995, step = 1.000000
+energy: -3.04659
+
+PULL MAG = 1.500000
+Iteration 56000:
+  xnorm = 53.858897, gnorm = 0.032520, step = 1.000000
+energy: -3.04659
+
+PULL MAG = 1.500000
+Iteration 57000:
+  xnorm = 53.858260, gnorm = 0.056779, step = 1.000000
+energy: -3.0466
+
+PULL MAG = 1.500000
+Iteration 58000:
+  xnorm = 53.856384, gnorm = 0.026548, step = 1.000000
+energy: -3.0466
+
+PULL MAG = 1.500000
+Iteration 59000:
+  xnorm = 53.855715, gnorm = 0.029697, step = 1.000000
+energy: -3.04661
+
+PULL MAG = 1.500000
+Iteration 60000:
+  xnorm = 53.855209, gnorm = 0.008601, step = 1.000000
+energy: -3.04661
+
+PULL MAG = 1.500000
+Iteration 61000:
+  xnorm = 53.854612, gnorm = 0.024819, step = 1.000000
+energy: -3.04661
+
+PULL MAG = 1.500000
+Iteration 62000:
+  xnorm = 53.853708, gnorm = 0.007336, step = 1.000000
+energy: -3.04661
+
+PULL MAG = 1.500000
+Iteration 63000:
+  xnorm = 53.853155, gnorm = 0.026598, step = 1.000000
+energy: -3.04662
+
+PULL MAG = 1.500000
+Iteration 64000:
+  xnorm = 53.852365, gnorm = 0.014123, step = 1.000000
+energy: -3.04662
+
+PULL MAG = 1.500000
+Iteration 65000:
+  xnorm = 53.851661, gnorm = 0.006171, step = 1.000000
+energy: -3.04662
+
+PULL MAG = 1.500000
+Iteration 66000:
+  xnorm = 53.851420, gnorm = 0.007804, step = 1.000000
+energy: -3.04662
+
+PULL MAG = 1.500000
+Iteration 67000:
+  xnorm = 53.851094, gnorm = 0.018133, step = 1.000000
+energy: -3.04662
+
+PULL MAG = 1.500000
+Iteration 68000:
+  xnorm = 53.850923, gnorm = 0.009570, step = 1.000000
+energy: -3.04663
+
+PULL MAG = 1.500000
+Iteration 69000:
+  xnorm = 53.850208, gnorm = 0.012682, step = 1.000000
+energy: -3.04663
+
+PULL MAG = 1.500000
+Iteration 70000:
+  xnorm = 53.849921, gnorm = 0.012789, step = 1.000000
+energy: -3.04663
+
+PULL MAG = 1.500000
+Iteration 71000:
+  xnorm = 53.849611, gnorm = 0.006992, step = 1.000000
+energy: -3.04663
+
+PULL MAG = 1.500000
+Iteration 72000:
+  xnorm = 53.849316, gnorm = 0.007281, step = 1.000000
+energy: -3.04663
+
+PULL MAG = 1.500000
+Iteration 73000:
+  xnorm = 53.849027, gnorm = 0.006826, step = 1.000000
+energy: -3.04663
+
+PULL MAG = 1.500000
+Iteration 74000:
+  xnorm = 53.847264, gnorm = 0.019367, step = 1.000000
+energy: -3.04664
+
+PULL MAG = 1.500000
+Iteration 75000:
+  xnorm = 53.846785, gnorm = 0.004718, step = 1.000000
+energy: -3.04664
+
+PULL MAG = 1.500000
+Iteration 76000:
+  xnorm = 53.846244, gnorm = 0.009674, step = 1.000000
+energy: -3.04664
+
+PULL MAG = 1.500000
+Iteration 77000:
+  xnorm = 53.845959, gnorm = 0.009501, step = 0.500000
+energy: -3.04664
+
+PULL MAG = 1.500000
+Iteration 78000:
+  xnorm = 53.845719, gnorm = 0.013857, step = 0.500000
+energy: -3.04664
+
+PULL MAG = 1.500000
+Iteration 79000:
+  xnorm = 53.844960, gnorm = 0.008298, step = 1.000000
+energy: -3.04664
+
+PULL MAG = 1.500000
+Iteration 80000:
+  xnorm = 53.844762, gnorm = 0.003238, step = 1.000000
+energy: -3.04664
+
+PULL MAG = 1.500000
+Iteration 81000:
+  xnorm = 53.843779, gnorm = 0.014773, step = 1.000000
+energy: -3.04664
+
+PULL MAG = 1.500000
+Iteration 82000:
+  xnorm = 53.843350, gnorm = 0.005538, step = 1.000000
+energy: -3.04664
+
+PULL MAG = 1.500000
+Iteration 83000:
+  xnorm = 53.842973, gnorm = 0.004272, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 84000:
+  xnorm = 53.842645, gnorm = 0.010897, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 85000:
+  xnorm = 53.842398, gnorm = 0.011519, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 86000:
+  xnorm = 53.842177, gnorm = 0.003901, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 87000:
+  xnorm = 53.841842, gnorm = 0.012516, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 88000:
+  xnorm = 53.841094, gnorm = 0.004632, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 89000:
+  xnorm = 53.840990, gnorm = 0.003590, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 90000:
+  xnorm = 53.840670, gnorm = 0.005182, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 91000:
+  xnorm = 53.840523, gnorm = 0.009283, step = 0.500000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 92000:
+  xnorm = 53.840340, gnorm = 0.001903, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 93000:
+  xnorm = 53.839936, gnorm = 0.022203, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 94000:
+  xnorm = 53.838897, gnorm = 0.014305, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 95000:
+  xnorm = 53.838662, gnorm = 0.002964, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 96000:
+  xnorm = 53.838606, gnorm = 0.003756, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 97000:
+  xnorm = 53.838394, gnorm = 0.004977, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 98000:
+  xnorm = 53.838246, gnorm = 0.001923, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 99000:
+  xnorm = 53.838035, gnorm = 0.003558, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 100000:
+  xnorm = 53.837945, gnorm = 0.002149, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 101000:
+  xnorm = 53.837784, gnorm = 0.004707, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 102000:
+  xnorm = 53.837497, gnorm = 0.003977, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 103000:
+  xnorm = 53.837448, gnorm = 0.001400, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 104000:
+  xnorm = 53.837382, gnorm = 0.002744, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 105000:
+  xnorm = 53.837288, gnorm = 0.003876, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 106000:
+  xnorm = 53.837215, gnorm = 0.005036, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 107000:
+  xnorm = 53.837156, gnorm = 0.001623, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 108000:
+  xnorm = 53.836940, gnorm = 0.001735, step = 1.000000
+energy: -3.04665
+
+PULL MAG = 1.500000
+Iteration 109000:
+  xnorm = 53.836818, gnorm = 0.008891, step = 1.000000
+energy: -3.04665
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000490443
+final distance: 2.11265
+PULL MAG = 1.750000
+Iteration 1000:
+  xnorm = 53.845456, gnorm = 0.499158, step = 1.000000
+energy: -3.57579
+
+PULL MAG = 1.750000
+Iteration 2000:
+  xnorm = 53.847634, gnorm = 0.155289, step = 1.000000
+energy: -3.57636
+
+PULL MAG = 1.750000
+Iteration 3000:
+  xnorm = 53.845720, gnorm = 0.097488, step = 1.000000
+energy: -3.57657
+
+PULL MAG = 1.750000
+Iteration 4000:
+  xnorm = 53.843082, gnorm = 0.164125, step = 1.000000
+energy: -3.57675
+
+PULL MAG = 1.750000
+Iteration 5000:
+  xnorm = 53.838854, gnorm = 0.112444, step = 1.000000
+energy: -3.57689
+
+PULL MAG = 1.750000
+Iteration 6000:
+  xnorm = 53.835242, gnorm = 0.196774, step = 1.000000
+energy: -3.57706
+
+PULL MAG = 1.750000
+Iteration 7000:
+  xnorm = 53.831701, gnorm = 0.059717, step = 1.000000
+energy: -3.57717
+
+PULL MAG = 1.750000
+Iteration 8000:
+  xnorm = 53.828962, gnorm = 0.090416, step = 1.000000
+energy: -3.57725
+
+PULL MAG = 1.750000
+Iteration 9000:
+  xnorm = 53.824862, gnorm = 0.068600, step = 1.000000
+energy: -3.57737
+
+PULL MAG = 1.750000
+Iteration 10000:
+  xnorm = 53.823123, gnorm = 0.039070, step = 1.000000
+energy: -3.57741
+
+PULL MAG = 1.750000
+Iteration 11000:
+  xnorm = 53.814053, gnorm = 0.116812, step = 1.000000
+energy: -3.57764
+
+PULL MAG = 1.750000
+Iteration 12000:
+  xnorm = 53.811003, gnorm = 0.054957, step = 1.000000
+energy: -3.57772
+
+PULL MAG = 1.750000
+Iteration 13000:
+  xnorm = 53.799837, gnorm = 0.059314, step = 1.000000
+energy: -3.57797
+
+PULL MAG = 1.750000
+Iteration 14000:
+  xnorm = 53.797239, gnorm = 0.058812, step = 1.000000
+energy: -3.57801
+
+PULL MAG = 1.750000
+Iteration 15000:
+  xnorm = 53.794712, gnorm = 0.072580, step = 1.000000
+energy: -3.57806
+
+PULL MAG = 1.750000
+Iteration 16000:
+  xnorm = 53.793081, gnorm = 0.058526, step = 1.000000
+energy: -3.5781
+
+PULL MAG = 1.750000
+Iteration 17000:
+  xnorm = 53.791709, gnorm = 0.029372, step = 1.000000
+energy: -3.57813
+
+PULL MAG = 1.750000
+Iteration 18000:
+  xnorm = 53.788785, gnorm = 0.057859, step = 1.000000
+energy: -3.57818
+
+PULL MAG = 1.750000
+Iteration 19000:
+  xnorm = 53.783640, gnorm = 0.103924, step = 1.000000
+energy: -3.57827
+
+PULL MAG = 1.750000
+Iteration 20000:
+  xnorm = 53.781295, gnorm = 0.102918, step = 1.000000
+energy: -3.57831
+
+PULL MAG = 1.750000
+Iteration 21000:
+  xnorm = 53.779884, gnorm = 0.085881, step = 0.500000
+energy: -3.57834
+
+PULL MAG = 1.750000
+Iteration 22000:
+  xnorm = 53.774025, gnorm = 0.044402, step = 1.000000
+energy: -3.57844
+
+PULL MAG = 1.750000
+Iteration 23000:
+  xnorm = 53.771732, gnorm = 0.040831, step = 1.000000
+energy: -3.57847
+
+PULL MAG = 1.750000
+Iteration 24000:
+  xnorm = 53.770483, gnorm = 0.041085, step = 1.000000
+energy: -3.57849
+
+PULL MAG = 1.750000
+Iteration 25000:
+  xnorm = 53.766129, gnorm = 0.069245, step = 1.000000
+energy: -3.57854
+
+PULL MAG = 1.750000
+Iteration 26000:
+  xnorm = 53.761200, gnorm = 0.038517, step = 1.000000
+energy: -3.57861
+
+PULL MAG = 1.750000
+Iteration 27000:
+  xnorm = 53.759496, gnorm = 0.067376, step = 1.000000
+energy: -3.57863
+
+PULL MAG = 1.750000
+Iteration 28000:
+  xnorm = 53.758708, gnorm = 0.024481, step = 1.000000
+energy: -3.57865
+
+PULL MAG = 1.750000
+Iteration 29000:
+  xnorm = 53.757154, gnorm = 0.025073, step = 1.000000
+energy: -3.57867
+
+PULL MAG = 1.750000
+Iteration 30000:
+  xnorm = 53.752944, gnorm = 0.094066, step = 1.000000
+energy: -3.57871
+
+PULL MAG = 1.750000
+Iteration 31000:
+  xnorm = 53.752130, gnorm = 0.017252, step = 1.000000
+energy: -3.57873
+
+PULL MAG = 1.750000
+Iteration 32000:
+  xnorm = 53.750823, gnorm = 0.019891, step = 1.000000
+energy: -3.57874
+
+PULL MAG = 1.750000
+Iteration 33000:
+  xnorm = 53.750160, gnorm = 0.029069, step = 1.000000
+energy: -3.57875
+
+PULL MAG = 1.750000
+Iteration 34000:
+  xnorm = 53.748088, gnorm = 0.038088, step = 1.000000
+energy: -3.57877
+
+PULL MAG = 1.750000
+Iteration 35000:
+  xnorm = 53.747225, gnorm = 0.042968, step = 1.000000
+energy: -3.57878
+
+PULL MAG = 1.750000
+Iteration 36000:
+  xnorm = 53.743911, gnorm = 0.037697, step = 1.000000
+energy: -3.57881
+
+PULL MAG = 1.750000
+Iteration 37000:
+  xnorm = 53.742910, gnorm = 0.014198, step = 1.000000
+energy: -3.57882
+
+PULL MAG = 1.750000
+Iteration 38000:
+  xnorm = 53.741213, gnorm = 0.026981, step = 1.000000
+energy: -3.57883
+
+PULL MAG = 1.750000
+Iteration 39000:
+  xnorm = 53.739963, gnorm = 0.013989, step = 1.000000
+energy: -3.57885
+
+PULL MAG = 1.750000
+Iteration 40000:
+  xnorm = 53.738348, gnorm = 0.016365, step = 1.000000
+energy: -3.57886
+
+PULL MAG = 1.750000
+Iteration 41000:
+  xnorm = 53.737856, gnorm = 0.024214, step = 1.000000
+energy: -3.57887
+
+PULL MAG = 1.750000
+Iteration 42000:
+  xnorm = 53.736663, gnorm = 0.033593, step = 1.000000
+energy: -3.57888
+
+PULL MAG = 1.750000
+Iteration 43000:
+  xnorm = 53.735256, gnorm = 0.012811, step = 1.000000
+energy: -3.57889
+
+PULL MAG = 1.750000
+Iteration 44000:
+  xnorm = 53.734266, gnorm = 0.018700, step = 1.000000
+energy: -3.5789
+
+PULL MAG = 1.750000
+Iteration 45000:
+  xnorm = 53.733500, gnorm = 0.019194, step = 1.000000
+energy: -3.5789
+
+PULL MAG = 1.750000
+Iteration 46000:
+  xnorm = 53.732936, gnorm = 0.018938, step = 1.000000
+energy: -3.57891
+
+PULL MAG = 1.750000
+Iteration 47000:
+  xnorm = 53.731566, gnorm = 0.021021, step = 1.000000
+energy: -3.57891
+
+PULL MAG = 1.750000
+Iteration 48000:
+  xnorm = 53.730870, gnorm = 0.017169, step = 1.000000
+energy: -3.57892
+
+PULL MAG = 1.750000
+Iteration 49000:
+  xnorm = 53.730271, gnorm = 0.029901, step = 1.000000
+energy: -3.57892
+
+PULL MAG = 1.750000
+Iteration 50000:
+  xnorm = 53.729331, gnorm = 0.030998, step = 1.000000
+energy: -3.57893
+
+PULL MAG = 1.750000
+Iteration 51000:
+  xnorm = 53.727296, gnorm = 0.010821, step = 1.000000
+energy: -3.57894
+
+PULL MAG = 1.750000
+Iteration 52000:
+  xnorm = 53.726739, gnorm = 0.023017, step = 1.000000
+energy: -3.57895
+
+PULL MAG = 1.750000
+Iteration 53000:
+  xnorm = 53.725778, gnorm = 0.013987, step = 1.000000
+energy: -3.57895
+
+PULL MAG = 1.750000
+Iteration 54000:
+  xnorm = 53.724938, gnorm = 0.010617, step = 1.000000
+energy: -3.57895
+
+PULL MAG = 1.750000
+Iteration 55000:
+  xnorm = 53.724672, gnorm = 0.011433, step = 1.000000
+energy: -3.57896
+
+PULL MAG = 1.750000
+Iteration 56000:
+  xnorm = 53.723679, gnorm = 0.028631, step = 1.000000
+energy: -3.57896
+
+PULL MAG = 1.750000
+Iteration 57000:
+  xnorm = 53.722241, gnorm = 0.013196, step = 1.000000
+energy: -3.57897
+
+PULL MAG = 1.750000
+Iteration 58000:
+  xnorm = 53.721808, gnorm = 0.020006, step = 1.000000
+energy: -3.57897
+
+PULL MAG = 1.750000
+Iteration 59000:
+  xnorm = 53.717702, gnorm = 0.039952, step = 1.000000
+energy: -3.57898
+
+PULL MAG = 1.750000
+Iteration 60000:
+  xnorm = 53.717151, gnorm = 0.026890, step = 0.500000
+energy: -3.57899
+
+PULL MAG = 1.750000
+Iteration 61000:
+  xnorm = 53.717132, gnorm = 0.007199, step = 1.000000
+energy: -3.57899
+
+PULL MAG = 1.750000
+Iteration 62000:
+  xnorm = 53.716878, gnorm = 0.016794, step = 1.000000
+energy: -3.57899
+
+PULL MAG = 1.750000
+Iteration 63000:
+  xnorm = 53.716352, gnorm = 0.008485, step = 1.000000
+energy: -3.57899
+
+PULL MAG = 1.750000
+Iteration 64000:
+  xnorm = 53.715808, gnorm = 0.021258, step = 1.000000
+energy: -3.57899
+
+PULL MAG = 1.750000
+Iteration 65000:
+  xnorm = 53.714381, gnorm = 0.017172, step = 1.000000
+energy: -3.579
+
+PULL MAG = 1.750000
+Iteration 66000:
+  xnorm = 53.714078, gnorm = 0.004628, step = 1.000000
+energy: -3.579
+
+PULL MAG = 1.750000
+Iteration 67000:
+  xnorm = 53.713840, gnorm = 0.004952, step = 1.000000
+energy: -3.579
+
+PULL MAG = 1.750000
+Iteration 68000:
+  xnorm = 53.713693, gnorm = 0.016400, step = 1.000000
+energy: -3.579
+
+PULL MAG = 1.750000
+Iteration 69000:
+  xnorm = 53.713455, gnorm = 0.016907, step = 1.000000
+energy: -3.579
+
+PULL MAG = 1.750000
+Iteration 70000:
+  xnorm = 53.712670, gnorm = 0.003555, step = 1.000000
+energy: -3.579
+
+PULL MAG = 1.750000
+Iteration 71000:
+  xnorm = 53.712361, gnorm = 0.006505, step = 1.000000
+energy: -3.579
+
+PULL MAG = 1.750000
+Iteration 72000:
+  xnorm = 53.712055, gnorm = 0.005047, step = 1.000000
+energy: -3.579
+
+PULL MAG = 1.750000
+Iteration 73000:
+  xnorm = 53.711705, gnorm = 0.016884, step = 1.000000
+energy: -3.579
+
+PULL MAG = 1.750000
+Iteration 74000:
+  xnorm = 53.711010, gnorm = 0.012844, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 75000:
+  xnorm = 53.710915, gnorm = 0.016766, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 76000:
+  xnorm = 53.710602, gnorm = 0.010829, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 77000:
+  xnorm = 53.710302, gnorm = 0.004299, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 78000:
+  xnorm = 53.710174, gnorm = 0.003846, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 79000:
+  xnorm = 53.709727, gnorm = 0.007930, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 80000:
+  xnorm = 53.709589, gnorm = 0.005065, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 81000:
+  xnorm = 53.709495, gnorm = 0.006513, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 82000:
+  xnorm = 53.708504, gnorm = 0.005348, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 83000:
+  xnorm = 53.708287, gnorm = 0.003573, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 84000:
+  xnorm = 53.708227, gnorm = 0.002372, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 85000:
+  xnorm = 53.708126, gnorm = 0.002341, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 86000:
+  xnorm = 53.707979, gnorm = 0.004654, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 87000:
+  xnorm = 53.707816, gnorm = 0.003462, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 88000:
+  xnorm = 53.707684, gnorm = 0.003197, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 89000:
+  xnorm = 53.707528, gnorm = 0.003044, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 90000:
+  xnorm = 53.707443, gnorm = 0.002864, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 91000:
+  xnorm = 53.707360, gnorm = 0.003058, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 92000:
+  xnorm = 53.707296, gnorm = 0.002255, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 93000:
+  xnorm = 53.707215, gnorm = 0.002771, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 94000:
+  xnorm = 53.707044, gnorm = 0.001682, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 95000:
+  xnorm = 53.706916, gnorm = 0.004819, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 96000:
+  xnorm = 53.706573, gnorm = 0.001449, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 97000:
+  xnorm = 53.706481, gnorm = 0.002937, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 98000:
+  xnorm = 53.706258, gnorm = 0.001688, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 99000:
+  xnorm = 53.706202, gnorm = 0.002142, step = 0.500000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 100000:
+  xnorm = 53.706159, gnorm = 0.001210, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 101000:
+  xnorm = 53.706106, gnorm = 0.002551, step = 1.000000
+energy: -3.57901
+
+PULL MAG = 1.750000
+Iteration 102000:
+  xnorm = 53.705949, gnorm = 0.001734, step = 1.000000
+energy: -3.57901
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000533142
+final distance: 2.14337
+PULL MAG = 2.000000
+Iteration 1000:
+  xnorm = 53.715168, gnorm = 0.137273, step = 1.000000
+energy: -4.11574
+
+PULL MAG = 2.000000
+Iteration 2000:
+  xnorm = 53.715076, gnorm = 0.130634, step = 1.000000
+energy: -4.11612
+
+PULL MAG = 2.000000
+Iteration 3000:
+  xnorm = 53.715035, gnorm = 0.075982, step = 1.000000
+energy: -4.11628
+
+PULL MAG = 2.000000
+Iteration 4000:
+  xnorm = 53.711464, gnorm = 0.231343, step = 1.000000
+energy: -4.11644
+
+PULL MAG = 2.000000
+Iteration 5000:
+  xnorm = 53.710790, gnorm = 0.080098, step = 1.000000
+energy: -4.11652
+
+PULL MAG = 2.000000
+Iteration 6000:
+  xnorm = 53.702764, gnorm = 0.111377, step = 1.000000
+energy: -4.11668
+
+PULL MAG = 2.000000
+Iteration 7000:
+  xnorm = 53.698997, gnorm = 0.080287, step = 1.000000
+energy: -4.11679
+
+PULL MAG = 2.000000
+Iteration 8000:
+  xnorm = 53.696067, gnorm = 0.080259, step = 1.000000
+energy: -4.11687
+
+PULL MAG = 2.000000
+Iteration 9000:
+  xnorm = 53.694258, gnorm = 0.105717, step = 1.000000
+energy: -4.11691
+
+PULL MAG = 2.000000
+Iteration 10000:
+  xnorm = 53.689511, gnorm = 0.060477, step = 1.000000
+energy: -4.117
+
+PULL MAG = 2.000000
+Iteration 11000:
+  xnorm = 53.687948, gnorm = 0.043282, step = 1.000000
+energy: -4.11704
+
+PULL MAG = 2.000000
+Iteration 12000:
+  xnorm = 53.685997, gnorm = 0.064254, step = 1.000000
+energy: -4.11707
+
+PULL MAG = 2.000000
+Iteration 13000:
+  xnorm = 53.678500, gnorm = 0.053964, step = 1.000000
+energy: -4.11719
+
+PULL MAG = 2.000000
+Iteration 14000:
+  xnorm = 53.677539, gnorm = 0.044102, step = 1.000000
+energy: -4.11721
+
+PULL MAG = 2.000000
+Iteration 15000:
+  xnorm = 53.675618, gnorm = 0.053968, step = 1.000000
+energy: -4.11724
+
+PULL MAG = 2.000000
+Iteration 16000:
+  xnorm = 53.674674, gnorm = 0.020347, step = 1.000000
+energy: -4.11726
+
+PULL MAG = 2.000000
+Iteration 17000:
+  xnorm = 53.664458, gnorm = 0.303767, step = 1.000000
+energy: -4.11739
+
+PULL MAG = 2.000000
+Iteration 18000:
+  xnorm = 53.662659, gnorm = 0.032935, step = 1.000000
+energy: -4.11742
+
+PULL MAG = 2.000000
+Iteration 19000:
+  xnorm = 53.661141, gnorm = 0.025117, step = 1.000000
+energy: -4.11743
+
+PULL MAG = 2.000000
+Iteration 20000:
+  xnorm = 53.659528, gnorm = 0.034262, step = 1.000000
+energy: -4.11744
+
+PULL MAG = 2.000000
+Iteration 21000:
+  xnorm = 53.659004, gnorm = 0.134449, step = 1.000000
+energy: -4.11745
+
+PULL MAG = 2.000000
+Iteration 22000:
+  xnorm = 53.657660, gnorm = 0.063554, step = 1.000000
+energy: -4.11747
+
+PULL MAG = 2.000000
+Iteration 23000:
+  xnorm = 53.656487, gnorm = 0.024678, step = 1.000000
+energy: -4.11748
+
+PULL MAG = 2.000000
+Iteration 24000:
+  xnorm = 53.655456, gnorm = 0.053030, step = 1.000000
+energy: -4.11749
+
+PULL MAG = 2.000000
+Iteration 25000:
+  xnorm = 53.654588, gnorm = 0.037725, step = 1.000000
+energy: -4.1175
+
+PULL MAG = 2.000000
+Iteration 26000:
+  xnorm = 53.652844, gnorm = 0.024333, step = 1.000000
+energy: -4.11751
+
+PULL MAG = 2.000000
+Iteration 27000:
+  xnorm = 53.651977, gnorm = 0.017321, step = 1.000000
+energy: -4.11752
+
+PULL MAG = 2.000000
+Iteration 28000:
+  xnorm = 53.651097, gnorm = 0.030125, step = 1.000000
+energy: -4.11752
+
+PULL MAG = 2.000000
+Iteration 29000:
+  xnorm = 53.650294, gnorm = 0.026589, step = 1.000000
+energy: -4.11753
+
+PULL MAG = 2.000000
+Iteration 30000:
+  xnorm = 53.649563, gnorm = 0.013024, step = 1.000000
+energy: -4.11754
+
+PULL MAG = 2.000000
+Iteration 31000:
+  xnorm = 53.649216, gnorm = 0.011090, step = 1.000000
+energy: -4.11754
+
+PULL MAG = 2.000000
+Iteration 32000:
+  xnorm = 53.647846, gnorm = 0.027733, step = 1.000000
+energy: -4.11755
+
+PULL MAG = 2.000000
+Iteration 33000:
+  xnorm = 53.646777, gnorm = 0.013703, step = 1.000000
+energy: -4.11756
+
+PULL MAG = 2.000000
+Iteration 34000:
+  xnorm = 53.646092, gnorm = 0.023498, step = 1.000000
+energy: -4.11756
+
+PULL MAG = 2.000000
+Iteration 35000:
+  xnorm = 53.645786, gnorm = 0.010170, step = 1.000000
+energy: -4.11756
+
+PULL MAG = 2.000000
+Iteration 36000:
+  xnorm = 53.645330, gnorm = 0.009791, step = 1.000000
+energy: -4.11756
+
+PULL MAG = 2.000000
+Iteration 37000:
+  xnorm = 53.644990, gnorm = 0.043213, step = 1.000000
+energy: -4.11757
+
+PULL MAG = 2.000000
+Iteration 38000:
+  xnorm = 53.641396, gnorm = 0.011731, step = 1.000000
+energy: -4.11758
+
+PULL MAG = 2.000000
+Iteration 39000:
+  xnorm = 53.641192, gnorm = 0.011736, step = 1.000000
+energy: -4.11759
+
+PULL MAG = 2.000000
+Iteration 40000:
+  xnorm = 53.640880, gnorm = 0.006484, step = 1.000000
+energy: -4.11759
+
+PULL MAG = 2.000000
+Iteration 41000:
+  xnorm = 53.640415, gnorm = 0.019486, step = 1.000000
+energy: -4.11759
+
+PULL MAG = 2.000000
+Iteration 42000:
+  xnorm = 53.640012, gnorm = 0.013804, step = 1.000000
+energy: -4.11759
+
+PULL MAG = 2.000000
+Iteration 43000:
+  xnorm = 53.639246, gnorm = 0.010007, step = 1.000000
+energy: -4.11759
+
+PULL MAG = 2.000000
+Iteration 44000:
+  xnorm = 53.639031, gnorm = 0.021273, step = 0.500000
+energy: -4.1176
+
+PULL MAG = 2.000000
+Iteration 45000:
+  xnorm = 53.638445, gnorm = 0.006325, step = 1.000000
+energy: -4.1176
+
+PULL MAG = 2.000000
+Iteration 46000:
+  xnorm = 53.638238, gnorm = 0.012260, step = 1.000000
+energy: -4.1176
+
+PULL MAG = 2.000000
+Iteration 47000:
+  xnorm = 53.637936, gnorm = 0.007185, step = 1.000000
+energy: -4.1176
+
+PULL MAG = 2.000000
+Iteration 48000:
+  xnorm = 53.637552, gnorm = 0.023358, step = 1.000000
+energy: -4.1176
+
+PULL MAG = 2.000000
+Iteration 49000:
+  xnorm = 53.636761, gnorm = 0.006064, step = 1.000000
+energy: -4.1176
+
+PULL MAG = 2.000000
+Iteration 50000:
+  xnorm = 53.636543, gnorm = 0.005530, step = 1.000000
+energy: -4.1176
+
+PULL MAG = 2.000000
+Iteration 51000:
+  xnorm = 53.636308, gnorm = 0.007254, step = 1.000000
+energy: -4.1176
+
+PULL MAG = 2.000000
+Iteration 52000:
+  xnorm = 53.635809, gnorm = 0.011073, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 53000:
+  xnorm = 53.635592, gnorm = 0.008610, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 54000:
+  xnorm = 53.635193, gnorm = 0.009855, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 55000:
+  xnorm = 53.634252, gnorm = 0.004710, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 56000:
+  xnorm = 53.634146, gnorm = 0.005742, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 57000:
+  xnorm = 53.633793, gnorm = 0.003635, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 58000:
+  xnorm = 53.633704, gnorm = 0.008233, step = 0.500000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 59000:
+  xnorm = 53.633573, gnorm = 0.006171, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 60000:
+  xnorm = 53.633410, gnorm = 0.006524, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 61000:
+  xnorm = 53.633232, gnorm = 0.010063, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 62000:
+  xnorm = 53.632834, gnorm = 0.009186, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 63000:
+  xnorm = 53.632709, gnorm = 0.003636, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 64000:
+  xnorm = 53.632588, gnorm = 0.004831, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 65000:
+  xnorm = 53.632440, gnorm = 0.003807, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 66000:
+  xnorm = 53.632153, gnorm = 0.004137, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 67000:
+  xnorm = 53.632102, gnorm = 0.005910, step = 0.500000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 68000:
+  xnorm = 53.631868, gnorm = 0.002159, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 69000:
+  xnorm = 53.631778, gnorm = 0.009967, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 70000:
+  xnorm = 53.631610, gnorm = 0.007029, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 71000:
+  xnorm = 53.631487, gnorm = 0.002947, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 72000:
+  xnorm = 53.631222, gnorm = 0.007727, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 73000:
+  xnorm = 53.631145, gnorm = 0.004153, step = 0.500000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 74000:
+  xnorm = 53.631000, gnorm = 0.002605, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 75000:
+  xnorm = 53.630959, gnorm = 0.001298, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 76000:
+  xnorm = 53.630911, gnorm = 0.001298, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 77000:
+  xnorm = 53.630635, gnorm = 0.004280, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 78000:
+  xnorm = 53.630477, gnorm = 0.001491, step = 1.000000
+energy: -4.11761
+
+PULL MAG = 2.000000
+Iteration 79000:
+  xnorm = 53.630451, gnorm = 0.000934, step = 1.000000
+energy: -4.11762
+
+PULL MAG = 2.000000
+Iteration 80000:
+  xnorm = 53.630349, gnorm = 0.001843, step = 1.000000
+energy: -4.11762
+
+PULL MAG = 2.000000
+Iteration 81000:
+  xnorm = 53.629931, gnorm = 0.009155, step = 1.000000
+energy: -4.11762
+
+PULL MAG = 2.000000
+Iteration 82000:
+  xnorm = 53.629763, gnorm = 0.009471, step = 1.000000
+energy: -4.11762
+
+PULL MAG = 2.000000
+Iteration 83000:
+  xnorm = 53.629741, gnorm = 0.001286, step = 1.000000
+energy: -4.11762
+
+PULL MAG = 2.000000
+Iteration 84000:
+  xnorm = 53.629690, gnorm = 0.001467, step = 1.000000
+energy: -4.11762
+
+PULL MAG = 2.000000
+Iteration 85000:
+  xnorm = 53.629620, gnorm = 0.001403, step = 1.000000
+energy: -4.11762
+
+PULL MAG = 2.000000
+Iteration 86000:
+  xnorm = 53.629483, gnorm = 0.001554, step = 1.000000
+energy: -4.11762
+
+PULL MAG = 2.000000
+Iteration 87000:
+  xnorm = 53.629457, gnorm = 0.001916, step = 1.000000
+energy: -4.11762
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000532934
+final distance: 2.16386
+PULL MAG = 2.500000
+Iteration 1000:
+  xnorm = 53.647911, gnorm = 0.459058, step = 1.000000
+energy: -5.2027
+
+PULL MAG = 2.500000
+Iteration 2000:
+  xnorm = 53.647276, gnorm = 0.581033, step = 1.000000
+energy: -5.20369
+
+PULL MAG = 2.500000
+Iteration 3000:
+  xnorm = 53.644536, gnorm = 0.159159, step = 1.000000
+energy: -5.2041
+
+PULL MAG = 2.500000
+Iteration 4000:
+  xnorm = 53.641430, gnorm = 0.118186, step = 1.000000
+energy: -5.20435
+
+PULL MAG = 2.500000
+Iteration 5000:
+  xnorm = 53.638062, gnorm = 0.259467, step = 1.000000
+energy: -5.20459
+
+PULL MAG = 2.500000
+Iteration 6000:
+  xnorm = 53.630619, gnorm = 0.219495, step = 1.000000
+energy: -5.20483
+
+PULL MAG = 2.500000
+Iteration 7000:
+  xnorm = 53.628415, gnorm = 0.273557, step = 1.000000
+energy: -5.20501
+
+PULL MAG = 2.500000
+Iteration 8000:
+  xnorm = 53.622416, gnorm = 0.073418, step = 1.000000
+energy: -5.20517
+
+PULL MAG = 2.500000
+Iteration 9000:
+  xnorm = 53.620728, gnorm = 0.118264, step = 0.500000
+energy: -5.20526
+
+PULL MAG = 2.500000
+Iteration 10000:
+  xnorm = 53.617374, gnorm = 0.097523, step = 1.000000
+energy: -5.20538
+
+PULL MAG = 2.500000
+Iteration 11000:
+  xnorm = 53.615396, gnorm = 0.093888, step = 1.000000
+energy: -5.20544
+
+PULL MAG = 2.500000
+Iteration 12000:
+  xnorm = 53.609321, gnorm = 0.130086, step = 1.000000
+energy: -5.20561
+
+PULL MAG = 2.500000
+Iteration 13000:
+  xnorm = 53.607654, gnorm = 0.046805, step = 1.000000
+energy: -5.20567
+
+PULL MAG = 2.500000
+Iteration 14000:
+  xnorm = 53.600939, gnorm = 0.104646, step = 1.000000
+energy: -5.20583
+
+PULL MAG = 2.500000
+Iteration 15000:
+  xnorm = 53.598223, gnorm = 0.067512, step = 1.000000
+energy: -5.20592
+
+PULL MAG = 2.500000
+Iteration 16000:
+  xnorm = 53.596633, gnorm = 0.033651, step = 1.000000
+energy: -5.20595
+
+PULL MAG = 2.500000
+Iteration 17000:
+  xnorm = 53.590893, gnorm = 0.088187, step = 1.000000
+energy: -5.20607
+
+PULL MAG = 2.500000
+Iteration 18000:
+  xnorm = 53.588550, gnorm = 0.022518, step = 1.000000
+energy: -5.20613
+
+PULL MAG = 2.500000
+Iteration 19000:
+  xnorm = 53.587262, gnorm = 0.149168, step = 1.000000
+energy: -5.20615
+
+PULL MAG = 2.500000
+Iteration 20000:
+  xnorm = 53.580154, gnorm = 0.064485, step = 1.000000
+energy: -5.20626
+
+PULL MAG = 2.500000
+Iteration 21000:
+  xnorm = 53.578982, gnorm = 0.028916, step = 1.000000
+energy: -5.2063
+
+PULL MAG = 2.500000
+Iteration 22000:
+  xnorm = 53.578561, gnorm = 0.027417, step = 1.000000
+energy: -5.2063
+
+PULL MAG = 2.500000
+Iteration 23000:
+  xnorm = 53.577752, gnorm = 0.023903, step = 1.000000
+energy: -5.20632
+
+PULL MAG = 2.500000
+Iteration 24000:
+  xnorm = 53.577264, gnorm = 0.025500, step = 1.000000
+energy: -5.20632
+
+PULL MAG = 2.500000
+Iteration 25000:
+  xnorm = 53.575337, gnorm = 0.025888, step = 1.000000
+energy: -5.20635
+
+PULL MAG = 2.500000
+Iteration 26000:
+  xnorm = 53.574494, gnorm = 0.021820, step = 1.000000
+energy: -5.20636
+
+PULL MAG = 2.500000
+Iteration 27000:
+  xnorm = 53.571058, gnorm = 0.051353, step = 1.000000
+energy: -5.2064
+
+PULL MAG = 2.500000
+Iteration 28000:
+  xnorm = 53.570257, gnorm = 0.023036, step = 1.000000
+energy: -5.20641
+
+PULL MAG = 2.500000
+Iteration 29000:
+  xnorm = 53.569488, gnorm = 0.018375, step = 1.000000
+energy: -5.20642
+
+PULL MAG = 2.500000
+Iteration 30000:
+  xnorm = 53.568615, gnorm = 0.034661, step = 1.000000
+energy: -5.20643
+
+PULL MAG = 2.500000
+Iteration 31000:
+  xnorm = 53.567586, gnorm = 0.011520, step = 1.000000
+energy: -5.20644
+
+PULL MAG = 2.500000
+Iteration 32000:
+  xnorm = 53.565169, gnorm = 0.062255, step = 1.000000
+energy: -5.20645
+
+PULL MAG = 2.500000
+Iteration 33000:
+  xnorm = 53.562521, gnorm = 0.026022, step = 1.000000
+energy: -5.20648
+
+PULL MAG = 2.500000
+Iteration 34000:
+  xnorm = 53.562189, gnorm = 0.014970, step = 1.000000
+energy: -5.20649
+
+PULL MAG = 2.500000
+Iteration 35000:
+  xnorm = 53.561721, gnorm = 0.013184, step = 1.000000
+energy: -5.20649
+
+PULL MAG = 2.500000
+Iteration 36000:
+  xnorm = 53.561218, gnorm = 0.021617, step = 1.000000
+energy: -5.2065
+
+PULL MAG = 2.500000
+Iteration 37000:
+  xnorm = 53.560708, gnorm = 0.013686, step = 1.000000
+energy: -5.2065
+
+PULL MAG = 2.500000
+Iteration 38000:
+  xnorm = 53.560388, gnorm = 0.012798, step = 1.000000
+energy: -5.2065
+
+PULL MAG = 2.500000
+Iteration 39000:
+  xnorm = 53.559238, gnorm = 0.025212, step = 1.000000
+energy: -5.20651
+
+PULL MAG = 2.500000
+Iteration 40000:
+  xnorm = 53.558990, gnorm = 0.009112, step = 1.000000
+energy: -5.20651
+
+PULL MAG = 2.500000
+Iteration 41000:
+  xnorm = 53.558503, gnorm = 0.027616, step = 1.000000
+energy: -5.20651
+
+PULL MAG = 2.500000
+Iteration 42000:
+  xnorm = 53.558097, gnorm = 0.005092, step = 1.000000
+energy: -5.20651
+
+PULL MAG = 2.500000
+Iteration 43000:
+  xnorm = 53.557591, gnorm = 0.012349, step = 1.000000
+energy: -5.20652
+
+PULL MAG = 2.500000
+Iteration 44000:
+  xnorm = 53.556999, gnorm = 0.024965, step = 1.000000
+energy: -5.20652
+
+PULL MAG = 2.500000
+Iteration 45000:
+  xnorm = 53.556773, gnorm = 0.017334, step = 1.000000
+energy: -5.20652
+
+PULL MAG = 2.500000
+Iteration 46000:
+  xnorm = 53.556376, gnorm = 0.026050, step = 1.000000
+energy: -5.20652
+
+PULL MAG = 2.500000
+Iteration 47000:
+  xnorm = 53.556128, gnorm = 0.009082, step = 1.000000
+energy: -5.20652
+
+PULL MAG = 2.500000
+Iteration 48000:
+  xnorm = 53.555742, gnorm = 0.010362, step = 1.000000
+energy: -5.20653
+
+PULL MAG = 2.500000
+Iteration 49000:
+  xnorm = 53.555422, gnorm = 0.005827, step = 1.000000
+energy: -5.20653
+
+PULL MAG = 2.500000
+Iteration 50000:
+  xnorm = 53.555297, gnorm = 0.010291, step = 1.000000
+energy: -5.20653
+
+PULL MAG = 2.500000
+Iteration 51000:
+  xnorm = 53.555039, gnorm = 0.012535, step = 1.000000
+energy: -5.20653
+
+PULL MAG = 2.500000
+Iteration 52000:
+  xnorm = 53.553824, gnorm = 0.029643, step = 1.000000
+energy: -5.20653
+
+PULL MAG = 2.500000
+Iteration 53000:
+  xnorm = 53.553623, gnorm = 0.005552, step = 1.000000
+energy: -5.20653
+
+PULL MAG = 2.500000
+Iteration 54000:
+  xnorm = 53.553417, gnorm = 0.005086, step = 1.000000
+energy: -5.20654
+
+PULL MAG = 2.500000
+Iteration 55000:
+  xnorm = 53.553221, gnorm = 0.006635, step = 1.000000
+energy: -5.20654
+
+PULL MAG = 2.500000
+Iteration 56000:
+  xnorm = 53.552926, gnorm = 0.009950, step = 0.500000
+energy: -5.20654
+
+PULL MAG = 2.500000
+Iteration 57000:
+  xnorm = 53.552506, gnorm = 0.012244, step = 1.000000
+energy: -5.20654
+
+PULL MAG = 2.500000
+Iteration 58000:
+  xnorm = 53.551911, gnorm = 0.005906, step = 1.000000
+energy: -5.20654
+
+PULL MAG = 2.500000
+Iteration 59000:
+  xnorm = 53.551678, gnorm = 0.005980, step = 1.000000
+energy: -5.20654
+
+PULL MAG = 2.500000
+Iteration 60000:
+  xnorm = 53.551404, gnorm = 0.008041, step = 1.000000
+energy: -5.20655
+
+PULL MAG = 2.500000
+Iteration 61000:
+  xnorm = 53.551299, gnorm = 0.007781, step = 1.000000
+energy: -5.20655
+
+PULL MAG = 2.500000
+Iteration 62000:
+  xnorm = 53.551046, gnorm = 0.011790, step = 1.000000
+energy: -5.20655
+
+PULL MAG = 2.500000
+Iteration 63000:
+  xnorm = 53.550727, gnorm = 0.024097, step = 1.000000
+energy: -5.20655
+
+PULL MAG = 2.500000
+Iteration 64000:
+  xnorm = 53.548710, gnorm = 0.032470, step = 1.000000
+energy: -5.20656
+
+PULL MAG = 2.500000
+Iteration 65000:
+  xnorm = 53.548410, gnorm = 0.013857, step = 1.000000
+energy: -5.20657
+
+PULL MAG = 2.500000
+Iteration 66000:
+  xnorm = 53.548183, gnorm = 0.019488, step = 1.000000
+energy: -5.20657
+
+PULL MAG = 2.500000
+Iteration 67000:
+  xnorm = 53.547985, gnorm = 0.021124, step = 1.000000
+energy: -5.20657
+
+PULL MAG = 2.500000
+Iteration 68000:
+  xnorm = 53.547502, gnorm = 0.014341, step = 1.000000
+energy: -5.20658
+
+PULL MAG = 2.500000
+Iteration 69000:
+  xnorm = 53.547172, gnorm = 0.008258, step = 1.000000
+energy: -5.20658
+
+PULL MAG = 2.500000
+Iteration 70000:
+  xnorm = 53.546915, gnorm = 0.033887, step = 1.000000
+energy: -5.20659
+
+PULL MAG = 2.500000
+Iteration 71000:
+  xnorm = 53.546545, gnorm = 0.009711, step = 1.000000
+energy: -5.20659
+
+PULL MAG = 2.500000
+Iteration 72000:
+  xnorm = 53.546245, gnorm = 0.009489, step = 1.000000
+energy: -5.20659
+
+PULL MAG = 2.500000
+Iteration 73000:
+  xnorm = 53.545995, gnorm = 0.017562, step = 1.000000
+energy: -5.2066
+
+PULL MAG = 2.500000
+Iteration 74000:
+  xnorm = 53.545534, gnorm = 0.034727, step = 1.000000
+energy: -5.2066
+
+PULL MAG = 2.500000
+Iteration 75000:
+  xnorm = 53.544959, gnorm = 0.022247, step = 1.000000
+energy: -5.20661
+
+PULL MAG = 2.500000
+Iteration 76000:
+  xnorm = 53.543802, gnorm = 0.015890, step = 1.000000
+energy: -5.20662
+
+PULL MAG = 2.500000
+Iteration 77000:
+  xnorm = 53.543686, gnorm = 0.013810, step = 1.000000
+energy: -5.20662
+
+PULL MAG = 2.500000
+Iteration 78000:
+  xnorm = 53.543536, gnorm = 0.011184, step = 1.000000
+energy: -5.20662
+
+PULL MAG = 2.500000
+Iteration 79000:
+  xnorm = 53.542937, gnorm = 0.073099, step = 1.000000
+energy: -5.20663
+
+PULL MAG = 2.500000
+Iteration 80000:
+  xnorm = 53.542528, gnorm = 0.023340, step = 1.000000
+energy: -5.20663
+
+PULL MAG = 2.500000
+Iteration 81000:
+  xnorm = 53.542222, gnorm = 0.008337, step = 1.000000
+energy: -5.20663
+
+PULL MAG = 2.500000
+Iteration 82000:
+  xnorm = 53.542085, gnorm = 0.004660, step = 1.000000
+energy: -5.20663
+
+PULL MAG = 2.500000
+Iteration 83000:
+  xnorm = 53.541183, gnorm = 0.038297, step = 1.000000
+energy: -5.20664
+
+PULL MAG = 2.500000
+Iteration 84000:
+  xnorm = 53.539419, gnorm = 0.017941, step = 1.000000
+energy: -5.20665
+
+PULL MAG = 2.500000
+Iteration 85000:
+  xnorm = 53.539307, gnorm = 0.014425, step = 1.000000
+energy: -5.20665
+
+PULL MAG = 2.500000
+Iteration 86000:
+  xnorm = 53.539058, gnorm = 0.037046, step = 1.000000
+energy: -5.20665
+
+PULL MAG = 2.500000
+Iteration 87000:
+  xnorm = 53.538757, gnorm = 0.011974, step = 1.000000
+energy: -5.20665
+
+PULL MAG = 2.500000
+Iteration 88000:
+  xnorm = 53.538563, gnorm = 0.011974, step = 1.000000
+energy: -5.20665
+
+PULL MAG = 2.500000
+Iteration 89000:
+  xnorm = 53.538354, gnorm = 0.005284, step = 1.000000
+energy: -5.20666
+
+PULL MAG = 2.500000
+Iteration 90000:
+  xnorm = 53.538268, gnorm = 0.003976, step = 1.000000
+energy: -5.20666
+
+PULL MAG = 2.500000
+Iteration 91000:
+  xnorm = 53.537579, gnorm = 0.027321, step = 0.500000
+energy: -5.20666
+
+PULL MAG = 2.500000
+Iteration 92000:
+  xnorm = 53.537382, gnorm = 0.007604, step = 1.000000
+energy: -5.20666
+
+PULL MAG = 2.500000
+Iteration 93000:
+  xnorm = 53.537177, gnorm = 0.007156, step = 1.000000
+energy: -5.20666
+
+PULL MAG = 2.500000
+Iteration 94000:
+  xnorm = 53.537117, gnorm = 0.005588, step = 1.000000
+energy: -5.20666
+
+PULL MAG = 2.500000
+Iteration 95000:
+  xnorm = 53.536417, gnorm = 0.034234, step = 1.000000
+energy: -5.20666
+
+PULL MAG = 2.500000
+Iteration 96000:
+  xnorm = 53.535053, gnorm = 0.007059, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 97000:
+  xnorm = 53.534941, gnorm = 0.002042, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 98000:
+  xnorm = 53.534822, gnorm = 0.010942, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 99000:
+  xnorm = 53.534589, gnorm = 0.009245, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 100000:
+  xnorm = 53.534490, gnorm = 0.003034, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 101000:
+  xnorm = 53.534219, gnorm = 0.010053, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 102000:
+  xnorm = 53.534107, gnorm = 0.002577, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 103000:
+  xnorm = 53.534052, gnorm = 0.003608, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 104000:
+  xnorm = 53.533950, gnorm = 0.004583, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 105000:
+  xnorm = 53.533867, gnorm = 0.001883, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 106000:
+  xnorm = 53.533820, gnorm = 0.002863, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 107000:
+  xnorm = 53.533646, gnorm = 0.005413, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 108000:
+  xnorm = 53.533403, gnorm = 0.002411, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 109000:
+  xnorm = 53.533353, gnorm = 0.001894, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 110000:
+  xnorm = 53.533259, gnorm = 0.004558, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 111000:
+  xnorm = 53.533209, gnorm = 0.001724, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 112000:
+  xnorm = 53.533056, gnorm = 0.002007, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 113000:
+  xnorm = 53.533026, gnorm = 0.002276, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 114000:
+  xnorm = 53.532830, gnorm = 0.004045, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 115000:
+  xnorm = 53.532722, gnorm = 0.001001, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 116000:
+  xnorm = 53.532689, gnorm = 0.001546, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 117000:
+  xnorm = 53.532644, gnorm = 0.002807, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 118000:
+  xnorm = 53.532571, gnorm = 0.001900, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 119000:
+  xnorm = 53.532544, gnorm = 0.002672, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 120000:
+  xnorm = 53.532489, gnorm = 0.001474, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 121000:
+  xnorm = 53.532446, gnorm = 0.001032, step = 1.000000
+energy: -5.20667
+
+PULL MAG = 2.500000
+Iteration 122000:
+  xnorm = 53.532404, gnorm = 0.001313, step = 1.000000
+energy: -5.20667
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000519523
+final distance: 2.18997
+PULL MAG = 3.000000
+Iteration 1000:
+  xnorm = 53.547304, gnorm = 0.290072, step = 1.000000
+energy: -6.30401
+
+PULL MAG = 3.000000
+Iteration 2000:
+  xnorm = 53.548276, gnorm = 0.130478, step = 1.000000
+energy: -6.30455
+
+PULL MAG = 3.000000
+Iteration 3000:
+  xnorm = 53.547618, gnorm = 0.070510, step = 1.000000
+energy: -6.3047
+
+PULL MAG = 3.000000
+Iteration 4000:
+  xnorm = 53.546806, gnorm = 0.089648, step = 1.000000
+energy: -6.3048
+
+PULL MAG = 3.000000
+Iteration 5000:
+  xnorm = 53.545487, gnorm = 0.056609, step = 1.000000
+energy: -6.30492
+
+PULL MAG = 3.000000
+Iteration 6000:
+  xnorm = 53.542659, gnorm = 0.113359, step = 1.000000
+energy: -6.30505
+
+PULL MAG = 3.000000
+Iteration 7000:
+  xnorm = 53.540418, gnorm = 0.043723, step = 1.000000
+energy: -6.30513
+
+PULL MAG = 3.000000
+Iteration 8000:
+  xnorm = 53.527266, gnorm = 0.056567, step = 1.000000
+energy: -6.30536
+
+PULL MAG = 3.000000
+Iteration 9000:
+  xnorm = 53.526668, gnorm = 0.066367, step = 1.000000
+energy: -6.3054
+
+PULL MAG = 3.000000
+Iteration 10000:
+  xnorm = 53.526443, gnorm = 0.037055, step = 1.000000
+energy: -6.30544
+
+PULL MAG = 3.000000
+Iteration 11000:
+  xnorm = 53.525419, gnorm = 0.030930, step = 1.000000
+energy: -6.30547
+
+PULL MAG = 3.000000
+Iteration 12000:
+  xnorm = 53.524022, gnorm = 0.054985, step = 1.000000
+energy: -6.30549
+
+PULL MAG = 3.000000
+Iteration 13000:
+  xnorm = 53.522413, gnorm = 0.029773, step = 1.000000
+energy: -6.30553
+
+PULL MAG = 3.000000
+Iteration 14000:
+  xnorm = 53.520686, gnorm = 0.068510, step = 1.000000
+energy: -6.30556
+
+PULL MAG = 3.000000
+Iteration 15000:
+  xnorm = 53.519410, gnorm = 0.026754, step = 1.000000
+energy: -6.30558
+
+PULL MAG = 3.000000
+Iteration 16000:
+  xnorm = 53.518593, gnorm = 0.056165, step = 1.000000
+energy: -6.3056
+
+PULL MAG = 3.000000
+Iteration 17000:
+  xnorm = 53.515927, gnorm = 0.024287, step = 1.000000
+energy: -6.30564
+
+PULL MAG = 3.000000
+Iteration 18000:
+  xnorm = 53.515567, gnorm = 0.030709, step = 1.000000
+energy: -6.30564
+
+PULL MAG = 3.000000
+Iteration 19000:
+  xnorm = 53.514480, gnorm = 0.023071, step = 1.000000
+energy: -6.30566
+
+PULL MAG = 3.000000
+Iteration 20000:
+  xnorm = 53.513495, gnorm = 0.023781, step = 1.000000
+energy: -6.30567
+
+PULL MAG = 3.000000
+Iteration 21000:
+  xnorm = 53.512561, gnorm = 0.019256, step = 1.000000
+energy: -6.30568
+
+PULL MAG = 3.000000
+Iteration 22000:
+  xnorm = 53.512152, gnorm = 0.037961, step = 1.000000
+energy: -6.30569
+
+PULL MAG = 3.000000
+Iteration 23000:
+  xnorm = 53.511765, gnorm = 0.019545, step = 1.000000
+energy: -6.30569
+
+PULL MAG = 3.000000
+Iteration 24000:
+  xnorm = 53.510946, gnorm = 0.041354, step = 1.000000
+energy: -6.3057
+
+PULL MAG = 3.000000
+Iteration 25000:
+  xnorm = 53.509832, gnorm = 0.028632, step = 1.000000
+energy: -6.30571
+
+PULL MAG = 3.000000
+Iteration 26000:
+  xnorm = 53.509488, gnorm = 0.015166, step = 1.000000
+energy: -6.30572
+
+PULL MAG = 3.000000
+Iteration 27000:
+  xnorm = 53.507844, gnorm = 0.044039, step = 1.000000
+energy: -6.30573
+
+PULL MAG = 3.000000
+Iteration 28000:
+  xnorm = 53.505556, gnorm = 0.009648, step = 1.000000
+energy: -6.30575
+
+PULL MAG = 3.000000
+Iteration 29000:
+  xnorm = 53.505387, gnorm = 0.023250, step = 1.000000
+energy: -6.30575
+
+PULL MAG = 3.000000
+Iteration 30000:
+  xnorm = 53.504941, gnorm = 0.035970, step = 1.000000
+energy: -6.30576
+
+PULL MAG = 3.000000
+Iteration 31000:
+  xnorm = 53.501565, gnorm = 0.031238, step = 1.000000
+energy: -6.30577
+
+PULL MAG = 3.000000
+Iteration 32000:
+  xnorm = 53.500824, gnorm = 0.008933, step = 1.000000
+energy: -6.30578
+
+PULL MAG = 3.000000
+Iteration 33000:
+  xnorm = 53.500790, gnorm = 0.010895, step = 1.000000
+energy: -6.30578
+
+PULL MAG = 3.000000
+Iteration 34000:
+  xnorm = 53.500572, gnorm = 0.004033, step = 1.000000
+energy: -6.30578
+
+PULL MAG = 3.000000
+Iteration 35000:
+  xnorm = 53.500375, gnorm = 0.013660, step = 1.000000
+energy: -6.30578
+
+PULL MAG = 3.000000
+Iteration 36000:
+  xnorm = 53.500252, gnorm = 0.008023, step = 1.000000
+energy: -6.30578
+
+PULL MAG = 3.000000
+Iteration 37000:
+  xnorm = 53.500043, gnorm = 0.003850, step = 1.000000
+energy: -6.30578
+
+PULL MAG = 3.000000
+Iteration 38000:
+  xnorm = 53.499837, gnorm = 0.008666, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 39000:
+  xnorm = 53.499687, gnorm = 0.005079, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 40000:
+  xnorm = 53.499227, gnorm = 0.008676, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 41000:
+  xnorm = 53.499193, gnorm = 0.004428, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 42000:
+  xnorm = 53.498790, gnorm = 0.018167, step = 0.500000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 43000:
+  xnorm = 53.498709, gnorm = 0.003030, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 44000:
+  xnorm = 53.498561, gnorm = 0.019345, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 45000:
+  xnorm = 53.497450, gnorm = 0.008477, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 46000:
+  xnorm = 53.497338, gnorm = 0.005061, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 47000:
+  xnorm = 53.497281, gnorm = 0.002702, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 48000:
+  xnorm = 53.497222, gnorm = 0.002061, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 49000:
+  xnorm = 53.497166, gnorm = 0.001167, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 50000:
+  xnorm = 53.497092, gnorm = 0.005762, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 51000:
+  xnorm = 53.496145, gnorm = 0.007619, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 52000:
+  xnorm = 53.496163, gnorm = 0.001960, step = 1.000000
+energy: -6.30579
+
+PULL MAG = 3.000000
+Iteration 53000:
+  xnorm = 53.496167, gnorm = 0.000840, step = 1.000000
+energy: -6.30579
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000407175
+final distance: 2.20521
+PULL MAG = 3.500000
+Iteration 1000:
+  xnorm = 53.506907, gnorm = 0.213031, step = 1.000000
+energy: -7.41005
+
+PULL MAG = 3.500000
+Iteration 2000:
+  xnorm = 53.508918, gnorm = 0.252971, step = 1.000000
+energy: -7.4104
+
+PULL MAG = 3.500000
+Iteration 3000:
+  xnorm = 53.509410, gnorm = 0.141928, step = 1.000000
+energy: -7.41054
+
+PULL MAG = 3.500000
+Iteration 4000:
+  xnorm = 53.509091, gnorm = 0.062520, step = 1.000000
+energy: -7.41062
+
+PULL MAG = 3.500000
+Iteration 5000:
+  xnorm = 53.508145, gnorm = 0.036718, step = 1.000000
+energy: -7.41069
+
+PULL MAG = 3.500000
+Iteration 6000:
+  xnorm = 53.507277, gnorm = 0.099976, step = 1.000000
+energy: -7.41072
+
+PULL MAG = 3.500000
+Iteration 7000:
+  xnorm = 53.506313, gnorm = 0.048137, step = 1.000000
+energy: -7.41075
+
+PULL MAG = 3.500000
+Iteration 8000:
+  xnorm = 53.501289, gnorm = 0.024775, step = 1.000000
+energy: -7.41084
+
+PULL MAG = 3.500000
+Iteration 9000:
+  xnorm = 53.500919, gnorm = 0.032346, step = 1.000000
+energy: -7.41085
+
+PULL MAG = 3.500000
+Iteration 10000:
+  xnorm = 53.500125, gnorm = 0.057406, step = 1.000000
+energy: -7.41087
+
+PULL MAG = 3.500000
+Iteration 11000:
+  xnorm = 53.498193, gnorm = 0.066240, step = 1.000000
+energy: -7.4109
+
+PULL MAG = 3.500000
+Iteration 12000:
+  xnorm = 53.496284, gnorm = 0.034344, step = 1.000000
+energy: -7.41092
+
+PULL MAG = 3.500000
+Iteration 13000:
+  xnorm = 53.495085, gnorm = 0.025790, step = 1.000000
+energy: -7.41094
+
+PULL MAG = 3.500000
+Iteration 14000:
+  xnorm = 53.494870, gnorm = 0.023786, step = 1.000000
+energy: -7.41095
+
+PULL MAG = 3.500000
+Iteration 15000:
+  xnorm = 53.494137, gnorm = 0.014161, step = 1.000000
+energy: -7.41096
+
+PULL MAG = 3.500000
+Iteration 16000:
+  xnorm = 53.493112, gnorm = 0.057839, step = 1.000000
+energy: -7.41096
+
+PULL MAG = 3.500000
+Iteration 17000:
+  xnorm = 53.492345, gnorm = 0.035242, step = 0.500000
+energy: -7.41097
+
+PULL MAG = 3.500000
+Iteration 18000:
+  xnorm = 53.492104, gnorm = 0.009948, step = 1.000000
+energy: -7.41098
+
+PULL MAG = 3.500000
+Iteration 19000:
+  xnorm = 53.491527, gnorm = 0.022409, step = 1.000000
+energy: -7.41099
+
+PULL MAG = 3.500000
+Iteration 20000:
+  xnorm = 53.491026, gnorm = 0.090094, step = 1.000000
+energy: -7.41099
+
+PULL MAG = 3.500000
+Iteration 21000:
+  xnorm = 53.490270, gnorm = 0.024687, step = 1.000000
+energy: -7.411
+
+PULL MAG = 3.500000
+Iteration 22000:
+  xnorm = 53.489841, gnorm = 0.034852, step = 1.000000
+energy: -7.411
+
+PULL MAG = 3.500000
+Iteration 23000:
+  xnorm = 53.489130, gnorm = 0.022317, step = 1.000000
+energy: -7.41101
+
+PULL MAG = 3.500000
+Iteration 24000:
+  xnorm = 53.488826, gnorm = 0.011875, step = 1.000000
+energy: -7.41101
+
+PULL MAG = 3.500000
+Iteration 25000:
+  xnorm = 53.488496, gnorm = 0.040016, step = 1.000000
+energy: -7.41101
+
+PULL MAG = 3.500000
+Iteration 26000:
+  xnorm = 53.488070, gnorm = 0.036124, step = 1.000000
+energy: -7.41102
+
+PULL MAG = 3.500000
+Iteration 27000:
+  xnorm = 53.487703, gnorm = 0.015248, step = 1.000000
+energy: -7.41102
+
+PULL MAG = 3.500000
+Iteration 28000:
+  xnorm = 53.486793, gnorm = 0.017493, step = 1.000000
+energy: -7.41102
+
+PULL MAG = 3.500000
+Iteration 29000:
+  xnorm = 53.486722, gnorm = 0.012231, step = 0.500000
+energy: -7.41102
+
+PULL MAG = 3.500000
+Iteration 30000:
+  xnorm = 53.486626, gnorm = 0.004680, step = 1.000000
+energy: -7.41102
+
+PULL MAG = 3.500000
+Iteration 31000:
+  xnorm = 53.486471, gnorm = 0.011558, step = 1.000000
+energy: -7.41102
+
+PULL MAG = 3.500000
+Iteration 32000:
+  xnorm = 53.485962, gnorm = 0.009922, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 33000:
+  xnorm = 53.485808, gnorm = 0.014748, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 34000:
+  xnorm = 53.485623, gnorm = 0.004472, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 35000:
+  xnorm = 53.485283, gnorm = 0.009120, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 36000:
+  xnorm = 53.485152, gnorm = 0.007736, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 37000:
+  xnorm = 53.485048, gnorm = 0.006353, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 38000:
+  xnorm = 53.484754, gnorm = 0.005731, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 39000:
+  xnorm = 53.484662, gnorm = 0.005675, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 40000:
+  xnorm = 53.484376, gnorm = 0.024716, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 41000:
+  xnorm = 53.484267, gnorm = 0.005691, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 42000:
+  xnorm = 53.484134, gnorm = 0.006930, step = 1.000000
+energy: -7.41103
+
+PULL MAG = 3.500000
+Iteration 43000:
+  xnorm = 53.483991, gnorm = 0.002977, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 44000:
+  xnorm = 53.483931, gnorm = 0.004006, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 45000:
+  xnorm = 53.483801, gnorm = 0.007666, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 46000:
+  xnorm = 53.483509, gnorm = 0.005534, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 47000:
+  xnorm = 53.483329, gnorm = 0.002679, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 48000:
+  xnorm = 53.483314, gnorm = 0.003202, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 49000:
+  xnorm = 53.483213, gnorm = 0.001674, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 50000:
+  xnorm = 53.483155, gnorm = 0.001968, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 51000:
+  xnorm = 53.483108, gnorm = 0.002089, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 52000:
+  xnorm = 53.482967, gnorm = 0.003258, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 53000:
+  xnorm = 53.482948, gnorm = 0.002721, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 54000:
+  xnorm = 53.482746, gnorm = 0.007588, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 55000:
+  xnorm = 53.482733, gnorm = 0.001854, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 56000:
+  xnorm = 53.482659, gnorm = 0.002480, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 57000:
+  xnorm = 53.482608, gnorm = 0.001746, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 58000:
+  xnorm = 53.482461, gnorm = 0.004099, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 59000:
+  xnorm = 53.482215, gnorm = 0.001862, step = 1.000000
+energy: -7.41104
+
+PULL MAG = 3.500000
+Iteration 60000:
+  xnorm = 53.482206, gnorm = 0.001613, step = 1.000000
+energy: -7.41104
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000473345
+final distance: 2.21506
+PULL MAG = 4.000000
+Iteration 1000:
+  xnorm = 53.492100, gnorm = 0.159930, step = 1.000000
+energy: -8.51986
+
+PULL MAG = 4.000000
+Iteration 2000:
+  xnorm = 53.493343, gnorm = 0.082897, step = 1.000000
+energy: -8.52007
+
+PULL MAG = 4.000000
+Iteration 3000:
+  xnorm = 53.493618, gnorm = 0.046174, step = 1.000000
+energy: -8.52018
+
+PULL MAG = 4.000000
+Iteration 4000:
+  xnorm = 53.493430, gnorm = 0.111473, step = 0.500000
+energy: -8.52022
+
+PULL MAG = 4.000000
+Iteration 5000:
+  xnorm = 53.492933, gnorm = 0.041123, step = 1.000000
+energy: -8.52024
+
+PULL MAG = 4.000000
+Iteration 6000:
+  xnorm = 53.492190, gnorm = 0.115779, step = 1.000000
+energy: -8.52027
+
+PULL MAG = 4.000000
+Iteration 7000:
+  xnorm = 53.491489, gnorm = 0.035933, step = 1.000000
+energy: -8.52029
+
+PULL MAG = 4.000000
+Iteration 8000:
+  xnorm = 53.490097, gnorm = 0.041505, step = 1.000000
+energy: -8.52031
+
+PULL MAG = 4.000000
+Iteration 9000:
+  xnorm = 53.488937, gnorm = 0.045857, step = 1.000000
+energy: -8.52032
+
+PULL MAG = 4.000000
+Iteration 10000:
+  xnorm = 53.488106, gnorm = 0.022195, step = 1.000000
+energy: -8.52034
+
+PULL MAG = 4.000000
+Iteration 11000:
+  xnorm = 53.487485, gnorm = 0.017449, step = 1.000000
+energy: -8.52034
+
+PULL MAG = 4.000000
+Iteration 12000:
+  xnorm = 53.487214, gnorm = 0.040931, step = 1.000000
+energy: -8.52035
+
+PULL MAG = 4.000000
+Iteration 13000:
+  xnorm = 53.486164, gnorm = 0.033786, step = 1.000000
+energy: -8.52036
+
+PULL MAG = 4.000000
+Iteration 14000:
+  xnorm = 53.484678, gnorm = 0.024834, step = 1.000000
+energy: -8.52037
+
+PULL MAG = 4.000000
+Iteration 15000:
+  xnorm = 53.484391, gnorm = 0.007821, step = 1.000000
+energy: -8.52038
+
+PULL MAG = 4.000000
+Iteration 16000:
+  xnorm = 53.484097, gnorm = 0.011990, step = 1.000000
+energy: -8.52038
+
+PULL MAG = 4.000000
+Iteration 17000:
+  xnorm = 53.482726, gnorm = 0.032548, step = 1.000000
+energy: -8.52039
+
+PULL MAG = 4.000000
+Iteration 18000:
+  xnorm = 53.482512, gnorm = 0.019613, step = 1.000000
+energy: -8.52039
+
+PULL MAG = 4.000000
+Iteration 19000:
+  xnorm = 53.482360, gnorm = 0.010879, step = 1.000000
+energy: -8.52039
+
+PULL MAG = 4.000000
+Iteration 20000:
+  xnorm = 53.481252, gnorm = 0.025910, step = 1.000000
+energy: -8.5204
+
+PULL MAG = 4.000000
+Iteration 21000:
+  xnorm = 53.481149, gnorm = 0.018923, step = 1.000000
+energy: -8.5204
+
+PULL MAG = 4.000000
+Iteration 22000:
+  xnorm = 53.481098, gnorm = 0.004732, step = 1.000000
+energy: -8.5204
+
+PULL MAG = 4.000000
+Iteration 23000:
+  xnorm = 53.480826, gnorm = 0.011242, step = 0.500000
+energy: -8.5204
+
+PULL MAG = 4.000000
+Iteration 24000:
+  xnorm = 53.480596, gnorm = 0.008398, step = 1.000000
+energy: -8.5204
+
+PULL MAG = 4.000000
+Iteration 25000:
+  xnorm = 53.480367, gnorm = 0.007297, step = 1.000000
+energy: -8.5204
+
+PULL MAG = 4.000000
+Iteration 26000:
+  xnorm = 53.480261, gnorm = 0.007543, step = 1.000000
+energy: -8.5204
+
+PULL MAG = 4.000000
+Iteration 27000:
+  xnorm = 53.480138, gnorm = 0.002266, step = 1.000000
+energy: -8.5204
+
+PULL MAG = 4.000000
+Iteration 28000:
+  xnorm = 53.479403, gnorm = 0.010424, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 29000:
+  xnorm = 53.479192, gnorm = 0.004219, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 30000:
+  xnorm = 53.479122, gnorm = 0.003178, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 31000:
+  xnorm = 53.479034, gnorm = 0.005247, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 32000:
+  xnorm = 53.478961, gnorm = 0.003101, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 33000:
+  xnorm = 53.478874, gnorm = 0.001918, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 34000:
+  xnorm = 53.478800, gnorm = 0.002958, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 35000:
+  xnorm = 53.478620, gnorm = 0.001829, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 36000:
+  xnorm = 53.478595, gnorm = 0.001227, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 37000:
+  xnorm = 53.478531, gnorm = 0.007024, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 38000:
+  xnorm = 53.478210, gnorm = 0.001624, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 39000:
+  xnorm = 53.478170, gnorm = 0.000815, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 40000:
+  xnorm = 53.478148, gnorm = 0.000791, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 41000:
+  xnorm = 53.478104, gnorm = 0.002381, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 42000:
+  xnorm = 53.478073, gnorm = 0.001471, step = 1.000000
+energy: -8.52041
+
+PULL MAG = 4.000000
+Iteration 43000:
+  xnorm = 53.477901, gnorm = 0.005276, step = 1.000000
+energy: -8.52041
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000527888
+final distance: 2.22201
+PULL MAG = 4.500000
+Iteration 1000:
+  xnorm = 53.485563, gnorm = 0.184548, step = 1.000000
+energy: -9.63239
+
+PULL MAG = 4.500000
+Iteration 2000:
+  xnorm = 53.487167, gnorm = 0.057340, step = 1.000000
+energy: -9.63257
+
+PULL MAG = 4.500000
+Iteration 3000:
+  xnorm = 53.487540, gnorm = 0.046159, step = 1.000000
+energy: -9.63262
+
+PULL MAG = 4.500000
+Iteration 4000:
+  xnorm = 53.487459, gnorm = 0.032717, step = 1.000000
+energy: -9.63266
+
+PULL MAG = 4.500000
+Iteration 5000:
+  xnorm = 53.487148, gnorm = 0.058791, step = 1.000000
+energy: -9.63269
+
+PULL MAG = 4.500000
+Iteration 6000:
+  xnorm = 53.486839, gnorm = 0.025627, step = 1.000000
+energy: -9.6327
+
+PULL MAG = 4.500000
+Iteration 7000:
+  xnorm = 53.485864, gnorm = 0.037885, step = 1.000000
+energy: -9.63272
+
+PULL MAG = 4.500000
+Iteration 8000:
+  xnorm = 53.485500, gnorm = 0.042405, step = 1.000000
+energy: -9.63272
+
+PULL MAG = 4.500000
+Iteration 9000:
+  xnorm = 53.484951, gnorm = 0.017542, step = 1.000000
+energy: -9.63273
+
+PULL MAG = 4.500000
+Iteration 10000:
+  xnorm = 53.484714, gnorm = 0.014966, step = 1.000000
+energy: -9.63273
+
+PULL MAG = 4.500000
+Iteration 11000:
+  xnorm = 53.483611, gnorm = 0.021921, step = 1.000000
+energy: -9.63274
+
+PULL MAG = 4.500000
+Iteration 12000:
+  xnorm = 53.483196, gnorm = 0.016638, step = 1.000000
+energy: -9.63274
+
+PULL MAG = 4.500000
+Iteration 13000:
+  xnorm = 53.482772, gnorm = 0.007272, step = 1.000000
+energy: -9.63275
+
+PULL MAG = 4.500000
+Iteration 14000:
+  xnorm = 53.481846, gnorm = 0.026815, step = 1.000000
+energy: -9.63275
+
+PULL MAG = 4.500000
+Iteration 15000:
+  xnorm = 53.481440, gnorm = 0.023049, step = 1.000000
+energy: -9.63276
+
+PULL MAG = 4.500000
+Iteration 16000:
+  xnorm = 53.481353, gnorm = 0.013821, step = 1.000000
+energy: -9.63276
+
+PULL MAG = 4.500000
+Iteration 17000:
+  xnorm = 53.481124, gnorm = 0.007274, step = 1.000000
+energy: -9.63276
+
+PULL MAG = 4.500000
+Iteration 18000:
+  xnorm = 53.480270, gnorm = 0.026220, step = 1.000000
+energy: -9.63276
+
+PULL MAG = 4.500000
+Iteration 19000:
+  xnorm = 53.480100, gnorm = 0.009443, step = 1.000000
+energy: -9.63276
+
+PULL MAG = 4.500000
+Iteration 20000:
+  xnorm = 53.480012, gnorm = 0.007776, step = 1.000000
+energy: -9.63276
+
+PULL MAG = 4.500000
+Iteration 21000:
+  xnorm = 53.479849, gnorm = 0.005439, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 22000:
+  xnorm = 53.479722, gnorm = 0.009902, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 23000:
+  xnorm = 53.479582, gnorm = 0.010665, step = 0.500000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 24000:
+  xnorm = 53.479475, gnorm = 0.003186, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 25000:
+  xnorm = 53.479276, gnorm = 0.007906, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 26000:
+  xnorm = 53.479160, gnorm = 0.005996, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 27000:
+  xnorm = 53.479062, gnorm = 0.004283, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 28000:
+  xnorm = 53.478804, gnorm = 0.005898, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 29000:
+  xnorm = 53.478757, gnorm = 0.001728, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 30000:
+  xnorm = 53.478683, gnorm = 0.002866, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 31000:
+  xnorm = 53.478642, gnorm = 0.003084, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 32000:
+  xnorm = 53.478584, gnorm = 0.002460, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 33000:
+  xnorm = 53.478493, gnorm = 0.001713, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 34000:
+  xnorm = 53.478420, gnorm = 0.005901, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 35000:
+  xnorm = 53.478131, gnorm = 0.002672, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 36000:
+  xnorm = 53.478111, gnorm = 0.006786, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 37000:
+  xnorm = 53.477969, gnorm = 0.006917, step = 1.000000
+energy: -9.63277
+
+PULL MAG = 4.500000
+Iteration 38000:
+  xnorm = 53.477927, gnorm = 0.002273, step = 1.000000
+energy: -9.63277
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000460358
+final distance: 2.22718
+PULL MAG = 5.000000
+Iteration 1000:
+  xnorm = 53.484503, gnorm = 0.156307, step = 1.000000
+energy: -10.7471
+
+PULL MAG = 5.000000
+Iteration 2000:
+  xnorm = 53.485743, gnorm = 0.041739, step = 1.000000
+energy: -10.7473
+
+PULL MAG = 5.000000
+Iteration 3000:
+  xnorm = 53.486060, gnorm = 0.038288, step = 1.000000
+energy: -10.7473
+
+PULL MAG = 5.000000
+Iteration 4000:
+  xnorm = 53.485649, gnorm = 0.030404, step = 1.000000
+energy: -10.7473
+
+PULL MAG = 5.000000
+Iteration 5000:
+  xnorm = 53.485571, gnorm = 0.041970, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 6000:
+  xnorm = 53.485237, gnorm = 0.029198, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 7000:
+  xnorm = 53.484944, gnorm = 0.012141, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 8000:
+  xnorm = 53.484132, gnorm = 0.012492, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 9000:
+  xnorm = 53.483960, gnorm = 0.013482, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 10000:
+  xnorm = 53.483636, gnorm = 0.013989, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 11000:
+  xnorm = 53.483204, gnorm = 0.022358, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 12000:
+  xnorm = 53.482929, gnorm = 0.010794, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 13000:
+  xnorm = 53.482422, gnorm = 0.022955, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 14000:
+  xnorm = 53.482282, gnorm = 0.010988, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 15000:
+  xnorm = 53.481890, gnorm = 0.008207, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 16000:
+  xnorm = 53.481722, gnorm = 0.011779, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 17000:
+  xnorm = 53.481280, gnorm = 0.029879, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 18000:
+  xnorm = 53.480861, gnorm = 0.010096, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 19000:
+  xnorm = 53.480720, gnorm = 0.006546, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 20000:
+  xnorm = 53.480560, gnorm = 0.014075, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 21000:
+  xnorm = 53.480370, gnorm = 0.008470, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 22000:
+  xnorm = 53.480287, gnorm = 0.010199, step = 0.500000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 23000:
+  xnorm = 53.480184, gnorm = 0.003714, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 24000:
+  xnorm = 53.480118, gnorm = 0.003731, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 25000:
+  xnorm = 53.479953, gnorm = 0.004976, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 26000:
+  xnorm = 53.479901, gnorm = 0.010536, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 27000:
+  xnorm = 53.479589, gnorm = 0.007805, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 28000:
+  xnorm = 53.479543, gnorm = 0.007103, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 29000:
+  xnorm = 53.479439, gnorm = 0.003251, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 30000:
+  xnorm = 53.479392, gnorm = 0.001811, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 31000:
+  xnorm = 53.479282, gnorm = 0.003692, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 32000:
+  xnorm = 53.479267, gnorm = 0.001213, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 33000:
+  xnorm = 53.479129, gnorm = 0.004201, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 34000:
+  xnorm = 53.479070, gnorm = 0.002452, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 35000:
+  xnorm = 53.479047, gnorm = 0.001161, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 36000:
+  xnorm = 53.478975, gnorm = 0.003025, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 37000:
+  xnorm = 53.478926, gnorm = 0.000985, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 38000:
+  xnorm = 53.478897, gnorm = 0.001558, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 39000:
+  xnorm = 53.478859, gnorm = 0.001293, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 40000:
+  xnorm = 53.478823, gnorm = 0.002473, step = 1.000000
+energy: -10.7474
+
+PULL MAG = 5.000000
+Iteration 41000:
+  xnorm = 53.478793, gnorm = 0.000975, step = 1.000000
+energy: -10.7474
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000507116
+final distance: 2.23122
+PULL MAG = 5.500000
+Iteration 1000:
+  xnorm = 53.484590, gnorm = 0.111663, step = 1.000000
+energy: -11.8637
+
+PULL MAG = 5.500000
+Iteration 2000:
+  xnorm = 53.485310, gnorm = 0.090390, step = 0.500000
+energy: -11.8638
+
+PULL MAG = 5.500000
+Iteration 3000:
+  xnorm = 53.485488, gnorm = 0.038069, step = 0.500000
+energy: -11.8638
+
+PULL MAG = 5.500000
+Iteration 4000:
+  xnorm = 53.484829, gnorm = 0.028498, step = 1.000000
+energy: -11.8638
+
+PULL MAG = 5.500000
+Iteration 5000:
+  xnorm = 53.484612, gnorm = 0.030596, step = 1.000000
+energy: -11.8638
+
+PULL MAG = 5.500000
+Iteration 6000:
+  xnorm = 53.484007, gnorm = 0.041850, step = 1.000000
+energy: -11.8638
+
+PULL MAG = 5.500000
+Iteration 7000:
+  xnorm = 53.483553, gnorm = 0.014194, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 8000:
+  xnorm = 53.482941, gnorm = 0.013352, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 9000:
+  xnorm = 53.482728, gnorm = 0.008019, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 10000:
+  xnorm = 53.482539, gnorm = 0.011714, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 11000:
+  xnorm = 53.481118, gnorm = 0.037742, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 12000:
+  xnorm = 53.480791, gnorm = 0.012955, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 13000:
+  xnorm = 53.480747, gnorm = 0.010152, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 14000:
+  xnorm = 53.480604, gnorm = 0.004377, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 15000:
+  xnorm = 53.480318, gnorm = 0.005290, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 16000:
+  xnorm = 53.480204, gnorm = 0.003114, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 17000:
+  xnorm = 53.480019, gnorm = 0.010064, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 18000:
+  xnorm = 53.479888, gnorm = 0.004286, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 19000:
+  xnorm = 53.479746, gnorm = 0.003821, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 20000:
+  xnorm = 53.479693, gnorm = 0.006774, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 21000:
+  xnorm = 53.479531, gnorm = 0.017607, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 22000:
+  xnorm = 53.479421, gnorm = 0.010922, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 23000:
+  xnorm = 53.479219, gnorm = 0.003831, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 24000:
+  xnorm = 53.479100, gnorm = 0.008130, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 25000:
+  xnorm = 53.479014, gnorm = 0.008808, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 26000:
+  xnorm = 53.478945, gnorm = 0.005636, step = 0.500000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 27000:
+  xnorm = 53.478777, gnorm = 0.003834, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 28000:
+  xnorm = 53.478750, gnorm = 0.002161, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 29000:
+  xnorm = 53.478538, gnorm = 0.004726, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 30000:
+  xnorm = 53.478525, gnorm = 0.003521, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 31000:
+  xnorm = 53.478510, gnorm = 0.001792, step = 0.500000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 32000:
+  xnorm = 53.478459, gnorm = 0.002308, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 33000:
+  xnorm = 53.478425, gnorm = 0.001245, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 34000:
+  xnorm = 53.478406, gnorm = 0.000821, step = 1.000000
+energy: -11.8639
+
+PULL MAG = 5.500000
+Iteration 35000:
+  xnorm = 53.478337, gnorm = 0.001153, step = 1.000000
+energy: -11.8639
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000508172
+final distance: 2.2345
+PULL MAG = 6.000000
+Iteration 1000:
+  xnorm = 53.483004, gnorm = 0.083306, step = 1.000000
+energy: -12.9817
+
+PULL MAG = 6.000000
+Iteration 2000:
+  xnorm = 53.483915, gnorm = 0.070465, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 3000:
+  xnorm = 53.483616, gnorm = 0.055324, step = 0.500000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 4000:
+  xnorm = 53.483217, gnorm = 0.053452, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 5000:
+  xnorm = 53.482690, gnorm = 0.018635, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 6000:
+  xnorm = 53.482241, gnorm = 0.017673, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 7000:
+  xnorm = 53.481680, gnorm = 0.014620, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 8000:
+  xnorm = 53.481439, gnorm = 0.019438, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 9000:
+  xnorm = 53.480802, gnorm = 0.011201, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 10000:
+  xnorm = 53.480572, gnorm = 0.005584, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 11000:
+  xnorm = 53.480246, gnorm = 0.010526, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 12000:
+  xnorm = 53.479978, gnorm = 0.026870, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 13000:
+  xnorm = 53.479779, gnorm = 0.021850, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 14000:
+  xnorm = 53.479572, gnorm = 0.005195, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 15000:
+  xnorm = 53.479354, gnorm = 0.014030, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 16000:
+  xnorm = 53.479120, gnorm = 0.004606, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 17000:
+  xnorm = 53.479062, gnorm = 0.011003, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 18000:
+  xnorm = 53.479002, gnorm = 0.002510, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 19000:
+  xnorm = 53.478930, gnorm = 0.006209, step = 0.500000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 20000:
+  xnorm = 53.478777, gnorm = 0.004188, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 21000:
+  xnorm = 53.478705, gnorm = 0.005492, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 22000:
+  xnorm = 53.478637, gnorm = 0.004886, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 23000:
+  xnorm = 53.478275, gnorm = 0.010569, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 24000:
+  xnorm = 53.478077, gnorm = 0.003997, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 25000:
+  xnorm = 53.478067, gnorm = 0.001333, step = 1.000000
+energy: -12.9818
+
+PULL MAG = 6.000000
+Iteration 26000:
+  xnorm = 53.478048, gnorm = 0.000959, step = 1.000000
+energy: -12.9818
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000522715
+final distance: 2.23722
+PULL MAG = 6.500000
+Iteration 1000:
+  xnorm = 53.482537, gnorm = 0.062272, step = 1.000000
+energy: -14.1009
+
+PULL MAG = 6.500000
+Iteration 2000:
+  xnorm = 53.482663, gnorm = 0.033934, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 3000:
+  xnorm = 53.482316, gnorm = 0.022061, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 4000:
+  xnorm = 53.481960, gnorm = 0.018787, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 5000:
+  xnorm = 53.481415, gnorm = 0.010852, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 6000:
+  xnorm = 53.481122, gnorm = 0.016543, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 7000:
+  xnorm = 53.480783, gnorm = 0.027128, step = 0.500000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 8000:
+  xnorm = 53.480395, gnorm = 0.018632, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 9000:
+  xnorm = 53.480061, gnorm = 0.012774, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 10000:
+  xnorm = 53.479850, gnorm = 0.009408, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 11000:
+  xnorm = 53.479636, gnorm = 0.007705, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 12000:
+  xnorm = 53.479255, gnorm = 0.009206, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 13000:
+  xnorm = 53.479152, gnorm = 0.013038, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 14000:
+  xnorm = 53.478967, gnorm = 0.010723, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 15000:
+  xnorm = 53.478842, gnorm = 0.005812, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 16000:
+  xnorm = 53.478693, gnorm = 0.003944, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 17000:
+  xnorm = 53.478648, gnorm = 0.008110, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 18000:
+  xnorm = 53.478446, gnorm = 0.009063, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 19000:
+  xnorm = 53.478284, gnorm = 0.017296, step = 0.500000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 20000:
+  xnorm = 53.478044, gnorm = 0.005749, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 21000:
+  xnorm = 53.478051, gnorm = 0.001827, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 22000:
+  xnorm = 53.478005, gnorm = 0.004895, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 23000:
+  xnorm = 53.477914, gnorm = 0.003580, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 24000:
+  xnorm = 53.477855, gnorm = 0.002644, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 25000:
+  xnorm = 53.477721, gnorm = 0.003078, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 26000:
+  xnorm = 53.477674, gnorm = 0.004885, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 27000:
+  xnorm = 53.477609, gnorm = 0.001660, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 28000:
+  xnorm = 53.477581, gnorm = 0.002435, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 29000:
+  xnorm = 53.477533, gnorm = 0.001742, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 30000:
+  xnorm = 53.477415, gnorm = 0.004826, step = 1.000000
+energy: -14.101
+
+PULL MAG = 6.500000
+Iteration 31000:
+  xnorm = 53.477344, gnorm = 0.001415, step = 1.000000
+energy: -14.101
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000531979
+final distance: 2.23952
+PULL MAG = 7.000000
+Iteration 1000:
+  xnorm = 53.481549, gnorm = 0.068978, step = 1.000000
+energy: -15.2212
+
+PULL MAG = 7.000000
+Iteration 2000:
+  xnorm = 53.481392, gnorm = 0.028355, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 3000:
+  xnorm = 53.480923, gnorm = 0.153485, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 4000:
+  xnorm = 53.480504, gnorm = 0.060824, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 5000:
+  xnorm = 53.480068, gnorm = 0.010934, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 6000:
+  xnorm = 53.479833, gnorm = 0.018364, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 7000:
+  xnorm = 53.479543, gnorm = 0.016785, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 8000:
+  xnorm = 53.478944, gnorm = 0.012649, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 9000:
+  xnorm = 53.478378, gnorm = 0.027528, step = 0.500000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 10000:
+  xnorm = 53.478047, gnorm = 0.013981, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 11000:
+  xnorm = 53.477833, gnorm = 0.009266, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 12000:
+  xnorm = 53.477609, gnorm = 0.003834, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 13000:
+  xnorm = 53.477324, gnorm = 0.007407, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 14000:
+  xnorm = 53.477227, gnorm = 0.005465, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 15000:
+  xnorm = 53.477118, gnorm = 0.006891, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 16000:
+  xnorm = 53.476947, gnorm = 0.009937, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 17000:
+  xnorm = 53.476894, gnorm = 0.007522, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 18000:
+  xnorm = 53.476615, gnorm = 0.011409, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 19000:
+  xnorm = 53.476569, gnorm = 0.003560, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 20000:
+  xnorm = 53.476456, gnorm = 0.005215, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 21000:
+  xnorm = 53.476411, gnorm = 0.003428, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 22000:
+  xnorm = 53.476354, gnorm = 0.002682, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 23000:
+  xnorm = 53.476314, gnorm = 0.001924, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 24000:
+  xnorm = 53.476226, gnorm = 0.001063, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 25000:
+  xnorm = 53.476179, gnorm = 0.003152, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 26000:
+  xnorm = 53.476095, gnorm = 0.001843, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 27000:
+  xnorm = 53.476076, gnorm = 0.001571, step = 1.000000
+energy: -15.2213
+
+PULL MAG = 7.000000
+Iteration 28000:
+  xnorm = 53.476035, gnorm = 0.003395, step = 1.000000
+energy: -15.2213
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000482848
+final distance: 2.24154
+PULL MAG = 7.500000
+Iteration 1000:
+  xnorm = 53.479543, gnorm = 0.055984, step = 1.000000
+energy: -16.3425
+
+PULL MAG = 7.500000
+Iteration 2000:
+  xnorm = 53.479737, gnorm = 0.033579, step = 1.000000
+energy: -16.3425
+
+PULL MAG = 7.500000
+Iteration 3000:
+  xnorm = 53.479370, gnorm = 0.029072, step = 1.000000
+energy: -16.3425
+
+PULL MAG = 7.500000
+Iteration 4000:
+  xnorm = 53.478997, gnorm = 0.016482, step = 1.000000
+energy: -16.3425
+
+PULL MAG = 7.500000
+Iteration 5000:
+  xnorm = 53.478689, gnorm = 0.013823, step = 1.000000
+energy: -16.3425
+
+PULL MAG = 7.500000
+Iteration 6000:
+  xnorm = 53.478253, gnorm = 0.014062, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 7000:
+  xnorm = 53.477492, gnorm = 0.005493, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 8000:
+  xnorm = 53.477389, gnorm = 0.007808, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 9000:
+  xnorm = 53.476691, gnorm = 0.009636, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 10000:
+  xnorm = 53.476558, gnorm = 0.004524, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 11000:
+  xnorm = 53.476304, gnorm = 0.005920, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 12000:
+  xnorm = 53.476237, gnorm = 0.009150, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 13000:
+  xnorm = 53.476163, gnorm = 0.004989, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 14000:
+  xnorm = 53.475916, gnorm = 0.005596, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 15000:
+  xnorm = 53.475803, gnorm = 0.007330, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 16000:
+  xnorm = 53.475668, gnorm = 0.005983, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 17000:
+  xnorm = 53.475581, gnorm = 0.003349, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 18000:
+  xnorm = 53.475530, gnorm = 0.003092, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 19000:
+  xnorm = 53.475465, gnorm = 0.002927, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 20000:
+  xnorm = 53.475408, gnorm = 0.006225, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 21000:
+  xnorm = 53.475356, gnorm = 0.005363, step = 0.500000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 22000:
+  xnorm = 53.475326, gnorm = 0.002713, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 23000:
+  xnorm = 53.475281, gnorm = 0.000775, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 24000:
+  xnorm = 53.475232, gnorm = 0.002554, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 25000:
+  xnorm = 53.475191, gnorm = 0.001837, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 26000:
+  xnorm = 53.475173, gnorm = 0.002465, step = 1.000000
+energy: -16.3426
+
+PULL MAG = 7.500000
+Iteration 27000:
+  xnorm = 53.475071, gnorm = 0.007516, step = 1.000000
+energy: -16.3426
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000516432
+final distance: 2.24334
+PULL MAG = 8.000000
+Iteration 1000:
+  xnorm = 53.478580, gnorm = 0.067026, step = 1.000000
+energy: -17.4646
+
+PULL MAG = 8.000000
+Iteration 2000:
+  xnorm = 53.478601, gnorm = 0.047083, step = 1.000000
+energy: -17.4646
+
+PULL MAG = 8.000000
+Iteration 3000:
+  xnorm = 53.478574, gnorm = 0.011551, step = 1.000000
+energy: -17.4646
+
+PULL MAG = 8.000000
+Iteration 4000:
+  xnorm = 53.478369, gnorm = 0.019269, step = 1.000000
+energy: -17.4646
+
+PULL MAG = 8.000000
+Iteration 5000:
+  xnorm = 53.478024, gnorm = 0.013947, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 6000:
+  xnorm = 53.477420, gnorm = 0.008385, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 7000:
+  xnorm = 53.477247, gnorm = 0.024384, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 8000:
+  xnorm = 53.476905, gnorm = 0.013777, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 9000:
+  xnorm = 53.476723, gnorm = 0.008888, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 10000:
+  xnorm = 53.476508, gnorm = 0.005018, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 11000:
+  xnorm = 53.476296, gnorm = 0.014613, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 12000:
+  xnorm = 53.476219, gnorm = 0.006610, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 13000:
+  xnorm = 53.475759, gnorm = 0.008832, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 14000:
+  xnorm = 53.475764, gnorm = 0.004329, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 15000:
+  xnorm = 53.475665, gnorm = 0.008251, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 16000:
+  xnorm = 53.475545, gnorm = 0.003603, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 17000:
+  xnorm = 53.475415, gnorm = 0.010471, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 18000:
+  xnorm = 53.475298, gnorm = 0.002923, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 19000:
+  xnorm = 53.475096, gnorm = 0.006373, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 20000:
+  xnorm = 53.474932, gnorm = 0.001962, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 21000:
+  xnorm = 53.474898, gnorm = 0.002817, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 22000:
+  xnorm = 53.474670, gnorm = 0.005292, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 23000:
+  xnorm = 53.474616, gnorm = 0.001797, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 24000:
+  xnorm = 53.474587, gnorm = 0.002228, step = 1.000000
+energy: -17.4647
+
+PULL MAG = 8.000000
+Iteration 25000:
+  xnorm = 53.474463, gnorm = 0.002125, step = 1.000000
+energy: -17.4647
+
+L-BFGS optimization terminated with status code = 0
+final gnorm: 0.000507558
+final distance: 2.245
+PULL MAG = 8.500000
+Iteration 1000:
+  xnorm = 53.477793, gnorm = 0.258098, step = 1.000000
+energy: -18.5875
+
+PULL MAG = 8.500000
+Iteration 2000:
+  xnorm = 53.478092, gnorm = 0.043008, step = 1.000000
+energy: -18.5875
+
+PULL MAG = 8.500000
+Iteration 3000:
+  xnorm = 53.478039, gnorm = 0.017421, step = 1.000000
+energy: -18.5876
+
+L-BFGS optimization terminated with status code = -998
+final gnorm: 0.897282
+final distance: 2.24649
+L-BFGS optimization terminated with status code = -998
+final gnorm: 1.14234
+final distance: 2.24649
+L-BFGS optimization terminated with status code = -998
+final gnorm: 8.38515e+07
+final distance: 2.24649
+L-BFGS optimization terminated with status code = -998
+final gnorm: 8.38515e+07
+final distance: 2.24649
+randomgrowth: Fatal IO error: client killed
