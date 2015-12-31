@@ -57,15 +57,9 @@ private slots:
 
     void on_eulerItersEdit_textEdited(const QString &arg1);
 
-    void on_growthAmountEdit_textEdited(const QString &arg1);
-
     void on_scaleEdit_textEdited(const QString &arg1);
 
     void on_outputEdit_textEdited(const QString &arg1);
-
-    void on_maxStrainEdit_textEdited(const QString &arg1);
-
-    void on_baseProbabilityEdit_textEdited(const QString &arg1);
 
     void on_actionImport_Metric_triggered();
 
@@ -74,6 +68,26 @@ private slots:
     void on_crushButton_clicked();
 
     void on_actionMake_Flat_Cone_triggered();
+
+    void on_constantPressureRadio_toggled(bool checked);
+
+    void on_scalingPressureRadio_toggled(bool checked);
+
+    void on_constantPressureEdit_textEdited(const QString &arg1);
+
+    void on_airLeakEdit_textEdited(const QString &arg1);
+
+    void on_coneAngleEdit_textEdited(const QString &arg1);
+
+    void on_coneHeightEdit_textEdited(const QString &arg1);
+
+    void on_crushTimeEdit_textEdited(const QString &arg1);
+
+    void on_constantVelocityRadio_toggled(bool checked);
+
+    void on_simulatedCrushingRadio_toggled(bool checked);
+
+    void on_crushMassEdit_textEdited(const QString &arg1);
 
 private:
     void updateGL();

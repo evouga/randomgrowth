@@ -505,7 +505,7 @@ double Midedge::elasticEnergyTwo(const Mesh &mesh, const EdgeNormalDerivatives &
                 A*trace(matMult( matMult(gbarinv, gmat) - I, matMult(gbarinv, gmat) - I));
     result += params.h*params.h*params.h/24.0/params.scale/params.scale * (
                 A*4.0*trace(matMult( matMult(gbarinv, gmat)-I, matMult(gbarinv, cmat) ))
-                + A*trace(matMult( matMult(gbarinv, bmat), matMult(gbarinv, bmat) ))
+                + 2.0*A*trace(matMult( matMult(gbarinv, bmat), matMult(gbarinv, bmat) ))
                 );
 
     assert(!isnan(result));
@@ -577,14 +577,15 @@ double Midedge::elasticEnergy(const Mesh &mesh, const ElasticParameters &params,
 
     for(int i=0; i<mesh.numFaces(); i++)
     {
-        result += params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio)*elasticEnergyOne(mesh, nderivs, i, params);
-        result += params.YoungsModulus/8.0/(1.0+params.PoissonRatio)*elasticEnergyTwo(mesh, nderivs, i, params);
+        double energy = params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio)*elasticEnergyOne(mesh, nderivs, i, params);
+        energy += params.YoungsModulus/8.0/(1.0+params.PoissonRatio)*elasticEnergyTwo(mesh, nderivs, i, params);
 
         if(derivs)
         {
             DelasticEnergyOne(mesh, nderivs, i, params, params.YoungsModulus/8.0*params.PoissonRatio/(1.0-params.PoissonRatio*params.PoissonRatio), *derivs);
             DelasticEnergyTwo(mesh, nderivs, i, params, params.YoungsModulus/8.0/(1.0+params.PoissonRatio), *derivs);
         }
+        result += energy;
     }
 
     return result;

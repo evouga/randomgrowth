@@ -58,7 +58,7 @@ void Controller::updateParameters(ProblemParameters params)
 
 void Controller::crush()
 {
-    m_.crush(*this, 3.885, 0.5);
+    m_.crush(*this);
 }
 
 void Controller::centerCamera()
@@ -75,10 +75,10 @@ void Controller::updateGL()
 
 void Controller::makeCone()
 {
-    m_.setConeHeights(3.885);
+    m_.setConeHeights(3.867);
 }
 
 void Controller::makeFlatCone()
 {
-    m_.setFlatCone(3.885);
+    m_.setFlatCone(3.867);
 }

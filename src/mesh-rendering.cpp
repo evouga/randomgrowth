@@ -37,94 +37,98 @@ void SimulationMesh::vertexNormals(VectorXd &vertNormals)
 
 void SimulationMesh::render()
 {
+    return;
     meshLock_.lock();
     {
-        Eigen::VectorXd normals;
-        vertexNormals(normals);
-        glEnable(GL_LIGHTING);
-        glEnable(GL_DITHER);
-
-        glPolygonOffset(1.0, 1.0);
-        glEnable(GL_POLYGON_OFFSET_FILL);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-        glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
-        glEnable ( GL_COLOR_MATERIAL );
-
-        if(params_.smoothShade)
+        if(numFaces() > 0)
         {
-            glShadeModel(GL_SMOOTH);
-        }
-        else
-        {
-            glShadeModel(GL_FLAT);
-        }
+            Eigen::VectorXd normals;
+            vertexNormals(normals);
+            glEnable(GL_LIGHTING);
+            glEnable(GL_DITHER);
 
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_NORMAL_ARRAY);
-        glEnableClientState(GL_COLOR_ARRAY);
+            glPolygonOffset(1.0, 1.0);
+            glEnable(GL_POLYGON_OFFSET_FILL);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-        static vector<GLfloat> colors;
-        static vector<int> indices;
-        static vector<GLfloat> pos;
-        static vector<GLfloat> normal;
+            glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+            glEnable ( GL_COLOR_MATERIAL );
 
-        colors.clear();
-        indices.clear();
-        pos.clear();
-        normal.clear();
-
-        for(int face=0; face<faces_.cols(); face++)
-        {
-            for(int vert=0; vert<3; vert++)
+            if(params_.smoothShade)
             {
-                int vertid = faceVerts(face)[vert];
-                Vector3d color = colormap(0, 10.0);
-                Vector3d pt = vertPos(vertid);
-                Vector3d n = normals.segment<3>(3*vertid);
-                for(int j=0; j<3; j++)
+                glShadeModel(GL_SMOOTH);
+            }
+            else
+            {
+                glShadeModel(GL_FLAT);
+            }
+
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glEnableClientState(GL_NORMAL_ARRAY);
+            glEnableClientState(GL_COLOR_ARRAY);
+
+            static vector<GLfloat> colors;
+            static vector<int> indices;
+            static vector<GLfloat> pos;
+            static vector<GLfloat> normal;
+
+            colors.resize(9*numFaces());
+            indices.resize(3*numFaces());
+            pos.resize(9*numFaces());
+            normal.resize(9*numFaces());
+
+            for(int face=0; face<faces_.cols(); face++)
+            {
+                for(int vert=0; vert<3; vert++)
                 {
-                    pos.push_back(pt[j]);
-                    normal.push_back(n[j]);
-                    colors.push_back(color[j]);
+                    int vertid = faceVerts(face)[vert];
+                    Vector3d color = colormap(0, 10.0);
+                    Vector3d pt = vertPos(vertid);
+                    Vector3d n = normals.segment<3>(3*vertid);
+                    for(int j=0; j<3; j++)
+                    {
+                        pos[9*face+3*vert+j] = pt[j];
+                        normal[9*face+3*vert+j] = n[j];
+                        colors[9*face+3*vert+j] = color[j];
+                    }
                 }
             }
-        }
 
-        glVertexPointer(3, GL_FLOAT, 0, &pos[0]);
-        glNormalPointer(GL_FLOAT, 0, &normal[0]);
-        glColorPointer(3, GL_FLOAT, 0, &colors[0]);
+            glVertexPointer(3, GL_FLOAT, 0, &pos[0]);
+            glNormalPointer(GL_FLOAT, 0, &normal[0]);
+            glColorPointer(3, GL_FLOAT, 0, &colors[0]);
 
-        int idx=0;
+            int idx=0;
 
-        for (int i=0; i<3*numFaces(); i++)
-        {
-            indices.push_back(idx++);
-        }
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, &indices[0]);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_NORMAL_ARRAY);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glDisable(GL_POLYGON_OFFSET_FILL);
-        glDisable(GL_LIGHTING);
-
-        if(params_.showWireframe)
-        {
-            glLineWidth(1.0);
-            glBegin(GL_LINES);
-            for(int i=0; i<numFaces(); i++)
+            for (int i=0; i<3*numFaces(); i++)
             {
-                for(int j=0; j<3; j++)
-                {
-                    glColor3f(0,0,0);
-                    Vector3d pt1 = vertPos(faceVerts(i)[j]);
-                    Vector3d pt2 = vertPos(faceVerts(i)[(j+1)%3]);
-                    glVertex3d(pt1[0], pt1[1], pt1[2]);
-                    glVertex3d(pt2[0], pt2[1], pt2[2]);
-                }
+                indices[i] = idx++;
             }
-            glEnd();
+            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, &indices[0]);
+
+            glDisableClientState(GL_VERTEX_ARRAY);
+            glDisableClientState(GL_NORMAL_ARRAY);
+            glDisableClientState(GL_COLOR_ARRAY);
+            glDisable(GL_POLYGON_OFFSET_FILL);
+            glDisable(GL_LIGHTING);
+
+            if(params_.showWireframe)
+            {
+                glLineWidth(1.0);
+                glBegin(GL_LINES);
+                for(int i=0; i<numFaces(); i++)
+                {
+                    for(int j=0; j<3; j++)
+                    {
+                        glColor3f(0,0,0);
+                        Vector3d pt1 = vertPos(faceVerts(i)[j]);
+                        Vector3d pt2 = vertPos(faceVerts(i)[(j+1)%3]);
+                        glVertex3d(pt1[0], pt1[1], pt1[2]);
+                        glVertex3d(pt2[0], pt2[1], pt2[2]);
+                    }
+                }
+                glEnd();
+            }
         }
     }
     meshLock_.unlock();

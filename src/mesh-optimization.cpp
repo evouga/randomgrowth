@@ -20,13 +20,19 @@ double SimulationMesh::truncatedConeVolume(double startHeight, double curHeight)
     return totV-topV;
 }
 
-bool SimulationMesh::crush(Controller &cont, double coneHeight, double endHeight)
+bool SimulationMesh::crush(Controller &cont)
 {
     {
         string name = params_.outputDir + "/parameters";
         ofstream paramfile(name.c_str());
         params_.dumpParameters(paramfile);
     }
+
+    params_.scale = params_.coneHeight * tan(params_.coneAngle);
+    double coneHeight = params_.coneHeight / params_.scale;
+    double endHeight = 0.5;
+
+    setConeHeights(coneHeight);
 
     double h = params_.eulerTimestep;
     VectorXd v(3*numVertices());
@@ -35,42 +41,73 @@ bool SimulationMesh::crush(Controller &cont, double coneHeight, double endHeight
 
     VectorXd startq = deformedPosition_;
 
-    const int crushTime = 100000;
+    const int crushTime = params_.crushTime*numsteps;
 
-    //double initialV = truncatedConeVolume(coneHeight, coneHeight);
-    double airpressure = 10000;//101325.0;
+    double initialV = truncatedConeVolume(coneHeight, coneHeight);
+    const double atm = 101325.0;
+    double planeZ = coneHeight;
+    double planeVel = 0;
 
     for(int i=0; i<numsteps; i++)
     {        
         std::cout << "iter " << i << std::endl;
 
-        double t = i;
-        if(t > crushTime)
-            t = crushTime;
-        double planeZ = (t*endHeight + (crushTime-t)*coneHeight)/double(crushTime);
+        if(params_.constantVelocity)
+        {
+            double t = i;
+            if(t > crushTime)
+                t = crushTime;
+            planeZ = (t*endHeight + (crushTime-t)*coneHeight)/double(crushTime);
+        }
+        else
+        {
+            planeZ += h*planeVel/params_.scale;
+        }
 
-        deformedPosition_ += h*v;
+        //double crushAmt = (coneHeight-endHeight)*sqrt( double(i) / double(crushTime) );
+        //double planeZ = coneHeight - crushAmt;
+
+        deformedPosition_ += h*v/params_.scale;
+
+        SparseMatrix<double> Minv;
+        buildMetricInvMassMatrix(Minv);
+
+        v += - h*Minv*params_.dampingCoeff*v;
+
         VectorXd gradq;
         std::cout << "computing energy" << std::endl;
         Midedge::elasticEnergy(*this,params_,&gradq);
-        std::cout << "force magnitude: " << gradq.norm() << std::endl;
-        SparseMatrix<double> Minv;
-        buildMetricInvMassMatrix(Minv);
+        std::cout << "force magnitude: " << gradq.norm() << " plane height " << planeZ << std::endl;
         VectorXd F = -gradq;
 
-        //double curV = truncatedConeVolume(coneHeight, planeZ);
-        //double pressure = airpressure*(initialV/curV - 1.0);
-        //const double leakconst = 1e-6;
-        //initialV = std::max(curV, initialV - leakconst*h*pressure);
+        double airpressure = 0;
+        double curV = truncatedConeVolume(coneHeight, planeZ);
+        if(params_.constantPressure)
+            airpressure = (params_.constantPressureVal-1.0)*atm;
+        else
+        {
+            airpressure = (initialV/curV - 1.0);
+            initialV = std::max(curV, initialV - params_.airLeakCoeff*h*airpressure);
+        }
         VectorXd pressureF;
         pressureForce(airpressure, pressureF);
+
+        if(!params_.constantVelocity)
+        {
+            double curradius = params_.scale * (coneHeight-planeZ)/coneHeight;
+            double surfaceArea = PI*curradius*curradius;
+            double massF = surfaceArea*airpressure;
+            massF -= params_.crushMass * 9.8;
+            planeVel += h*massF/params_.crushMass;
+            cout << "Plane force " << massF << " " << surfaceArea*airpressure << " " << planeVel << endl;
+        }
 
         //std::cout << "Regular force " << F.norm() << " pressure force " << pressureF.norm() << " pressure " << pressure << " initialV " << initialV << " curV " << curV << std::endl;
 
         F += pressureF;
 
-        v += h*Minv*F - h*Minv*params_.dampingCoeff*v;
-        if(i%100 == 0)
+        v += h*Minv*F;//
+        if(i%(numsteps/100) == 0)
             dumpFrame();
         // enforce constraints
         enforceConstraints(startq, planeZ);
@@ -171,7 +208,7 @@ void SimulationMesh::pressureForce(double pressure, VectorXd &F)
     F.resize(3*numVertices());
 
     VectorXd areas(numVertices());
-    deformedBarycentricDualAreas(areas);
+    metricBarycentricDualAreas(areas);
 
     VectorXd normals;
     vertexNormals(normals);

@@ -23,9 +23,16 @@ struct ProblemParameters : public ElasticParameters
     bool smoothShade;
 
     // problem
-    double growthAmount;
-    double maxEdgeStrain;
-    double baseGrowthProbability;
+    bool constantPressure;
+    double constantPressureVal;
+    double airLeakCoeff;
+
+    bool constantVelocity;
+    double crushTime;
+    double crushMass;
+
+    double coneAngle;
+    double coneHeight;
 
     std::string outputDir;
 
@@ -39,7 +46,7 @@ public:
 
     enum RelaxationType {RelaxMetric, RelaxEmbedding, FitMetric};
 
-    bool crush(Controller &cont, double coneHeight, double endHeight);
+    bool crush(Controller &cont);
 
     const ProblemParameters &getParameters() const;
     void setParameters(ProblemParameters params);

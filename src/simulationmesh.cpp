@@ -9,17 +9,24 @@ using namespace std;
 SimulationMesh::SimulationMesh() : Mesh(), meshLock_(QMutex::Recursive)
 {
     params_.scale = 0.085;
-    params_.h = .0001; // 0.0027, 0.0021, 0.0009, 0.0007, 0.0004
+    params_.h = .0005; // 0.0027, 0.0021, 0.0009, 0.0007, 0.0004
     params_.YoungsModulus = 2e9;
     params_.PoissonRatio = 0.33;
     params_.rho = 500.0;
-    params_.dampingCoeff = 1e-3;
-    params_.eulerTimestep = 1e-6;
-    params_.numEulerIters = 150000;
+    params_.dampingCoeff = 0.001;
+    params_.eulerTimestep = 5e-7;
+    params_.numEulerIters = 200000;
 
-    params_.growthAmount = 50;
-    params_.maxEdgeStrain = 1e8;
-    params_.baseGrowthProbability = 0.5;
+    params_.constantPressure = true;
+    params_.constantPressureVal = 1.0; // in atmospheres
+    params_.airLeakCoeff = 0.0;
+
+    params_.constantVelocity = true;
+    params_.crushMass = 2.0;
+    params_.crushTime = 1.0;
+
+    params_.coneAngle = 0.25;
+    params_.coneHeight = 0.330;
 
     params_.smoothShade = true;
     params_.showWireframe = true;
@@ -35,9 +42,14 @@ void ProblemParameters::dumpParameters(ostream &os)
     os << "dampingCoeff " << dampingCoeff << endl;
     os << "eulerTimestep " << eulerTimestep << endl;
     os << "numEulerIters " << numEulerIters << endl;
-    os << "growthAmount " << growthAmount << endl;
-    os << "baseGrowthProbability " << baseGrowthProbability << endl;
-    os << "maxEdgeStrain " << maxEdgeStrain << endl;
+    os << "constantPressure " << constantPressure << endl;
+    os << "constantPressureVal " << constantPressureVal << endl;
+    os << "airLeakCoeff " << airLeakCoeff << endl;
+    os << "coneAngle " << coneAngle << endl;
+    os << "coneHeight " << coneHeight << endl;
+    os << "constantVelocity " << constantVelocity << endl;
+    os << "crushTime " << crushTime << endl;
+    os << "crushMass " << crushMass << endl;
 }
 
 bool SimulationMesh::exportOBJ(const char *filename)
