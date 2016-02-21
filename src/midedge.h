@@ -85,7 +85,7 @@ private:
     static void DfaceNormal(const Eigen::Vector3d &q0, const Eigen::Vector3d &q1, const Eigen::Vector3d &q2, std::vector<Eigen::Matrix3d> &partials);
 
     static Eigen::Vector3d g(const Eigen::Vector3d &q1, const Eigen::Vector3d &q2, const Eigen::Vector3d &q3);
-    static void Dg(const Eigen::Vector3d &q1, const Eigen::Vector3d &q2, const Eigen::Vector3d &q3, std::vector<Eigen::Matrix3d> &partials);
+    static void Dg(const Eigen::Vector3d &q1, const Eigen::Vector3d &q2, const Eigen::Vector3d &q3, Eigen::Matrix3d &out1, Eigen::Matrix3d &out2, Eigen::Matrix3d &out3);
 
     static Eigen::Vector3d b(const Eigen::Vector3d &q1, const Eigen::Vector3d &q2, const Eigen::Vector3d &q3, const Eigen::Vector3d &n1, const Eigen::Vector3d &n2,const Eigen::Vector3d &n3);    
     static void Db(const Eigen::Vector3d &q1, const Eigen::Vector3d &q2, const Eigen::Vector3d &q3, const Eigen::Vector3d &n1, const Eigen::Vector3d &n2,const Eigen::Vector3d &n3, Eigen::Matrix3d *partials);

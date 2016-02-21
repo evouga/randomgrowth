@@ -17,10 +17,17 @@ void EdgeNormalDerivatives::DedgeNormal(int face, int vertno, const Vector3d &pr
     int numpartials = (int)edgeNormalsPartials[3*face+vertno].size();
     for(int i=0; i<numpartials; i++)
     {
+        Vector3d thing1 = prefactor.transpose()*edgeNormalsPartials[3*face+vertno][i];
+        int index1 = 3*edgeNormalsPartialIndices[3*face+vertno][i];
         for(int j=0; j<3; j++)
         {
+
+            //partials[3*edgeNormalsPartialIndices[3*face+vertno][i] + j] += (prefactor.transpose()*edgeNormalsPartials[3*face+vertno][i])[j];
+            double thing = thing1[j];
+            int index = index1 + j;
             #pragma omp atomic
-            partials[3*edgeNormalsPartialIndices[3*face+vertno][i] + j] += (prefactor.transpose()*edgeNormalsPartials[3*face+vertno][i])[j];
+            partials[index] += thing;
+
         }
     }
 }
@@ -117,27 +124,20 @@ Vector3d Midedge::g(const Vector3d &q1, const Vector3d &q2, const Vector3d &q3)
     return result;
 }
 
-void Midedge::Dg(const Vector3d &q1, const Vector3d &q2, const Vector3d &q3, std::vector<Eigen::Matrix3d> &partials)
+void Midedge::Dg(const Vector3d &q1, const Vector3d &q2, const Vector3d &q3, Eigen::Matrix3d &out1, Eigen::Matrix3d &out2, Eigen::Matrix3d &out3)
 {
-    partials.clear();
 
-    Matrix3d dg1;
-    dg1 << 0, 0, 0,
+    out1 << 0, 0, 0,
             (q3-q2).transpose(),
             2.0*(q1-q3).transpose();
-    partials.push_back(dg1);
 
-    Matrix3d dg2;
-    dg2 << -2.0*(q3-q2).transpose(),
+    out2 << -2.0*(q3-q2).transpose(),
             -(q1-q3).transpose(),
             0,0,0;
-    partials.push_back(dg2);
 
-    Matrix3d dg3;
-    dg3 << 2.0*(q3-q2).transpose(),
+    out3 << 2.0*(q3-q2).transpose(),
             (q1-q3).transpose() - (q3-q2).transpose(),
             -2.0*(q1-q3).transpose();
-    partials.push_back(dg3);
 }
 
 Vector3d Midedge::b(const Vector3d &q1, const Vector3d &q2, const Vector3d &q3, const Vector3d &n1, const Vector3d &n2, const Vector3d &n3)
@@ -229,21 +229,21 @@ void Midedge::Dg(const Mesh &mesh, const VectorXd &q, int faceid, const Vector4d
         idx[i] = mesh.faceVerts(faceid)[i];
         qs[i] = q.segment<3>(3*idx[i]);
     }
-    vector<Matrix3d> partials3;
-    Dg(qs[0], qs[1], qs[2], partials3);
+    Matrix3d out[3];
+    Dg(qs[0], qs[1], qs[2], out[0], out[1], out[2]);
 
     for(int i=0; i<3; i++)
     {
         for(int j=0; j<3; j++)
         {
             #pragma omp atomic
-            partials[3*idx[i]+j] += partials3[i](0,j)*prefactor[0];
+            partials[3*idx[i]+j] += out[i](0,j)*prefactor[0];
             #pragma omp atomic
-            partials[3*idx[i]+j] += partials3[i](1,j)*prefactor[1];
+            partials[3*idx[i]+j] += out[i](1,j)*prefactor[1];
             #pragma omp atomic
-            partials[3*idx[i]+j] += partials3[i](1,j)*prefactor[2];
+            partials[3*idx[i]+j] += out[i](1,j)*prefactor[2];
             #pragma omp atomic
-            partials[3*idx[i]+j] += partials3[i](2,j)*prefactor[3];
+            partials[3*idx[i]+j] += out[i](2,j)*prefactor[3];
         }
     }
 }
@@ -440,7 +440,7 @@ void Midedge::Dc(const Mesh &mesh, const VectorXd &q, const EdgeNormalDerivative
 }
 
 
-double Midedge::elasticEnergyOne(const Mesh &mesh, const VectorXd &q, const PrecomputedFaceQuantities &data, int faceid, const ElasticParameters &params)
+double Midedge::EnergyOne(const Mesh &mesh, const VectorXd &q, const PrecomputedFaceQuantities &data, int faceid, const ElasticParameters &params)
 {
     double A = data.intrinsicArea;
     double trgminusI = data.trgminusI;

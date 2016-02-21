@@ -17,7 +17,7 @@ public:
 
     void renderMesh();
 
-    std::string meshName = "crazy";
+    std::string meshName = "single_slit";
 
 public slots:
     void exportOBJ(std::string filename);
