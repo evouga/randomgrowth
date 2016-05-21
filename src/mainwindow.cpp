@@ -111,20 +111,23 @@ void MainWindow::setParameters(ProblemParameters params)
     ui->smoothShadeCheckBox->setChecked(params.smoothShade);
     ui->densityEdit->setText(QString::number(params.rho));
     ui->dampingCoeffEdit->setText(QString::number(params.dampingCoeff));
-    ui->eulerItersEdit->setText(QString::number(params.numEulerIters));
+    ui->simTimeEdit->setText(QString::number(params.simTime));
     ui->eulerTimestepEdit->setText(QString::number(params.eulerTimestep));
     ui->scaleEdit->setText(QString::number(params.scale));
     ui->outputEdit->setText(QString::fromStdString(params.outputDir));
-    ui->constantPressureRadio->setChecked(params.constantPressure);
-    ui->scalingPressureRadio->setChecked(!params.constantPressure);
+    ui->constantPressureRadio->setChecked(params.pressureBehavior == params.PB_CONSTANT);
+    ui->scalingPressureRadio->setChecked(params.pressureBehavior == params.PB_SCALING);
+    ui->holeRadiusRadio->setChecked(params.pressureBehavior == params.PB_LEAKY);
     ui->constantPressureEdit->setText(QString::number(params.constantPressureVal));
-    ui->airLeakEdit->setText(QString::number(params.airLeakCoeff));
+    ui->holeRadiusEdit->setText(QString::number(params.holeRadius));
     ui->coneAngleEdit->setText(QString::number(params.coneAngle));
     ui->coneHeightEdit->setText(QString::number(params.coneHeight));
     ui->crushTimeEdit->setText(QString::number(params.crushTime));
     ui->constantVelocityRadio->setChecked(params.constantVelocity);
     ui->simulatedCrushingRadio->setChecked(!params.constantVelocity);
     ui->crushMassEdit->setText(QString::number(params.crushMass));
+    ui->initialVelEdit->setText(QString::number(params.initialVel));
+    ui->restoreEdit->setText(QString::fromStdString(params.restoreCheckpoint));
 }
 
 ProblemParameters MainWindow::getParameters()
@@ -138,17 +141,29 @@ ProblemParameters MainWindow::getParameters()
     result.rho = ui->densityEdit->text().toDouble();
     result.dampingCoeff = ui->dampingCoeffEdit->text().toDouble();
     result.eulerTimestep = ui->eulerTimestepEdit->text().toDouble();
-    result.numEulerIters = ui->eulerItersEdit->text().toInt();
+    result.simTime = ui->simTimeEdit->text().toDouble();
     result.scale = ui->scaleEdit->text().toDouble();
     result.outputDir = ui->outputEdit->text().toStdString();
-    result.constantPressure = ui->constantPressureRadio->isChecked();
+    if(ui->constantPressureRadio->isChecked())
+    {
+        result.pressureBehavior = result.PB_CONSTANT;
+    }
+    else if(ui->scalingPressureRadio->isChecked())
+    {
+        result.pressureBehavior = result.PB_SCALING;
+    }
+    else
+        result.pressureBehavior = result.PB_LEAKY;
+
     result.constantPressureVal = ui->constantPressureEdit->text().toDouble();
-    result.airLeakCoeff = ui->airLeakEdit->text().toDouble();
+    result.holeRadius = ui->holeRadiusEdit->text().toDouble();
     result.coneAngle = ui->coneAngleEdit->text().toDouble();
     result.coneHeight = ui->coneHeightEdit->text().toDouble();
     result.crushTime = ui->crushTimeEdit->text().toDouble();
     result.constantVelocity = ui->constantPressureRadio->isChecked();
     result.crushMass = ui->crushMassEdit->text().toDouble();
+    result.initialVel = ui->initialVelEdit->text().toDouble();
+    result.restoreCheckpoint = ui->restoreEdit->text().toStdString();
     return result;
 }
 
@@ -234,11 +249,6 @@ void MainWindow::on_eulerTimestepEdit_textEdited(const QString &)
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }
 
-void MainWindow::on_eulerItersEdit_textEdited(const QString &)
-{
-    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
-}
-
 void MainWindow::on_scaleEdit_textEdited(const QString &)
 {
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
@@ -263,11 +273,6 @@ void MainWindow::on_actionMake_Cone_triggered()
 void MainWindow::on_crushButton_clicked()
 {
     QMetaObject::invokeMethod(cont_, "crush");
-}
-
-void MainWindow::on_actionMake_Flat_Cone_triggered()
-{
-    QMetaObject::invokeMethod(cont_, "makeFlatCone");
 }
 
 void MainWindow::on_constantPressureRadio_toggled(bool )
@@ -316,6 +321,31 @@ void MainWindow::on_simulatedCrushingRadio_toggled(bool )
 }
 
 void MainWindow::on_crushMassEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_simTimeEdit_textChanged(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_initialVelEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_restoreEdit_textEdited(const QString &)
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_holeRadiusRadio_toggled(bool )
+{
+    QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
+}
+
+void MainWindow::on_holeRadiusEdit_textEdited(const QString &arg1)
 {
     QMetaObject::invokeMethod(cont_, "updateParameters", Q_ARG(ProblemParameters, getParameters()));
 }

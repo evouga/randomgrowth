@@ -24,7 +24,6 @@ public slots:
     void centerCamera();
     void updateGL();
     void makeCone();
-    void makeFlatCone();
     void crush();
 
 private:    

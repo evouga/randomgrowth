@@ -16,27 +16,40 @@ struct ProblemParameters : public ElasticParameters
 
     double eulerTimestep;
     double dampingCoeff;
-    int numEulerIters;
+    double simTime;
 
     // rendering
     bool showWireframe;
     bool smoothShade;
 
     // problem
-    bool constantPressure;
+    enum PressureBehavior { PB_CONSTANT = 0, PB_SCALING = 1, PB_LEAKY = 2 };
+    PressureBehavior pressureBehavior;
     double constantPressureVal;
-    double airLeakCoeff;
+    double holeRadius;
 
     bool constantVelocity;
     double crushTime;
     double crushMass;
+    double initialVel;
 
     double coneAngle;
-    double coneHeight;
+    double coneHeight;    
 
     std::string outputDir;
+    std::string restoreCheckpoint;
 
     virtual void dumpParameters(std::ostream &os);
+};
+
+struct DynamicData
+{
+    double initialV;
+    double planeZ;
+    double planeVel;
+    int iter;
+    int frameno;
+    Eigen::VectorXd v;
 };
 
 class SimulationMesh : public Mesh
@@ -60,17 +73,26 @@ public:
     bool exportOBJ(const char *filename);
     bool importOBJ(const char *filename);
 
+    bool saveCheckpoint(const DynamicData &dd, const char *filename);
+    bool restoreCheckpoint(DynamicData &dd, const char *filename);
+
     void addRandomNoise(double magnitude);
     void printHessianEigenvalues();
     void setConeHeights(double height);
     void setFlatCone(double height);
 
+    double truncatedConeVolume(double startHeight, double curHeight);
+    void pressureForce(double pressure, Eigen::VectorXd &F);
+
+
 private:
-    void buildMetricInvMassMatrix(Eigen::SparseMatrix<double> &M) const;
+    void buildMetricInvMassMatrix(Eigen::SparseMatrix<double> &Minv) const;
+    void buildMetricMassMatrix(Eigen::SparseMatrix<double> &M) const;
     void metricBarycentricDualAreas(Eigen::VectorXd &areas) const;
     void deformedBarycentricDualAreas(Eigen::VectorXd &areas) const;
     double deformedFaceArea(int fidx) const;
 
+    void rescaleConeFromAngle();
     void enforceConstraints(const Eigen::VectorXd &startq,
                             double planeHeight);
 
@@ -89,7 +111,7 @@ private:
     double vertexStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int vidx) const;
     double faceStrainEnergy(const Eigen::VectorXd &q, const Eigen::VectorXd &g, int fidx) const;
 
-    void dumpFrame();
+    void dumpFrame(const DynamicData &dd);
     void deleteBadFlatConeFaces();
 
     Eigen::Vector3d colormap(double val) const;
@@ -97,11 +119,8 @@ private:
     Eigen::Vector3d HSLtoRGB(const Eigen::Vector3d &hsl) const;
 
     double randomRange(double min, double max) const;
-    double truncatedConeVolume(double startHeight, double curHeight);
-    void pressureForce(double pressure, Eigen::VectorXd &F);
     Eigen::Vector3d surfaceAreaNormal(const Eigen::VectorXd &q, int vidx);
 
-    int frameno_;
     ProblemParameters params_;
 
     // The rendering thread reads the mesh and its edge data. Any function must lock this before writing to

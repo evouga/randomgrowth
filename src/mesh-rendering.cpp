@@ -7,34 +7,6 @@ using namespace Eigen;
 
 const double PI = 3.1415926535;
 
-void SimulationMesh::vertexNormals(VectorXd &vertNormals)
-{
-    vertNormals.resize(3*numVertices());
-    int nfaces = numFaces();
-
-    VectorXd faceNormals(3*nfaces);
-    for(int i=0; i<nfaces; i++)
-    {
-        Vector3d normal = faceNormal(i);
-        normal *= deformedFaceArea(i);
-        faceNormals.segment<3>(3*i) = normal;
-    }
-
-    vertNormals.setZero();
-    for(int i=0; i<nfaces; i++)
-    {
-        for(int j=0; j<3; j++)
-        {
-            vertNormals.segment<3>(3*faceVerts(i)[j]) += faceNormals.segment<3>(3*i);
-        }
-    }
-
-    for(int i=0; i<numVertices(); i++)
-    {
-        vertNormals.segment<3>(3*i) /= vertNormals.segment<3>(3*i).norm();
-    }
-}
-
 void SimulationMesh::render()
 {
     return;

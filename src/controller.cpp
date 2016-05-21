@@ -77,8 +77,3 @@ void Controller::makeCone()
 {
     m_.setConeHeights(3.867);
 }
-
-void Controller::makeFlatCone()
-{
-    m_.setFlatCone(3.867);
-}

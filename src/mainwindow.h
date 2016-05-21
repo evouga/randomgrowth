@@ -55,8 +55,6 @@ private slots:
 
     void on_eulerTimestepEdit_textEdited(const QString &arg1);
 
-    void on_eulerItersEdit_textEdited(const QString &arg1);
-
     void on_scaleEdit_textEdited(const QString &arg1);
 
     void on_outputEdit_textEdited(const QString &arg1);
@@ -66,8 +64,6 @@ private slots:
     void on_actionMake_Cone_triggered();
 
     void on_crushButton_clicked();
-
-    void on_actionMake_Flat_Cone_triggered();
 
     void on_constantPressureRadio_toggled(bool checked);
 
@@ -88,6 +84,16 @@ private slots:
     void on_simulatedCrushingRadio_toggled(bool checked);
 
     void on_crushMassEdit_textEdited(const QString &arg1);
+
+    void on_simTimeEdit_textChanged(const QString &arg1);
+
+    void on_initialVelEdit_textEdited(const QString &arg1);
+
+    void on_restoreEdit_textEdited(const QString &arg1);
+
+    void on_holeRadiusRadio_toggled(bool checked);
+
+    void on_holeRadiusEdit_textEdited(const QString &arg1);
 
 private:
     void updateGL();
